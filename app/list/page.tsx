@@ -1,3 +1,4 @@
+import PhotoUpload from '@/components/PhotoUpload'
 'use client'
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -17,6 +18,7 @@ const defaultFeatures = Object.fromEntries(allKeys.map(k => [k, false]))
 
 export default function ListProperty() {
   const [loading, setLoading] = useState(false)
+  const [photos, setPhotos] = useState<string[]>([])
   const [message, setMessage] = useState('')
   const [form, setForm] = useState({
     title: '', description: '', price: '', price_type: 'sale',
@@ -33,6 +35,7 @@ export default function ListProperty() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { setMessage('Please sign in first'); setLoading(false); return }
     const { error } = await supabase.from('properties').insert({
+      photos,
       ...form,
       price: parseFloat(form.price),
       bedrooms: parseInt(form.bedrooms),
@@ -140,7 +143,15 @@ export default function ListProperty() {
             </div>
           </div>
           {message && <div className={`p-4 rounded-lg text-center font-medium ${message.includes('success') ? 'bg-green-900 text-green-300' : 'bg-red-900 text-red-300'}`}>{message}</div>}
-          <button type="submit" disabled={loading} className="w-full bg-orange-500 text-black font-bold py-4 rounded-xl text-lg hover:bg-orange-400 transition-colors disabled:opacity-50">
+          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+            <h2 className="text-lg font-bold mb-4 text-orange-500">Property Photos</h2>
+            <PhotoUpload propertyId={Date.now().toString()} onUpload={setPhotos} />
+            {photos.length < 3 && (
+              <p className="text-yellow-500 text-sm mt-2">⚠ Please upload at least 3 photos before submitting</p>
+            )}
+          </div>
+
+          <button type="submit" disabled={loading || photos.length < 3} className="w-full bg-orange-500 text-black font-bold py-4 rounded-xl text-lg hover:bg-orange-400 transition-colors disabled:opacity-50">
             {loading ? 'Submitting...' : 'List My Property'}
           </button>
         </form>

@@ -48,9 +48,26 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
 
       <div className="max-w-5xl mx-auto px-6 py-10">
 
-        <div className="bg-gray-800 rounded-2xl h-80 flex items-center justify-center text-8xl mb-8 border border-gray-700">
-          🏡
-        </div>
+        {p.photos && p.photos.length > 0 ? (
+          <div className="mb-8">
+            <div className="rounded-2xl h-80 overflow-hidden bg-gray-800 border border-gray-700">
+              <img src={p.photos[0]} alt={p.title} className="w-full h-full object-cover" />
+            </div>
+            {p.photos.length > 1 && (
+              <div className="grid grid-cols-4 gap-2 mt-2">
+                {p.photos.slice(1, 5).map((photo: string, i: number) => (
+                  <div key={i} className="h-24 rounded-xl overflow-hidden bg-gray-800 border border-gray-700">
+                    <img src={photo} alt={`${p.title} ${i + 2}`} className="w-full h-full object-cover" />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="bg-gray-800 rounded-2xl h-80 flex items-center justify-center text-8xl mb-8 border border-gray-700">
+            🏡
+          </div>
+        )}
 
         <div className="grid grid-cols-3 gap-8">
           <div className="col-span-2 space-y-6">
