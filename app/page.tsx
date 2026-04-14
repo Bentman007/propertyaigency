@@ -1,26 +1,29 @@
+'use client'
+import Link from 'next/link'
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-gray-900 text-white">
-      <nav className="bg-gray-800 border-b border-gray-800 px-6 py-4 flex justify-between items-center">
+      <nav className="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center">
         <div className="text-2xl font-bold">
           Property<span className="text-orange-500">AI</span>gency
         </div>
         <div className="flex gap-6 text-gray-300 text-sm">
-          <a href="/buy" className="hover:text-orange-500">Buy</a>
-          <a href="/rent" className="hover:text-orange-500">Rent</a>
-          <a href="/list" className="hover:text-orange-500">List Property</a>
+          <Link href="/buy" className="hover:text-orange-500">Buy</Link>
+          <Link href="/rent" className="hover:text-orange-500">Rent</Link>
+          <Link href="/list" className="hover:text-orange-500">List Property</Link>
         </div>
-        <a href="/auth/login" className="bg-orange-500 text-black px-4 py-2 rounded-lg font-semibold hover:bg-orange-400">Sign In</a>
+        <Link href="/auth/login" className="bg-orange-500 text-black px-4 py-2 rounded-lg font-semibold hover:bg-orange-400">Sign In</Link>
       </nav>
 
       <section className="text-center py-24 px-6 bg-gradient-to-b from-gray-950 to-gray-900">
         <h1 className="text-6xl font-bold mb-4">Find Your Perfect <span className="text-orange-500">Property</span></h1>
         <p className="text-gray-400 text-xl mb-8">South Africa's smartest AI-powered property platform</p>
         <div className="bg-gray-800 rounded-2xl p-4 max-w-2xl mx-auto flex gap-2">
-          <a href="/buy" className="bg-orange-500 text-black px-6 py-2 rounded-lg font-bold">Buy</a>
-          <a href="/rent" className="text-gray-300 px-6 py-2 rounded-lg">Rent</a>
+          <Link href="/buy" className="bg-orange-500 text-black px-6 py-2 rounded-lg font-bold">Buy</Link>
+          <Link href="/rent" className="text-gray-300 px-6 py-2 rounded-lg">Rent</Link>
           <input className="flex-1 bg-transparent text-white outline-none px-4" placeholder="Search area, suburb or city..."/>
-          <a href="/buy" className="bg-orange-500 text-black px-6 py-2 rounded-lg font-bold">Search</a>
+          <Link href="/buy" className="bg-orange-500 text-black px-6 py-2 rounded-lg font-bold">Search</Link>
         </div>
       </section>
 
@@ -52,11 +55,11 @@ export default function Home() {
       <section className="text-center py-16 px-6 bg-gray-800">
         <h2 className="text-3xl font-bold mb-4">Ready to list your property?</h2>
         <p className="text-gray-400 mb-6">Use AI to write your advert, get a valuation and reach thousands of buyers</p>
-        <a href="/list" className="bg-orange-500 text-black px-8 py-3 rounded-lg font-bold hover:bg-orange-400">List My Property</a>
+        <Link href="/list" className="bg-orange-500 text-black px-8 py-3 rounded-lg font-bold hover:bg-orange-400">List My Property</Link>
       </section>
 
       <footer className="text-center py-8 text-gray-500 text-sm">
-        <p>© 2025 PropertyAIgency · <a href="/auth/login" className="text-orange-500 hover:underline">Sign In</a> · <a href="/auth/register" className="text-orange-500 hover:underline">Register</a></p>
+        <p>© 2025 PropertyAIgency · <Link href="/auth/login" className="text-orange-500 hover:underline">Sign In</Link> · <Link href="/auth/register" className="text-orange-500 hover:underline">Register</Link></p>
       </footer>
     </main>
   )
