@@ -48,7 +48,7 @@ export default function ListProperty() {
 
   const getActiveFeatures = () =>
     Object.entries(form)
-      .filter(([key, val]) => (key.startsWith('has_') || key === 'pet_friendly' || key === 'is_golf_estate') && val === true)
+      .filter(([key, val]) => (key.startsWith('has_') || key === 'pet_friendly' || key === 'is_golf_estate') && val === true || val === 'true')
       .map(([key]) => key.replace('has_', '').replace(/_/g, ' '))
 
   const generateWithAI = async () => {
