@@ -1,27 +1,29 @@
 export default function Home() {
   return (
     <main className="min-h-screen bg-gray-900 text-white">
-      <nav className="bg-gray-950 border-b border-gray-800 px-6 py-4 flex justify-between items-center">
+      <nav className="bg-gray-800 border-b border-gray-800 px-6 py-4 flex justify-between items-center">
         <div className="text-2xl font-bold">
           Property<span className="text-orange-500">AI</span>gency
         </div>
         <div className="flex gap-6 text-gray-300 text-sm">
-          <a href="#" className="hover:text-orange-500">Buy</a>
-          <a href="#" className="hover:text-orange-500">Rent</a>
-          <a href="#" className="hover:text-orange-500">List Property</a>
-          <a href="#" className="bg-orange-500 text-black px-4 py-2 rounded-lg font-semibold hover:bg-orange-400">Sign In</a>
+          <a href="/buy" className="hover:text-orange-500">Buy</a>
+          <a href="/rent" className="hover:text-orange-500">Rent</a>
+          <a href="/list" className="hover:text-orange-500">List Property</a>
         </div>
+        <a href="/auth/login" className="bg-orange-500 text-black px-4 py-2 rounded-lg font-semibold hover:bg-orange-400">Sign In</a>
       </nav>
+
       <section className="text-center py-24 px-6 bg-gradient-to-b from-gray-950 to-gray-900">
         <h1 className="text-6xl font-bold mb-4">Find Your Perfect <span className="text-orange-500">Property</span></h1>
         <p className="text-gray-400 text-xl mb-8">South Africa's smartest AI-powered property platform</p>
         <div className="bg-gray-800 rounded-2xl p-4 max-w-2xl mx-auto flex gap-2">
-          <button className="bg-orange-500 text-black px-6 py-2 rounded-lg font-bold">Buy</button>
-          <button className="text-gray-400 px-6 py-2 rounded-lg">Rent</button>
+          <a href="/buy" className="bg-orange-500 text-black px-6 py-2 rounded-lg font-bold">Buy</a>
+          <a href="/rent" className="text-gray-300 px-6 py-2 rounded-lg">Rent</a>
           <input className="flex-1 bg-transparent text-white outline-none px-4" placeholder="Search area, suburb or city..."/>
-          <button className="bg-orange-500 text-black px-6 py-2 rounded-lg font-bold">Search</button>
+          <a href="/buy" className="bg-orange-500 text-black px-6 py-2 rounded-lg font-bold">Search</a>
         </div>
       </section>
+
       <section className="px-6 py-16 max-w-6xl mx-auto">
         <h2 className="text-3xl font-bold mb-8">Featured Properties</h2>
         <div className="grid grid-cols-3 gap-6">
@@ -33,23 +35,29 @@ export default function Home() {
             {title:"Garden Cottage",location:"Stellenbosch, WC",price:"R 12,000/mo",beds:1,baths:1,type:"To Rent"},
             {title:"Estate Home",location:"Fourways, Johannesburg",price:"R 3,450,000",beds:4,baths:3,type:"For Sale"},
           ].map((p,i)=>(
-            <div key={i} className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 hover:border-orange-500 transition-all cursor-pointer">
-              <div className="h-48 bg-gray-700 flex items-center justify-center text-4xl">🏡</div>
-            <div className="p-4">
-                <span className="text-xs bg-orange-500 text-black px-2 py-1 rounded font-bold">{p.type}</span>
+            <div key={i} className="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 hover:border-orange-500 transition-colors">
+              <div className="h-48 bg-gray-700 flex items-center justify-center text-4xl">🏠</div>
+              <div className="p-4">
+                <span className={`text-xs px-2 py-1 rounded font-bold ${p.type === 'To Rent' ? 'bg-blue-500' : 'bg-orange-500'} text-black`}>{p.type}</span>
                 <h3 className="text-lg font-bold mt-2">{p.title}</h3>
                 <p className="text-gray-400 text-sm">📍 {p.location}</p>
-                <p className="text-orange-500 text-xl font-bold mt-2">{p.price}</p>
-                <div className="flex gap-4 text-gray-400 text-sm mt-2 border-t border-gray-700 pt-2">
-                  <span>🛏 {p.beds} beds</span>
-                  <span>🚿 {p.baths} baths</span>
-                  <span className="ml-auto text-greenext-xs font-bold">AI Verified ✓</span>
-                </div>
+                <p className="text-orange-500 font-bold text-xl mt-2">{p.price}</p>
+                <p className="text-gray-400 text-sm mt-1">🛏 {p.beds} beds · 🚿 {p.baths} baths · AI Verified ✓</p>
               </div>
             </div>
           ))}
         </div>
       </section>
+
+      <section className="text-center py-16 px-6 bg-gray-800">
+        <h2 className="text-3xl font-bold mb-4">Ready to list your property?</h2>
+        <p className="text-gray-400 mb-6">Use AI to write your advert, get a valuation and reach thousands of buyers</p>
+        <a href="/list" className="bg-orange-500 text-black px-8 py-3 rounded-lg font-bold hover:bg-orange-400">List My Property</a>
+      </section>
+
+      <footer className="text-center py-8 text-gray-500 text-sm">
+        <p>© 2025 PropertyAIgency · <a href="/auth/login" className="text-orange-500 hover:underline">Sign In</a> · <a href="/auth/register" className="text-orange-500 hover:underline">Register</a></p>
+      </footer>
     </main>
   )
 }
