@@ -22,13 +22,13 @@ export default function PhotoUpload({ propertyId, onUpload }: { propertyId: stri
       const ext = file.name.split('.').pop()
       const path = `${propertyId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
       const { error: uploadError } = await supabase.storage
-        .from('property-images')
+        .from('Property Images')
         .upload(path, file)
 
       if (uploadError) {
         setError(uploadError.message)
       } else {
-        const { data } = supabase.storage.from('property-images').getPublicUrl(path)
+        const { data } = supabase.storage.from('Property Images').getPublicUrl(path)
         urls.push(data.publicUrl)
       }
     }

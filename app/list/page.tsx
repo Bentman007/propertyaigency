@@ -1,5 +1,5 @@
-import PhotoUpload from '@/components/PhotoUpload'
 'use client'
+import PhotoUpload from '@/components/PhotoUpload'
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 
