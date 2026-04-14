@@ -1,3 +1,4 @@
+import PropertyChat from '@/components/PropertyChat'
 import { supabase } from '@/lib/supabase'
 
 function formatPrice(price: number, type: string) {
@@ -142,9 +143,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
               <button className="w-full bg-gray-700 text-white font-bold py-3 rounded-lg hover:bg-gray-600 transition-colors mb-3">
                 📅 Book Viewing
               </button>
-              <button className="w-full border border-gray-600 text-gray-300 font-bold py-3 rounded-lg hover:border-orange-500 hover:text-orange-500 transition-colors">
-                🤖 Ask AI About This Property
-              </button>
+              <PropertyChat property={p} />
               <div className="mt-4 pt-4 border-t border-gray-700">
                 <div className="flex items-center gap-2 text-xs text-gray-500">
                   <span className="w-2 h-2 bg-green-400 rounded-full"></span>
