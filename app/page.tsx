@@ -61,7 +61,7 @@ export default async function Home() {
         {properties && properties.length > 0 ? (
           <div className="grid grid-cols-3 gap-6">
             {properties.map((p) => (
-              <div key={p.id} className="bg-gray-800 rounded-xl border border-gray-700 hover:border-orange-500 transition-all cursor-pointer group">
+              <a key={p.id} href={`/property/${p.id}`} className="bg-gray-800 rounded-xl border border-gray-700 hover:border-orange-500 transition-all cursor-pointer group block no-underline">
                 <div className="h-48 bg-gray-700 rounded-t-xl flex items-center justify-center text-5xl relative overflow-hidden">
                   🏡
                   <div className="absolute top-3 left-3">
@@ -96,7 +96,7 @@ export default async function Home() {
                     {p.has_fibre && <span className="text-xs bg-gray-700 px-2 py-1 rounded text-gray-300">Fibre</span>}
                   </div>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         ) : (
