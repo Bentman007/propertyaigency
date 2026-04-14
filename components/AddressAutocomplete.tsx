@@ -1,4 +1,5 @@
 'use client'
+
 import { useEffect, useRef, useState } from 'react'
 
 interface AddressResult {
@@ -17,6 +18,14 @@ export default function AddressAutocomplete({ onSelect }: { onSelect: (result: A
   useEffect(() => {
     if (typeof window === 'undefined') return
     if ((window as any).google) { setLoaded(true); return }
+
+    // Only add script if not already present
+    const existing = document.querySelector('script[src*="maps.googleapis.com"]')
+    if (existing) {
+      existing.addEventListener('load', () => setLoaded(true))
+      return
+    }
+
     const script = document.createElement('script')
     script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_KEY}&libraries=places`
     script.async = true
@@ -30,6 +39,7 @@ export default function AddressAutocomplete({ onSelect }: { onSelect: (result: A
       componentRestrictions: { country: 'za' },
       fields: ['address_components', 'formatted_address', 'geometry']
     })
+
     autocomplete.addListener('place_changed', () => {
       const place = autocomplete.getPlace()
       if (!place.address_components) return
@@ -48,7 +58,7 @@ export default function AddressAutocomplete({ onSelect }: { onSelect: (result: A
         city,
         province,
         lat: place.geometry?.location?.lat(),
-        lng: place.geometry?.location?.lng()
+        lng: place.geometry?.location?.lng(),
       })
     })
   }, [loaded, onSelect])

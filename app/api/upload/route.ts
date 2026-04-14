@@ -2,11 +2,17 @@ import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!url || !key) {
+    return NextResponse.json({ 
+      error: `Missing env vars - URL: ${url ? 'SET' : 'MISSING'}, KEY: ${key ? 'SET' : 'MISSING'}` 
+    }, { status: 500 })
+  }
+
   try {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_KEY!
-    )
+    const supabase = createClient(url, key)
 
     const formData = await request.formData()
     const file = formData.get('file') as File
