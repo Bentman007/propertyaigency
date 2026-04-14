@@ -44,7 +44,7 @@ export default function LoginPage() {
               className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
               placeholder="••••••••" required />
             <div className="text-right mt-1">
-              <a href="/forgot-password" className="text-orange-500 hover:underline text-sm">
+              <a href="/auth/forgot-password" className="text-orange-500 hover:underline text-sm">
                 Forgot password?
               </a>
             </div>
