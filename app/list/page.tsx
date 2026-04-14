@@ -19,6 +19,67 @@ const defaultFeatures = Object.fromEntries(allKeys.map(k => [k, false]))
 export default function ListProperty() {
   const [loading, setLoading] = useState(false)
   const [photos, setPhotos] = useState<string[]>([])
+  const [aiLoading, setAiLoading] = useState(false)
+  const [valuation, setValuation] = useState<any>(null)
+  const [valuationLoading, setValuationLoading] = useState(false)
+
+  const getValuation = async () => {
+    if (!form.suburb || !form.city || !form.bedrooms) return
+    setValuationLoading(true)
+    try {
+      const res = await fetch('/api/valuation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bedrooms: form.bedrooms,
+          bathrooms: form.bathrooms,
+          garages: form.garages,
+          size_sqm: form.size_sqm,
+          property_type: form.property_type,
+          suburb: form.suburb,
+          city: form.city,
+          province: form.province
+        })
+      })
+      const data = await res.json()
+      setValuation(data)
+    } catch (e) {
+      console.error(e)
+    }
+    setValuationLoading(false)
+  }
+
+  const generateWithAI = async () => {
+    setAiLoading(true)
+    const activeFeatures = Object.entries(form)
+      .filter(([key, val]) => key.startsWith('has_') || key === 'pet_friendly' || key === 'is_golf_estate')
+      .filter(([, val]) => val === true)
+      .map(([key]) => key.replace('has_', '').replace('_', ' '))
+    try {
+      const res = await fetch('/api/generate-listing', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bedrooms: form.bedrooms,
+          bathrooms: form.bathrooms,
+          garages: form.garages,
+          size_sqm: form.size_sqm,
+          property_type: form.property_type,
+          price_type: form.price_type,
+          suburb: form.suburb,
+          city: form.city,
+          province: form.province,
+          features: activeFeatures
+        })
+      })
+      const data = await res.json()
+      if (data.title) update('title', data.title)
+      if (data.description) update('description', data.description)
+    } catch (e) {
+      console.error(e)
+    }
+    setAiLoading(false)
+  }
   const [message, setMessage] = useState('')
   const [form, setForm] = useState({
     title: '', description: '', price: '', price_type: 'sale',
@@ -62,9 +123,16 @@ export default function ListProperty() {
           <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
             <h2 className="text-lg font-bold mb-4 text-orange-500">Basic Details</h2>
             <div className="space-y-4">
+              <div className="flex justify-end mb-4">
+                <button type="button" onClick={generateWithAI} disabled={aiLoading || !form.suburb || !form.city}
+                  className="flex items-center gap-2 bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white font-bold px-4 py-2 rounded-lg text-sm transition-colors">
+                  {aiLoading ? '✨ Writing...' : '✨ Generate Title & Description with AI'}
+                </button>
+              </div>
+              {!form.suburb && <p className="text-yellow-500 text-xs mb-3">💡 Fill in your location first, then click Generate with AI</p>}
               <div>
                 <label className="text-gray-300 text-sm mb-1 block">Property Title</label>
-                <input value={form.title} onChange={e => update('title', e.target.value)} className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500" placeholder="e.g. Modern 4-bedroom home in Sandton" required />
+                <input value={form.title} onChange={e => update('title', e.target.value)} className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500" placeholder="Click Generate with AI above..." />
               </div>
               <div>
                 <label className="text-gray-300 text-sm mb-1 block">Description</label>
@@ -92,8 +160,40 @@ export default function ListProperty() {
               </div>
               <div>
                 <label className="text-gray-300 text-sm mb-1 block">Price (R)</label>
-                <input value={form.price} onChange={e => update('price', e.target.value)} type="number" className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500" placeholder="2500000" required />
+                <div className="flex gap-2">
+                  <input value={form.price} onChange={e => update('price', e.target.value)} type="number" className="flex-1 bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500" placeholder="2500000" required />
+                  <button type="button" onClick={getValuation} disabled={valuationLoading || !form.suburb || !form.bedrooms}
+                    className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-bold px-4 py-3 rounded-lg text-sm transition-colors whitespace-nowrap">
+                    {valuationLoading ? '...' : '🤖 Get AI Value'}
+                  </button>
+                </div>
               </div>
+
+              {valuation && (
+                <div className="bg-gray-900 border border-blue-500 rounded-xl p-4 space-y-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-blue-400 font-bold text-sm">🤖 AI Valuation Estimate</span>
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${valuation.trend === 'rising' ? 'bg-green-900 text-green-400' : valuation.trend === 'declining' ? 'bg-red-900 text-red-400' : 'bg-yellow-900 text-yellow-400'}`}>
+                      {valuation.trend === 'rising' ? '📈 Rising market' : valuation.trend === 'declining' ? '📉 Declining market' : '➡️ Stable market'}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-gray-800 rounded-lg p-3">
+                      <div className="text-gray-400 text-xs mb-1">Estimated Sale Value</div>
+                      <div className="text-white font-bold">R {valuation.sale_min?.toLocaleString()} – R {valuation.sale_max?.toLocaleString()}</div>
+                    </div>
+                    <div className="bg-gray-800 rounded-lg p-3">
+                      <div className="text-gray-400 text-xs mb-1">Estimated Monthly Rent</div>
+                      <div className="text-white font-bold">R {valuation.rent_min?.toLocaleString()} – R {valuation.rent_max?.toLocaleString()}</div>
+                    </div>
+                  </div>
+                  <p className="text-gray-400 text-xs">{valuation.reason}</p>
+                  <button type="button" onClick={() => update('price', valuation.sale_min)}
+                    className="text-xs text-blue-400 hover:text-blue-300 underline">
+                    Use minimum estimate as asking price
+                  </button>
+                </div>
+              )}
             </div>
           </div>
           <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
