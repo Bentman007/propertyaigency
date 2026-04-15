@@ -1,4 +1,5 @@
 import PropertyChat from '@/components/PropertyChat'
+import ViewTracker from '@/components/ViewTracker'
 import { supabase } from '@/lib/supabase'
 
 function formatPrice(price: number, type: string) {
@@ -41,6 +42,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
 
   return (
     <main className="min-h-screen bg-gray-900 text-white">
+      <ViewTracker propertyId={p.id} />
       <nav className="bg-gray-950 border-b border-gray-800 px-6 py-4 flex justify-between items-center">
         <a href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</a>
         <a href="/" className="text-gray-400 hover:text-white text-sm">← Back to listings</a>
