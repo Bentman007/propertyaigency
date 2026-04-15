@@ -25,10 +25,15 @@ export default function PushNotifications() {
   }
 
   const subscribe = async () => {
+    console.log('Subscribe clicked')
+    console.log('ServiceWorker support:', 'serviceWorker' in navigator)
+    console.log('PushManager support:', 'PushManager' in window)
     if (!user) return
     setLoading(true)
     try {
+      console.log('Waiting for SW ready...')
       const reg = await navigator.serviceWorker.ready
+      console.log('SW ready:', reg)
       const sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!)
