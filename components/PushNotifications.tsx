@@ -56,7 +56,17 @@ export default function PushNotifications() {
     setLoading(false)
   }
 
-  if (!supported || !user) return null
+  if (!user) return null
+  
+  if (!supported) return (
+    <div className="flex items-center gap-3 px-4 py-3 rounded-xl border bg-gray-700 border-gray-600">
+      <span className="text-xl">🔕</span>
+      <div className="flex-1">
+        <p className="text-sm font-semibold">Notifications not supported</p>
+        <p className="text-xs text-gray-400">Try opening this page in Chrome on your phone</p>
+      </div>
+    </div>
+  )
 
   return (
     <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border ${
