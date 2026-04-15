@@ -45,7 +45,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
       <ViewTracker propertyId={p.id} />
       <nav className="bg-gray-950 border-b border-gray-800 px-6 py-4 flex justify-between items-center">
         <a href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</a>
-        <a href="/" className="text-gray-400 hover:text-white text-sm">← Back to listings</a>
+        <a href="/dashboard" className="text-gray-400 hover:text-white text-sm">← Back to Dashboard</a>
       </nav>
 
       <div className="max-w-5xl mx-auto px-6 py-10">
