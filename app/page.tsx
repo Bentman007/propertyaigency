@@ -17,6 +17,7 @@ export default function Home() {
           Property<span className="text-orange-500">AI</span>gency
         </div>
         <div className="flex gap-6 text-gray-300 text-sm">
+          <Link href="/search" className="hover:text-orange-500">🔍 AI Search</Link>
           <Link href="/buy" className="hover:text-orange-500">Buy</Link>
           <Link href="/rent" className="hover:text-orange-500">Rent</Link>
           <Link href="/list" className="hover:text-orange-500">List Property</Link>
