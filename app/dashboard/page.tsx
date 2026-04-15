@@ -5,6 +5,8 @@ import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import AvailabilityManager from '@/components/AvailabilityManager'
 import ViewingBookings from '@/components/ViewingBookings'
+import AvailabilityManager from '@/components/AvailabilityManager'
+import ViewingBookings from '@/components/ViewingBookings'
 
 interface PropertyWithStats {
   id: string
@@ -300,6 +302,13 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
+
+      {user && (
+        <div className="max-w-6xl mx-auto px-6 pb-8 grid grid-cols-2 gap-6 mt-6">
+          <AvailabilityManager agentId={user.id} />
+          <ViewingBookings agentId={user.id} />
+        </div>
+      )}
     </main>
   )
 }
