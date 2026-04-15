@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
+import AvailabilityManager from '@/components/AvailabilityManager'
+import ViewingBookings from '@/components/ViewingBookings'
 
 interface PropertyWithStats {
   id: string

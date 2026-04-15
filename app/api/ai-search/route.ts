@@ -12,27 +12,33 @@ export async function POST(request: NextRequest) {
   try {
     const { messages, user_id } = await request.json()
 
-    // Get all properties from database
     const { data: properties } = await supabase
       .from('properties')
       .select('*')
       .order('created_at', { ascending: false })
 
-    // Get rejected properties for this user
     let rejectedIds: string[] = []
+    let existingProfile: any = {}
     if (user_id) {
       const { data: rejected } = await supabase
         .from('rejected_properties')
         .select('property_id')
         .eq('user_id', user_id)
       rejectedIds = rejected?.map(r => r.property_id) || []
+
+      const { data: profile } = await supabase
+        .from('searcher_profiles')
+        .select('*')
+        .eq('user_id', user_id)
+        .single()
+      existingProfile = profile || {}
     }
 
     const availableProperties = properties?.filter(p => !rejectedIds.includes(p.id)) || []
 
-    const systemPrompt = `You are PropertyAI Concierge, a friendly and expert South African property search assistant. Your job is to help people find their perfect property through natural conversation.
+    const systemPrompt = `You are PropertyAI Concierge, a warm and expert South African property search assistant. 
 
-You have access to these available properties in the database:
+AVAILABLE PROPERTIES:
 ${JSON.stringify(availableProperties.map(p => ({
   id: p.id,
   title: p.title,
@@ -44,7 +50,6 @@ ${JSON.stringify(availableProperties.map(p => ({
   price_type: p.price_type,
   bedrooms: p.bedrooms,
   bathrooms: p.bathrooms,
-  garages: p.garages,
   size_sqm: p.size_sqm,
   property_type: p.property_type,
   has_pool: p.has_pool,
@@ -61,27 +66,37 @@ ${JSON.stringify(availableProperties.map(p => ({
   photos: p.photos?.slice(0, 1)
 })), null, 2)}
 
-INSTRUCTIONS:
-1. Have a warm, friendly conversation to understand what the person wants
-2. Ask smart follow-up questions ONE AT A TIME - never bombard them with multiple questions
-3. Good questions to ask: budget range, flexibility on budget, location flexibility, must-have features, nice-to-have features, timeline for moving, reason for moving (helps understand priorities)
-4. Once you have enough information (after 2-4 exchanges), search the properties and present matches
-5. When presenting properties, be enthusiastic but honest
-6. If someone seems unsure, help them clarify their priorities
-7. If no properties match perfectly, present the closest matches and explain what's different
-8. Always respond in a conversational, warm tone - like a knowledgeable friend helping them find a home
+EXISTING PROFILE FOR THIS USER:
+${JSON.stringify(existingProfile)}
 
-PRESENTING PROPERTIES:
-When you have enough info to search, respond with a JSON block at the END of your message in this exact format:
+INSTRUCTIONS:
+1. Be warm and conversational - like a knowledgeable friend
+2. Ask ONE question at a time - never bombard them
+3. Naturally weave in qualifying questions through conversation
+4. Good topics to naturally explore: timeline to move, current situation, family needs, budget flexibility
+5. When you learn something important, include a profile update at the end
+6. Once you have enough info (2-4 exchanges), search and present matches
+7. Maximum 3 properties per response
+
+PRESENTING PROPERTIES - include at end of message:
 <properties>
-[{"id": "property-id-here", "match_score": 95, "match_reason": "Matches all your requirements - 3 beds, pool, solar, secure estate within budget"}]
+[{"id": "id", "match_score": 95, "match_reason": "Matches all requirements"}]
 </properties>
 
-Only include properties that genuinely match. Maximum 3 properties per response.
-Match score: 95-100 = perfect match, 80-94 = great match, 60-79 = good match with some compromises.
+PROFILE UPDATES - include at end of message when you learn something:
+<profile>
+{"budget_min": 10000, "budget_max": 15000, "move_timeline": "end of May", "has_kids": true, "locations": ["Benoni", "Boksburg"]}
+</profile>
 
-If you need more information before searching, do NOT include the properties block yet.
-South African context: prices in Rands, areas like Johannesburg, Cape Town, Durban, Pretoria, Benoni, Sandton etc.`
+LEAD SCORING - include at end of every message:
+<lead>
+{"score": 65, "temperature": "warm", "reason": "Has specific timeline and budget"}
+</lead>
+
+Lead score guide:
+- 80-100 = Hot (specific timeline, knows budget, ready to move)
+- 50-79 = Warm (actively looking, has general requirements)  
+- 0-49 = Cold (just browsing, no urgency)`
 
     const response = await anthropic.messages.create({
       model: 'claude-opus-4-6',
@@ -92,11 +107,13 @@ South African context: prices in Rands, areas like Johannesburg, Cape Town, Durb
 
     const content = response.content[0].type === 'text' ? response.content[0].text : ''
     
-    // Extract property matches if present
-    const propertiesMatch = content.match(/<properties>([\s\S]*?)<\/properties>/)
     let matchedProperties = []
+    let profileUpdate = {}
+    let leadData = { score: 0, temperature: 'cold', reason: '' }
     let cleanContent = content
 
+    // Extract properties
+    const propertiesMatch = content.match(/<properties>([\s\S]*?)<\/properties>/)
     if (propertiesMatch) {
       try {
         const propertyIds = JSON.parse(propertiesMatch[1])
@@ -104,13 +121,40 @@ South African context: prices in Rands, areas like Johannesburg, Cape Town, Durb
           const prop = availableProperties.find(p => p.id === match.id)
           return prop ? { ...prop, match_score: match.match_score, match_reason: match.match_reason } : null
         }).filter(Boolean)
-        cleanContent = content.replace(/<properties>[\s\S]*?<\/properties>/, '').trim()
       } catch (e) {}
+      cleanContent = cleanContent.replace(/<properties>[\s\S]*?<\/properties>/, '').trim()
+    }
+
+    // Extract profile updates
+    const profileMatch = content.match(/<profile>([\s\S]*?)<\/profile>/)
+    if (profileMatch) {
+      try {
+        profileUpdate = JSON.parse(profileMatch[1])
+        if (user_id && Object.keys(profileUpdate).length > 0) {
+          await supabase.from('searcher_profiles').upsert({
+            user_id,
+            ...existingProfile,
+            ...profileUpdate,
+            updated_at: new Date().toISOString()
+          })
+        }
+      } catch (e) {}
+      cleanContent = cleanContent.replace(/<profile>[\s\S]*?<\/profile>/, '').trim()
+    }
+
+    // Extract lead score
+    const leadMatch = content.match(/<lead>([\s\S]*?)<\/lead>/)
+    if (leadMatch) {
+      try {
+        leadData = JSON.parse(leadMatch[1])
+      } catch (e) {}
+      cleanContent = cleanContent.replace(/<lead>[\s\S]*?<\/lead>/, '').trim()
     }
 
     return NextResponse.json({ 
       message: cleanContent,
-      properties: matchedProperties
+      properties: matchedProperties,
+      lead: leadData
     })
 
   } catch (error: any) {
