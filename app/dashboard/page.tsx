@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import AvailabilityManager from '@/components/AvailabilityManager'
+import ConversationsList from '@/components/ConversationsList'
 import ViewingBookings from '@/components/ViewingBookings'
 
 interface PropertyWithStats {
@@ -304,6 +305,7 @@ export default function DashboardPage() {
       {user && (
         <div className="max-w-6xl mx-auto px-6 pb-8 grid grid-cols-2 gap-6 mt-6">
           <AvailabilityManager agentId={user.id} />
+          <ConversationsList agentId={user.id} />
           <ViewingBookings agentId={user.id} />
         </div>
       )}
