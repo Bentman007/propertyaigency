@@ -1,7 +1,15 @@
 'use client'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabase'
 
 export default function Home() {
+  const [user, setUser] = useState<any>(null)
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUser(data.user))
+  }, [])
+
   return (
     <main className="min-h-screen bg-gray-900 text-white">
       <nav className="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center">
@@ -12,8 +20,22 @@ export default function Home() {
           <Link href="/buy" className="hover:text-orange-500">Buy</Link>
           <Link href="/rent" className="hover:text-orange-500">Rent</Link>
           <Link href="/list" className="hover:text-orange-500">List Property</Link>
+          {user && <Link href="/dashboard" className="hover:text-orange-500">My Dashboard</Link>}
         </div>
-        <Link href="/auth/login" className="bg-orange-500 text-black px-4 py-2 rounded-lg font-semibold hover:bg-orange-400">Sign In</Link>
+        {user ? (
+          <div className="flex gap-3 items-center">
+            <Link href="/dashboard" className="bg-orange-500 text-black px-4 py-2 rounded-lg font-semibold hover:bg-orange-400 text-sm">
+              My Dashboard
+            </Link>
+            <button onClick={() => supabase.auth.signOut().then(() => setUser(null))} className="text-gray-400 hover:text-white text-sm">
+              Sign Out
+            </button>
+          </div>
+        ) : (
+          <Link href="/auth/login" className="bg-orange-500 text-black px-4 py-2 rounded-lg font-semibold hover:bg-orange-400">
+            Sign In
+          </Link>
+        )}
       </nav>
 
       <section className="text-center py-24 px-6 bg-gradient-to-b from-gray-950 to-gray-900">
