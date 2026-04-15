@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import AvailabilityManager from '@/components/AvailabilityManager'
 import ConversationsList from '@/components/ConversationsList'
+import PushNotifications from '@/components/PushNotifications'
 import ViewingBookings from '@/components/ViewingBookings'
 
 interface PropertyWithStats {
@@ -171,6 +172,9 @@ export default function DashboardPage() {
       </nav>
 
       <div className="max-w-6xl mx-auto px-6 py-8">
+        <div className="mb-6">
+          <PushNotifications />
+        </div>
         <div className="mb-8">
           <h1 className="text-3xl font-bold">My Dashboard</h1>
           <p className="text-gray-400 mt-1">Track performance and get AI insights on your listings</p>

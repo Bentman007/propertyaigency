@@ -10,28 +10,30 @@ export async function POST(request: NextRequest) {
   try {
     const { property_id, agent_id, searcher_id, slot, session_id } = await request.json()
 
-    // Get searcher profile for agent brief
     const { data: profile } = await supabase
       .from('searcher_profiles')
       .select('*')
       .eq('user_id', searcher_id)
       .single()
 
-    // Get conversation lead score
     const { data: conversation } = await supabase
       .from('property_conversations')
       .select('lead_score, lead_temperature')
       .eq('session_id', session_id)
       .single()
 
-    // Create booking
+    const { data: property } = await supabase
+      .from('properties')
+      .select('title, suburb, city')
+      .eq('id', property_id)
+      .single()
+
     const { error } = await supabase
       .from('viewing_bookings')
       .insert({
         property_id,
         agent_id,
         searcher_id,
-        availability_id: slot.id,
         date: slot.date,
         start_time: slot.start_time,
         status: 'confirmed',
@@ -42,11 +44,18 @@ export async function POST(request: NextRequest) {
 
     if (error) throw error
 
-    // Mark slot as booked
-    await supabase
-      .from('agent_availability')
-      .update({ is_booked: true })
-      .eq('id', slot.id)
+    // Send push notification to agent
+    const notifyUrl = `${request.nextUrl.origin}/api/push`
+    await fetch(notifyUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_id: agent_id,
+        title: '📅 New Viewing Booked!',
+        body: `${property?.title} — ${new Date(slot.date).toLocaleDateString('en-ZA', { weekday: 'long', month: 'long', day: 'numeric' })} at ${slot.start_time}`,
+        url: '/dashboard'
+      })
+    })
 
     return NextResponse.json({ success: true })
   } catch (error: any) {

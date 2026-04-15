@@ -75,6 +75,21 @@ Just write the suggested reply, nothing else.`
 
     const suggestedReply = aiResponse.content[0].type === 'text' ? aiResponse.content[0].text : ''
 
+    // Send push notification to recipient
+    const recipientId = sender_type === 'agent' ? buyer_id : agent_id
+    const senderLabel = sender_type === 'agent' ? 'Agent' : 'Buyer'
+    
+    await fetch(`${request.nextUrl.origin}/api/push`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_id: recipientId,
+        title: `💬 New message from ${senderLabel}`,
+        body: content.substring(0, 100),
+        url: sender_type === 'agent' ? '/saved' : '/dashboard'
+      })
+    })
+
     return NextResponse.json({ 
       success: true, 
       conversation_id: conversation.id,
