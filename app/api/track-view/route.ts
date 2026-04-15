@@ -1,14 +1,15 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
 export async function POST(request: NextRequest) {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+
   try {
-    const { property_id, session_id, time_spent, user_id } = await request.json()
+    const body = await request.text()
+    const { property_id, session_id, time_spent, user_id } = JSON.parse(body)
 
     const { data: existing } = await supabase
       .from('property_views')
