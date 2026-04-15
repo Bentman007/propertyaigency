@@ -1,5 +1,6 @@
 import PropertyChat from '@/components/PropertyChat'
 import PhotoGallery from '@/components/PhotoGallery'
+import BookViewing from '@/components/BookViewing'
 import ViewTracker from '@/components/ViewTracker'
 import PropertyMessaging from '@/components/PropertyMessaging'
 import { supabase } from '@/lib/supabase'
