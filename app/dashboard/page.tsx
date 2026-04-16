@@ -30,6 +30,7 @@ export default function DashboardPage() {
   const [properties, setProperties] = useState<PropertyWithStats[]>([])
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
+  const [profile, setProfile] = useState<any>(null)
   const [aiInsights, setAiInsights] = useState<{[key: string]: string}>({})
   const [loadingInsight, setLoadingInsight] = useState<string | null>(null)
 
@@ -42,6 +43,13 @@ export default function DashboardPage() {
       }
       setUser(data.user)
       fetchProperties(data.user.id)
+      // Fetch profile
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', data.user.id)
+        .single()
+      setProfile(profileData)
     }
     getUser()
   }, [])
@@ -162,6 +170,9 @@ export default function DashboardPage() {
           <Link href="/list" className="bg-orange-500 text-black px-4 py-2 rounded-lg font-semibold hover:bg-orange-400 text-sm">
             + New Listing
           </Link>
+          <Link href="/profile" className="text-gray-400 hover:text-white text-sm">
+            👤 Profile
+          </Link>
           <button 
             onClick={() => supabase.auth.signOut().then(() => window.location.href = '/')}
             className="text-gray-400 hover:text-white text-sm"
@@ -179,11 +190,15 @@ export default function DashboardPage() {
           <div>
             <p className="text-gray-400 text-sm mb-1">Welcome back 👋</p>
             <h1 className="text-3xl font-bold">
-              {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'My Dashboard'}
+              {profile?.full_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'My Dashboard'}
             </h1>
-            <p className="text-gray-400 mt-1 text-sm">
-              {user?.email} · <span className="text-orange-500">Agent Dashboard</span>
-            </p>
+            <div className="flex items-center gap-2 mt-1">
+              {profile?.agency_name && (
+                <span className="text-orange-500 text-sm font-semibold">{profile.agency_name}</span>
+              )}
+              {profile?.agency_name && <span className="text-gray-600">·</span>}
+              <span className="text-gray-400 text-sm">{user?.email}</span>
+            </div>
           </div>
           <div className="text-right">
             <p className="text-gray-500 text-xs">Last updated</p>

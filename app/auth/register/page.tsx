@@ -6,18 +6,29 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
+  const [agencyName, setAgencyName] = useState('')
+  const [accountType, setAccountType] = useState<'agent' | 'buyer'>('buyer')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email, password,
-      options: { data: { full_name: name } }
+      options: { data: { full_name: name, agency_name: agencyName, account_type: accountType } }
     })
-    if (error) setMessage(error.message)
-    else setMessage('Success! Check your email to confirm your account.')
+    if (error) {
+      setMessage(error.message)
+    } else if (data.user) {
+      // Create profile
+      await supabase.from('profiles').upsert({
+        id: data.user.id,
+        full_name: name,
+        agency_name: agencyName || null
+      })
+      setMessage('Success! Check your email to confirm your account.')
+    }
     setLoading(false)
   }
 
@@ -30,6 +41,23 @@ export default function RegisterPage() {
           </a>
           <p className="text-gray-400 mt-2">Create your free account</p>
         </div>
+
+        {/* Account type selector */}
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <button type="button" onClick={() => setAccountType('buyer')}
+            className={`py-3 rounded-xl font-semibold text-sm transition ${
+              accountType === 'buyer' ? 'bg-orange-500 text-black' : 'bg-gray-700 text-gray-300'
+            }`}>
+            🔍 I'm Looking
+          </button>
+          <button type="button" onClick={() => setAccountType('agent')}
+            className={`py-3 rounded-xl font-semibold text-sm transition ${
+              accountType === 'agent' ? 'bg-orange-500 text-black' : 'bg-gray-700 text-gray-300'
+            }`}>
+            🏠 I'm an Agent
+          </button>
+        </div>
+
         <form onSubmit={handleRegister} className="space-y-4">
           <div>
             <label className="text-gray-300 text-sm mb-1 block">Full Name</label>
@@ -37,6 +65,16 @@ export default function RegisterPage() {
               className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
               placeholder="Andrew Sharp" required />
           </div>
+
+          {accountType === 'agent' && (
+            <div>
+              <label className="text-gray-300 text-sm mb-1 block">Agency Name <span className="text-gray-500">(optional)</span></label>
+              <input type="text" value={agencyName} onChange={e => setAgencyName(e.target.value)}
+                className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
+                placeholder="Pam Golding, RE/MAX, Private etc." />
+            </div>
+          )}
+
           <div>
             <label className="text-gray-300 text-sm mb-1 block">Email</label>
             <input type="email" value={email} onChange={e => setEmail(e.target.value)}
