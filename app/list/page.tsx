@@ -21,6 +21,10 @@ export default function ListProperty() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [photos, setPhotos] = useState<string[]>([])
+  const [availabilitySlots, setAvailabilitySlots] = useState<{date: string, time: string}[]>([])
+  const [newSlotDate, setNewSlotDate] = useState('')
+  const [newSlotTime, setNewSlotTime] = useState('morning')
+  const [showAvailabilityNudge, setShowAvailabilityNudge] = useState(true)
   const [aiLoading, setAiLoading] = useState(false)
   const [valuationLoading, setValuationLoading] = useState(false)
   const [valuation, setValuation] = useState<any>(null)
@@ -120,7 +124,8 @@ export default function ListProperty() {
     details: !!(form.bedrooms && form.bathrooms && form.price_type && form.property_type),
     price: !!form.price,
     ai: !!(form.title && form.description),
-    photos: photos.length >= 3
+    photos: photos.length >= 3,
+        availability: availabilitySlots
   }
 
   return (
@@ -316,6 +321,66 @@ export default function ListProperty() {
               {message}
             </div>
           )}
+
+          {/* Step 7 - Availability */}
+          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+            <h2 className="text-lg font-bold mb-1 text-orange-500">Step 7 — Viewing Availability</h2>
+            <p className="text-gray-400 text-sm mb-4">When are you available to show this property?</p>
+
+            {showAvailabilityNudge && availabilitySlots.length === 0 && (
+              <div className="bg-gray-700 rounded-xl p-4 mb-4 flex gap-3">
+                <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-sm flex-shrink-0">AI</div>
+                <div>
+                  <p className="text-sm text-gray-200 leading-relaxed">
+                    👋 <strong>Quick tip from your AI Concierge:</strong> Listings with available viewing slots get <strong>3x more bookings</strong>! 
+                    Without slots, buyers have to request a time and wait for your reply — this back-and-forth can cost you serious leads. 
+                    Add at least 3 slots to get instant bookings! 🏡
+                  </p>
+                  <button onClick={() => setShowAvailabilityNudge(false)} className="text-xs text-gray-500 hover:text-gray-300 mt-2">Dismiss</button>
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-3 mb-3">
+              <input type="date" value={newSlotDate}
+                onChange={e => setNewSlotDate(e.target.value)}
+                min={new Date(Date.now() + 86400000).toISOString().split('T')[0]}
+                className="flex-1 bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
+              <select value={newSlotTime} onChange={e => setNewSlotTime(e.target.value)}
+                className="bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500">
+                <option value="morning">🌅 Morning (9am)</option>
+                <option value="afternoon">☀️ Afternoon (1pm)</option>
+                <option value="evening">🌆 Evening (4pm)</option>
+              </select>
+              <button type="button"
+                onClick={() => {
+                  if (!newSlotDate) return
+                  setAvailabilitySlots(prev => [...prev, { date: newSlotDate, time: newSlotTime }])
+                  setNewSlotDate('')
+                }}
+                disabled={!newSlotDate}
+                className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-4 py-2 rounded-lg text-sm disabled:opacity-50">
+                + Add
+              </button>
+            </div>
+
+            {availabilitySlots.length > 0 ? (
+              <div className="space-y-2">
+                {availabilitySlots.map((slot, i) => (
+                  <div key={i} className="flex items-center justify-between bg-gray-700 rounded-lg px-3 py-2">
+                    <span className="text-sm">
+                      📅 {new Date(slot.date).toLocaleDateString('en-ZA', { weekday: 'long', month: 'long', day: 'numeric' })} — {slot.time === 'morning' ? '🌅 Morning' : slot.time === 'afternoon' ? '☀️ Afternoon' : '🌆 Evening'}
+                    </span>
+                    <button type="button" onClick={() => setAvailabilitySlots(prev => prev.filter((_, j) => j !== i))}
+                      className="text-gray-500 hover:text-red-400 text-sm">✕</button>
+                  </div>
+                ))}
+                <p className="text-xs text-green-400 mt-1">✓ {availabilitySlots.length} slot{availabilitySlots.length > 1 ? 's' : ''} added — buyers can book instantly!</p>
+              </div>
+            ) : (
+              <p className="text-xs text-yellow-500">⚠️ No slots added — buyers will need to request a viewing time</p>
+            )}
+          </div>
 
           <button type="submit" disabled={loading || photos.length < 3 || !form.title}
             className="w-full bg-orange-500 text-black font-bold py-4 rounded-xl text-lg hover:bg-orange-400 transition-colors disabled:opacity-50">
