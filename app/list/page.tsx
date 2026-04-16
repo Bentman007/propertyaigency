@@ -1,5 +1,6 @@
 'use client'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import PhotoUpload from '@/components/PhotoUpload'
 import AddressAutocomplete from '@/components/AddressAutocomplete'
@@ -25,6 +26,54 @@ export default function ListProperty() {
   const [newSlotDate, setNewSlotDate] = useState('')
   const [newSlotTime, setNewSlotTime] = useState('morning')
   const [showAvailabilityNudge, setShowAvailabilityNudge] = useState(true)
+  const [editId, setEditId] = useState<string | null>(null)
+  const [isEditing, setIsEditing] = useState(false)
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const id = searchParams.get('edit')
+    if (id) {
+      setEditId(id)
+      setIsEditing(true)
+      loadExistingProperty(id)
+    }
+  }, [])
+
+  const loadExistingProperty = async (id: string) => {
+    const { data } = await supabase
+      .from('properties')
+      .select('*')
+      .eq('id', id)
+      .single()
+    
+    if (data) {
+      setForm({
+        title: data.title || '',
+        description: data.description || '',
+        price: data.price?.toString() || '',
+        price_type: data.price_type || 'sale',
+        bedrooms: data.bedrooms?.toString() || '',
+        bathrooms: data.bathrooms?.toString() || '',
+        garages: data.garages?.toString() || '',
+        size_sqm: data.size_sqm?.toString() || '',
+        property_type: data.property_type || 'house',
+        address: data.address || '',
+        suburb: data.suburb || '',
+        city: data.city || '',
+        province: data.province || '',
+        latitude: data.latitude?.toString() || '',
+        longitude: data.longitude?.toString() || '',
+        ...defaultFeatures
+      })
+      if (data.photos) setPhotos(data.photos)
+      // Load feature flags
+      const features: any = {}
+      Object.keys(defaultFeatures).forEach(key => {
+        if (data[key] !== undefined) features[key] = data[key]
+      })
+      setForm((prev: any) => ({ ...prev, ...features }))
+    }
+  }
   const [aiLoading, setAiLoading] = useState(false)
   const [valuationLoading, setValuationLoading] = useState(false)
   const [valuation, setValuation] = useState<any>(null)
@@ -102,7 +151,8 @@ export default function ListProperty() {
     setLoading(true)
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { setMessage('Please sign in first'); setLoading(false); return }
-    const { error } = await supabase.from('properties').insert({
+
+    const propertyData = {
       ...form,
       price: parseFloat(form.price),
       bedrooms: parseInt(form.bedrooms),
@@ -113,9 +163,41 @@ export default function ListProperty() {
       longitude: parseFloat(form.longitude as string) || null,
       user_id: user.id,
       photos
-    })
+    }
+
+    let error
+    let data
+
+    if (isEditing && editId) {
+      const result = await supabase.from('properties').update(propertyData).eq('id', editId).select()
+      error = result.error
+      data = result.data
+    } else {
+      const result = await supabase.from('properties').insert(propertyData).select()
+      error = result.error
+      data = result.data
+    }
+
+    // Save availability slots
+    if (availabilitySlots.length > 0 && data?.[0]?.id) {
+      const timeMap: {[key: string]: string} = { morning: '09:00', afternoon: '13:00', evening: '16:00' }
+      await supabase.from('agent_availability').insert(
+        availabilitySlots.map(slot => ({
+          agent_id: user.id,
+          date: slot.date,
+          start_time: timeMap[slot.time] || '09:00',
+          end_time: slot.time === 'morning' ? '10:00' : slot.time === 'afternoon' ? '14:00' : '17:00',
+          is_booked: false
+        }))
+      )
+    }
+
     if (error) setMessage(error.message)
-    else { setMessage('Property listed successfully!'); window.scrollTo(0,0) }
+    else { 
+      setMessage(isEditing ? 'Property updated successfully!' : 'Property listed successfully!')
+      window.scrollTo(0,0)
+      if (isEditing) setTimeout(() => window.location.href = '/dashboard', 1500)
+    }
     setLoading(false)
   }
 
@@ -384,7 +466,7 @@ export default function ListProperty() {
 
           <button type="submit" disabled={loading || photos.length < 3 || !form.title}
             className="w-full bg-orange-500 text-black font-bold py-4 rounded-xl text-lg hover:bg-orange-400 transition-colors disabled:opacity-50">
-            {loading ? 'Submitting...' : '🏠 Publish My Listing'}
+            {loading ? 'Saving...' : isEditing ? '✏️ Update Listing' : '🏠 Publish My Listing'}
           </button>
           {(photos.length < 3 || !form.title) && (
             <p className="text-center text-gray-500 text-sm">
