@@ -145,7 +145,23 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ 
       slots: availableSlots.slice(0, 8), // Return next 8 available slots
-      template,
+      template: template ? {
+        ...template,
+        monday_start: template.monday_start?.substring(0, 5),
+        monday_end: template.monday_end?.substring(0, 5),
+        tuesday_start: template.tuesday_start?.substring(0, 5),
+        tuesday_end: template.tuesday_end?.substring(0, 5),
+        wednesday_start: template.wednesday_start?.substring(0, 5),
+        wednesday_end: template.wednesday_end?.substring(0, 5),
+        thursday_start: template.thursday_start?.substring(0, 5),
+        thursday_end: template.thursday_end?.substring(0, 5),
+        friday_start: template.friday_start?.substring(0, 5),
+        friday_end: template.friday_end?.substring(0, 5),
+        saturday_start: template.saturday_start?.substring(0, 5),
+        saturday_end: template.saturday_end?.substring(0, 5),
+        sunday_start: template.sunday_start?.substring(0, 5),
+        sunday_end: template.sunday_end?.substring(0, 5),
+      } : null,
       property_location: { suburb: propertySuburb, city: propertyCity }
     })
 
