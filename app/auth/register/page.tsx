@@ -58,7 +58,7 @@ export default function RegisterPage() {
           </button>
         </div>
 
-        <form onSubmit={handleRegister} className="space-y-4">
+        <form onSubmit={handleRegister} className="space-y-4" autoComplete="off">
           <div>
             <label className="text-gray-300 text-sm mb-1 block">Full Name</label>
             <input type="text" value={name} onChange={e => setName(e.target.value)}
