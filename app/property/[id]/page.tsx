@@ -2,7 +2,6 @@ import PropertyChat from '@/components/PropertyChat'
 import PhotoGallery from '@/components/PhotoGallery'
 import BookViewing from '@/components/BookViewing'
 import ViewTracker from '@/components/ViewTracker'
-import PropertyMessaging from '@/components/PropertyMessaging'
 import { supabase } from '@/lib/supabase'
 
 function formatPrice(price: number, type: string) {
@@ -144,7 +143,6 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
                 📅 Book Viewing
               </button>
               <PropertyChat property={p} />
-              <PropertyMessaging property={p} />
               <div className="mt-4 pt-4 border-t border-gray-700">
                 <div className="flex items-center gap-2 text-xs text-gray-500">
                   <span className="w-2 h-2 bg-green-400 rounded-full"></span>
