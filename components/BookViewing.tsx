@@ -71,7 +71,7 @@ export default function BookViewing({ property }: { property: any }) {
         <div className="text-center py-4 text-gray-400 text-sm">Finding available slots...</div>
       ) : noSlots ? (
         <div className="bg-gray-700 rounded-lg p-3 text-sm text-gray-400 text-center">
-          No available slots in the next 2 weeks. Message the agent to arrange a viewing.
+          No slots available yet — request a preferred time below and we'll confirm ASAP!
         </div>
       ) : (
         <div className="space-y-2">
