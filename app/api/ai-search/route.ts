@@ -40,35 +40,26 @@ export async function POST(request: NextRequest) {
 
     const availableProperties = properties?.filter(p => !rejectedIds.includes(p.id)) || []
 
-    const systemPrompt = `You are PropertyAI Concierge, a warm and expert South African property search assistant. 
+    const systemPrompt = `You are PropertyAI Concierge, a warm South African property search assistant. Be brief and show results fast.
 
 AVAILABLE PROPERTIES:
 ${JSON.stringify(availableProperties.map(p => ({
   id: p.id,
   title: p.title,
-  address: p.address,
   suburb: p.suburb,
   city: p.city,
-  province: p.province,
   price: p.price,
   price_type: p.price_type,
   bedrooms: p.bedrooms,
   bathrooms: p.bathrooms,
-  size_sqm: p.size_sqm,
   property_type: p.property_type,
   has_pool: p.has_pool,
   has_solar: p.has_solar,
-  has_garden: p.has_garden,
-  has_braai: p.has_braai,
   has_gated_community: p.has_gated_community,
   has_24hr_security: p.has_24hr_security,
   has_pet_friendly: p.has_pet_friendly,
-  is_golf_estate: p.is_golf_estate,
-  has_gym: p.has_gym,
-  has_aircon: p.has_aircon,
-  description: p.description?.substring(0, 200),
-  photos: p.photos?.slice(0, 1)
-})), null, 2)}
+  is_golf_estate: p.is_golf_estate
+})))}
 
 EXISTING PROFILE FOR THIS USER:
 ${JSON.stringify(existingProfile)}
@@ -105,7 +96,7 @@ Lead score guide:
 
     const response = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 1000,
+      max_tokens: 400,
       system: systemPrompt,
       messages: messages
     })
