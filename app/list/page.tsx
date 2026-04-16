@@ -1,6 +1,5 @@
 'use client'
 import { useState, useCallback, useEffect, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import PhotoUpload from '@/components/PhotoUpload'
 import AddressAutocomplete from '@/components/AddressAutocomplete'
@@ -29,14 +28,17 @@ function ListPropertyInner() {
   const [editId, setEditId] = useState<string | null>(null)
   const [isEditing, setIsEditing] = useState(false)
   const [editLoading, setEditLoading] = useState(false)
-  const searchParams = useSearchParams()
-
   useEffect(() => {
-    const id = searchParams.get('edit')
-    if (id) {
-      setEditId(id)
-      setIsEditing(true)
-      loadExistingProperty(id)
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      const id = params.get('edit')
+      console.log('URL params:', window.location.search)
+      console.log('Edit ID:', id)
+      if (id) {
+        setEditId(id)
+        setIsEditing(true)
+        loadExistingProperty(id)
+      }
     }
   }, [])
 
