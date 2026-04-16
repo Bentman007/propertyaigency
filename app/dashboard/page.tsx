@@ -42,6 +42,12 @@ export default function DashboardPage() {
         window.location.href = '/auth/login?next=/dashboard'
         return
       }
+      // Redirect buyers to their dashboard
+      const accountType = data.user.user_metadata?.account_type || 'buyer'
+      if (accountType !== 'agent') {
+        window.location.href = '/my-properties'
+        return
+      }
       setUser(data.user)
       fetchProperties(data.user.id)
       // Fetch profile

@@ -19,14 +19,11 @@ export default function LoginPage() {
       const params = new URLSearchParams(window.location.search)
       const next = params.get('next')
       if (next) {
-        setTimeout(() => { window.location.href = next }, 500)
+        window.location.href = next
       } else {
-        // Get user profile to determine account type
         const { data: { user } } = await supabase.auth.getUser()
         const accountType = user?.user_metadata?.account_type || 'buyer'
-        setTimeout(() => {
-          window.location.href = accountType === 'agent' ? '/dashboard' : '/my-properties'
-        }, 500)
+        window.location.href = accountType === 'agent' ? '/dashboard' : '/my-properties'
       }
     }
     setLoading(false)
