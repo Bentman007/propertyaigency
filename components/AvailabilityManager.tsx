@@ -66,14 +66,26 @@ export default function AvailabilityManager({ agentId }: { agentId: string }) {
     setTimeout(() => setSaved(false), 2000)
   }
 
+  const [newBlockedStart, setNewBlockedStart] = useState('')
+  const [newBlockedEnd, setNewBlockedEnd] = useState('')
+  const [blockType, setBlockType] = useState<'all_day' | 'time_range'>('all_day')
+
   const addBlockedDate = async () => {
     if (!newBlockedDate) return
     await fetch('/api/availability', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ agent_id: agentId, blocked_date: newBlockedDate })
+      body: JSON.stringify({ 
+        agent_id: agentId, 
+        blocked_date: newBlockedDate,
+        start_time: blockType === 'time_range' ? newBlockedStart : null,
+        end_time: blockType === 'time_range' ? newBlockedEnd : null,
+        reason: blockType === 'time_range' ? `Blocked ${newBlockedStart}-${newBlockedEnd}` : 'All day'
+      })
     })
     setNewBlockedDate('')
+    setNewBlockedStart('')
+    setNewBlockedEnd('')
     fetchBlockedDates()
   }
 
