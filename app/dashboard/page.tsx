@@ -372,9 +372,9 @@ export default function DashboardPage() {
 
       {user && (
         <div className="max-w-6xl mx-auto px-6 pb-8 grid grid-cols-2 gap-6 mt-6">
-          <AvailabilityManager agentId={user.id} />
-          <PropertyAIsistant agentId={user.id} />
           <BookingsCalendar agentId={user.id} />
+          <PropertyAIsistant agentId={user.id} />
+          <AvailabilityManager agentId={user.id} />
         </div>
       )}
     </main>
