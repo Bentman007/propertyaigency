@@ -17,10 +17,17 @@ export default function LoginPage() {
       setMessage(error.message)
     } else {
       const params = new URLSearchParams(window.location.search)
-      const next = params.get('next') || '/dashboard'
-      setTimeout(() => {
-        window.location.href = next
-      }, 500)
+      const next = params.get('next')
+      if (next) {
+        setTimeout(() => { window.location.href = next }, 500)
+      } else {
+        // Get user profile to determine account type
+        const { data: { user } } = await supabase.auth.getUser()
+        const accountType = user?.user_metadata?.account_type || 'buyer'
+        setTimeout(() => {
+          window.location.href = accountType === 'agent' ? '/dashboard' : '/my-properties'
+        }, 500)
+      }
     }
     setLoading(false)
   }

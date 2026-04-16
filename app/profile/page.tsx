@@ -9,6 +9,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
+  const [accountType, setAccountType] = useState('buyer')
   const [form, setForm] = useState({
     full_name: '',
     agency_name: '',
@@ -26,6 +27,7 @@ export default function ProfilePage() {
         .select('*')
         .eq('id', data.user.id)
         .single()
+      setAccountType(data.user.user_metadata?.account_type || 'buyer')
       if (profile) {
         setForm({
           full_name: profile.full_name || data.user.user_metadata?.full_name || '',
@@ -94,6 +96,7 @@ export default function ProfilePage() {
           </div>
         </div>
 
+        {accountType === 'agent' && (
         <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6 space-y-4">
           <h2 className="text-lg font-bold text-orange-500">Agency Details</h2>
           <div>
@@ -110,6 +113,7 @@ export default function ProfilePage() {
               placeholder="Tell buyers a bit about yourself..."/>
           </div>
         </div>
+        )}
 
         <button onClick={handleSave} disabled={saving}
           className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-4 rounded-xl text-lg disabled:opacity-50 transition">
