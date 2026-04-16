@@ -42,12 +42,14 @@ function ListPropertyInner() {
 
   const loadExistingProperty = async (id: string) => {
     setEditLoading(true)
+    console.log('Loading property with id:', id)
     const { data } = await supabase
       .from('properties')
       .select('*')
       .eq('id', id)
       .single()
     
+    console.log('Property data:', data)
     if (data) {
       setForm({
         title: data.title || '',
