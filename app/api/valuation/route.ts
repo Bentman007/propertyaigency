@@ -1,4 +1,4 @@
-export const maxDuration = 30
+export const maxDuration = 10
 export const dynamic = 'force-dynamic'
 
 import Anthropic from '@anthropic-ai/sdk'
