@@ -194,22 +194,59 @@ export default function AvailabilityManager({ agentId }: { agentId: string }) {
 
       {/* Blocked Dates */}
       <div>
-        <p className="text-sm font-semibold text-gray-300 mb-3">🚫 Block Out Dates</p>
-        <div className="flex gap-2 mb-3">
+        <p className="text-sm font-semibold text-gray-300 mb-3">🚫 Block Out Dates / Times</p>
+
+        {/* Block type selector */}
+        <div className="grid grid-cols-2 gap-2 mb-3">
+          <button onClick={() => setBlockType('all_day')}
+            className={`py-2 rounded-lg text-xs font-semibold transition ${blockType === 'all_day' ? 'bg-orange-500 text-black' : 'bg-gray-700 text-gray-300'}`}>
+            📅 All Day
+          </button>
+          <button onClick={() => setBlockType('time_range')}
+            className={`py-2 rounded-lg text-xs font-semibold transition ${blockType === 'time_range' ? 'bg-orange-500 text-black' : 'bg-gray-700 text-gray-300'}`}>
+            ⏰ Specific Times
+          </button>
+        </div>
+
+        <div className="mb-2">
           <input type="date" value={newBlockedDate}
             onChange={e => setNewBlockedDate(e.target.value)}
             min={new Date().toISOString().split('T')[0]}
-            className="flex-1 bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
-          <button onClick={addBlockedDate} disabled={!newBlockedDate}
-            className="bg-red-700 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-50">
-            Block
-          </button>
+            className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
         </div>
+
+        {blockType === 'time_range' && (
+          <div className="grid grid-cols-2 gap-2 mb-2">
+            <div>
+              <label className="text-xs text-gray-400 mb-1 block">From</label>
+              <input type="time" value={newBlockedStart}
+                onChange={e => setNewBlockedStart(e.target.value)}
+                className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
+            </div>
+            <div>
+              <label className="text-xs text-gray-400 mb-1 block">To</label>
+              <input type="time" value={newBlockedEnd}
+                onChange={e => setNewBlockedEnd(e.target.value)}
+                className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
+            </div>
+          </div>
+        )}
+
+        <button onClick={addBlockedDate}
+          disabled={!newBlockedDate || (blockType === 'time_range' && (!newBlockedStart || !newBlockedEnd))}
+          className="w-full bg-red-700 hover:bg-red-600 text-white px-3 py-2 rounded-lg text-sm font-semibold disabled:opacity-50 mb-3">
+          🚫 {blockType === 'all_day' ? 'Block Entire Day' : 'Block This Time Slot'}
+        </button>
+
         {blockedDates.length > 0 && (
           <div className="space-y-1">
             {blockedDates.map(b => (
               <div key={b.id} className="flex items-center justify-between bg-red-900 border border-red-700 rounded-lg px-3 py-2">
-                <span className="text-red-300 text-sm">🚫 {new Date(b.blocked_date).toLocaleDateString('en-ZA', { weekday: 'long', month: 'long', day: 'numeric' })}</span>
+                <span className="text-red-300 text-sm">
+                  🚫 {new Date(b.blocked_date + 'T12:00:00').toLocaleDateString('en-ZA', { weekday: 'short', month: 'short', day: 'numeric' })}
+                  {b.start_time && b.end_time && ` — ${b.start_time.substring(0,5)} to ${b.end_time.substring(0,5)}`}
+                  {(!b.start_time) && ' — All day'}
+                </span>
                 <button onClick={() => removeBlockedDate(b.blocked_date)} className="text-red-500 hover:text-red-300 text-sm">✕</button>
               </div>
             ))}
