@@ -6,7 +6,7 @@ import Link from 'next/link'
 import AvailabilityManager from '@/components/AvailabilityManager'
 import ConversationsList from '@/components/ConversationsList'
 import PushNotifications from '@/components/PushNotifications'
-import ViewingBookings from '@/components/ViewingBookings'
+import BookingsCalendar from '@/components/BookingsCalendar'
 
 interface PropertyWithStats {
   id: string
@@ -374,7 +374,7 @@ export default function DashboardPage() {
         <div className="max-w-6xl mx-auto px-6 pb-8 grid grid-cols-2 gap-6 mt-6">
           <AvailabilityManager agentId={user.id} />
           <ConversationsList agentId={user.id} />
-          <ViewingBookings agentId={user.id} />
+          <BookingsCalendar agentId={user.id} />
         </div>
       )}
     </main>
