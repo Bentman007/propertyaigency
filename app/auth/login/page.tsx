@@ -17,7 +17,7 @@ export default function LoginPage() {
       setMessage(error.message)
     } else {
       const params = new URLSearchParams(window.location.search)
-      const next = params.get('next') || '/'
+      const next = params.get('next') || '/dashboard'
       window.location.href = next
     }
     setLoading(false)

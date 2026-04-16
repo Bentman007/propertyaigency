@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useParams, useRouter } from 'next/navigation'
+import AddressAutocomplete from '@/components/AddressAutocomplete'
+import PhotoUpload from '@/components/PhotoUpload'
 
 export default function EditListing() {
   const params = useParams()
@@ -19,10 +21,7 @@ export default function EditListing() {
   })
 
   useEffect(() => {
-    if (id) {
-      console.log('Loading property:', id)
-      loadProperty()
-    }
+    if (id) loadProperty()
   }, [id])
 
   const loadProperty = async () => {
@@ -84,6 +83,16 @@ export default function EditListing() {
 
   const update = (field: string, value: any) => setForm((p: any) => ({ ...p, [field]: value }))
 
+  const handleAddressSelect = (result: any) => {
+    setForm((prev: any) => ({
+      ...prev,
+      address: result.address,
+      suburb: result.suburb,
+      city: result.city,
+      province: result.province,
+    }))
+  }
+
   if (loading) return (
     <main className="min-h-screen bg-gray-900 flex items-center justify-center">
       <p className="text-orange-500 animate-pulse text-xl">Loading your listing...</p>
@@ -114,13 +123,64 @@ export default function EditListing() {
             placeholder="Property title"/>
         </div>
 
-        {/* Description */}
+        {/* Address */}
         <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 space-y-4">
-          <h2 className="text-lg font-bold text-orange-500">Description</h2>
-          <textarea value={form.description} onChange={e => update('description', e.target.value)}
-            rows={6}
-            className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
-            placeholder="Property description"/>
+          <h2 className="text-lg font-bold text-orange-500">Address</h2>
+          <div className="space-y-2">
+            <AddressAutocomplete onSelect={handleAddressSelect} />
+            {form.address && (
+              <div className="grid grid-cols-2 gap-3 mt-3">
+                <div>
+                  <label className="text-gray-400 text-xs mb-1 block">Street Address</label>
+                  <input value={form.address} onChange={e => update('address', e.target.value)}
+                    className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
+                </div>
+                <div>
+                  <label className="text-gray-400 text-xs mb-1 block">Suburb</label>
+                  <input value={form.suburb} onChange={e => update('suburb', e.target.value)}
+                    className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
+                </div>
+                <div>
+                  <label className="text-gray-400 text-xs mb-1 block">City</label>
+                  <input value={form.city} onChange={e => update('city', e.target.value)}
+                    className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
+                </div>
+                <div>
+                  <label className="text-gray-400 text-xs mb-1 block">Province</label>
+                  <input value={form.province} onChange={e => update('province', e.target.value)}
+                    className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
+                </div>
+              </div>
+            )}
+            {!form.address && (
+              <div className="grid grid-cols-2 gap-3 mt-3">
+                <div>
+                  <label className="text-gray-400 text-xs mb-1 block">Street Address</label>
+                  <input value={form.address} onChange={e => update('address', e.target.value)}
+                    className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"
+                    placeholder="Street address"/>
+                </div>
+                <div>
+                  <label className="text-gray-400 text-xs mb-1 block">Suburb</label>
+                  <input value={form.suburb} onChange={e => update('suburb', e.target.value)}
+                    className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"
+                    placeholder="Suburb"/>
+                </div>
+                <div>
+                  <label className="text-gray-400 text-xs mb-1 block">City</label>
+                  <input value={form.city} onChange={e => update('city', e.target.value)}
+                    className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"
+                    placeholder="City"/>
+                </div>
+                <div>
+                  <label className="text-gray-400 text-xs mb-1 block">Province</label>
+                  <input value={form.province} onChange={e => update('province', e.target.value)}
+                    className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"
+                    placeholder="Province"/>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Price */}
@@ -167,6 +227,39 @@ export default function EditListing() {
                 type="number" placeholder="Size in m²"/>
             </div>
           </div>
+        </div>
+
+        {/* Description */}
+        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 space-y-4">
+          <h2 className="text-lg font-bold text-orange-500">Description</h2>
+          <textarea value={form.description} onChange={e => update('description', e.target.value)}
+            rows={6}
+            className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
+            placeholder="Property description"/>
+        </div>
+
+        {/* Photos */}
+        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 space-y-4">
+          <h2 className="text-lg font-bold text-orange-500">Property Photos</h2>
+          <p className="text-gray-400 text-sm">Current photos are preserved — add new ones or remove existing ones</p>
+          
+          {/* Show existing photos */}
+          {photos.length > 0 && (
+            <div className="grid grid-cols-3 gap-2 mb-4">
+              {photos.map((photo, i) => (
+                <div key={i} className="relative group">
+                  <img src={photo} alt="" className="w-full h-24 object-cover rounded-lg"/>
+                  <button
+                    type="button"
+                    onClick={() => setPhotos(prev => prev.filter((_, j) => j !== i))}
+                    className="absolute top-1 right-1 bg-red-600 hover:bg-red-500 text-white w-6 h-6 rounded-full text-xs opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+          <PhotoUpload propertyId={id} onUpload={(urls) => setPhotos(prev => [...prev, ...urls])} />
         </div>
 
         {/* Save button */}

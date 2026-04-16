@@ -49,7 +49,15 @@ export default function DashboardPage() {
         .select('*')
         .eq('id', data.user.id)
         .single()
-      setProfile(profileData)
+      if (profileData) {
+        setProfile(profileData)
+      } else {
+        // Use auth metadata as fallback
+        setProfile({
+          full_name: data.user.user_metadata?.full_name || data.user.email?.split('@')[0],
+          agency_name: data.user.user_metadata?.agency_name || null
+        })
+      }
     }
     getUser()
   }, [])
