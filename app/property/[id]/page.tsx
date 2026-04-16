@@ -139,9 +139,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
                 <div className="text-green-400 font-bold text-sm">✓ Good Price</div>
                 <div className="text-green-300 text-xs mt-1">Priced competitively for this area</div>
               </div>
-<button className="w-full bg-gray-700 text-white font-bold py-3 rounded-lg hover:bg-gray-600 transition-colors mb-3">
-                📅 Book Viewing
-              </button>
+<BookViewing property={p} />
               <PropertyChat property={p} />
               <div className="mt-4 pt-4 border-t border-gray-700">
                 <div className="flex items-center gap-2 text-xs text-gray-500">
