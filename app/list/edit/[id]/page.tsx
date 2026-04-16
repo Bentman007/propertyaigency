@@ -19,7 +19,10 @@ export default function EditListing() {
   })
 
   useEffect(() => {
-    loadProperty()
+    if (id) {
+      console.log('Loading property:', id)
+      loadProperty()
+    }
   }, [id])
 
   const loadProperty = async () => {
