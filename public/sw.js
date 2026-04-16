@@ -1,4 +1,4 @@
-const CACHE_NAME = 'propertyaigency-v1'
+const CACHE_NAME = 'propertyaigency-v2'
 const urlsToCache = [
   '/',
   '/search',
@@ -23,9 +23,18 @@ self.addEventListener('activate', event => {
 })
 
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(response => response || fetch(event.request))
-  )
+  // Never cache API calls or POST requests
+  if (event.request.url.includes('/api/') || event.request.method === 'POST') {
+    event.respondWith(fetch(event.request))
+    return
+  }
+  
+  // Only cache GET requests for static assets
+  if (event.request.method === 'GET') {
+    event.respondWith(
+      caches.match(event.request).then(response => response || fetch(event.request))
+    )
+  }
 })
 
 // Push notifications
