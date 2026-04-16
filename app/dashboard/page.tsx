@@ -371,9 +371,13 @@ export default function DashboardPage() {
       </div>
 
       {user && (
-        <div className="max-w-6xl mx-auto px-6 pb-8 grid grid-cols-2 gap-6 mt-6">
-          <BookingsCalendar agentId={user.id} />
-          <PropertyAIsistant agentId={user.id} />
+        <div className="max-w-6xl mx-auto px-6 pb-8 mt-6 space-y-6">
+          {/* Calendar + AIsistant side by side */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <BookingsCalendar agentId={user.id} />
+            <PropertyAIsistant agentId={user.id} />
+          </div>
+          {/* Availability at the bottom */}
           <AvailabilityManager agentId={user.id} />
         </div>
       )}
