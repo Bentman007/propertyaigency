@@ -62,7 +62,7 @@ Include at end of every message:
         lead_score: leadData.score,
         lead_temperature: leadData.temperature,
         updated_at: new Date().toISOString()
-      }, { onConflict: 'session_id' }).then(() => {}).catch(() => {})
+      }, { onConflict: 'session_id' }).then(() => {}) as any
     }
 
     return NextResponse.json({
