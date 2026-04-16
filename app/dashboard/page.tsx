@@ -227,6 +227,15 @@ export default function DashboardPage() {
         </div>
 
         {/* Summary Stats */}
+      {user && (
+        <div className="max-w-6xl mx-auto px-6 mt-6 space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <BookingsCalendar agentId={user.id} />
+            <PropertyAIsistant agentId={user.id} />
+          </div>
+        </div>
+      )}
+
         {properties.length > 0 && (
           <div className="grid grid-cols-4 gap-4 mb-8">
             <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
@@ -371,13 +380,7 @@ export default function DashboardPage() {
       </div>
 
       {user && (
-        <div className="max-w-6xl mx-auto px-6 pb-8 mt-6 space-y-6">
-          {/* Calendar + AIsistant side by side */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <BookingsCalendar agentId={user.id} />
-            <PropertyAIsistant agentId={user.id} />
-          </div>
-          {/* Availability at the bottom */}
+        <div className="max-w-6xl mx-auto px-6 pb-8 mt-6">
           <AvailabilityManager agentId={user.id} />
         </div>
       )}
