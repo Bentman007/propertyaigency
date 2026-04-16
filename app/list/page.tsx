@@ -1,5 +1,5 @@
 'use client'
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import PhotoUpload from '@/components/PhotoUpload'
@@ -18,7 +18,7 @@ const featureGroups = [
 const allKeys = featureGroups.flatMap(g => g.features.map(([k]) => k))
 const defaultFeatures = Object.fromEntries(allKeys.map(k => [k, false]))
 
-export default function ListProperty() {
+function ListPropertyInner() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [photos, setPhotos] = useState<string[]>([])
@@ -476,5 +476,13 @@ export default function ListProperty() {
         </form>
       </div>
     </main>
+  )
+}
+
+export default function ListProperty() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-900 flex items-center justify-center text-white">Loading...</div>}>
+      <ListPropertyInner />
+    </Suspense>
   )
 }
