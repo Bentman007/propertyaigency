@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import AvailabilityManager from '@/components/AvailabilityManager'
-import ConversationsList from '@/components/ConversationsList'
+import PropertyAIsistant from '@/components/PropertyAIsistant'
 import PushNotifications from '@/components/PushNotifications'
 import BookingsCalendar from '@/components/BookingsCalendar'
 
@@ -373,7 +373,7 @@ export default function DashboardPage() {
       {user && (
         <div className="max-w-6xl mx-auto px-6 pb-8 grid grid-cols-2 gap-6 mt-6">
           <AvailabilityManager agentId={user.id} />
-          <ConversationsList agentId={user.id} />
+          <PropertyAIsistant agentId={user.id} />
           <BookingsCalendar agentId={user.id} />
         </div>
       )}

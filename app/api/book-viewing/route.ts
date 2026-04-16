@@ -57,6 +57,18 @@ export async function POST(request: NextRequest) {
         .eq('id', slot.id)
     }
 
+    // Send booking update to Property AIsistant
+    await fetch(`${request.nextUrl.origin}/api/aisistant`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'booking_update',
+        agent_id,
+        property_id,
+        data: { date: slot.date, start_time: slot.start_time }
+      })
+    })
+
     // Send push notification to agent
     await fetch(`${request.nextUrl.origin}/api/push`, {
       method: 'POST',

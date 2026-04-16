@@ -45,6 +45,23 @@ export async function POST(request: NextRequest) {
         })
       })
 
+      // Send lead brief to Property AIsistant
+      await fetch(`${request.nextUrl.origin}/api/aisistant`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'lead_brief',
+          agent_id,
+          property_id: booking.property_id,
+          data: {
+            date: booking.date,
+            start_time: booking.start_time,
+            searcher_profile: booking.searcher_profile,
+            lead_temperature: booking.lead_temperature
+          }
+        })
+      })
+
       // Notify agent confirmation
       await fetch(`${request.nextUrl.origin}/api/push`, {
         method: 'POST',
