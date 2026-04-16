@@ -18,6 +18,7 @@ export async function POST(request: NextRequest) {
     const { data: properties } = await supabase
       .from('properties')
       .select('*')
+      .eq('status', 'active')
       .order('created_at', { ascending: false })
 
     let rejectedIds: string[] = []

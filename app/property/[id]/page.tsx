@@ -54,6 +54,16 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
         </div>
       </nav>
 
+      {p.status === 'sold' && (
+        <div className="bg-red-900 border-b border-red-700 px-6 py-3 text-center">
+          <p className="text-red-300 font-semibold">🔴 This property has been sold/rented and is no longer available</p>
+        </div>
+      )}
+      {p.status === 'under_offer' && (
+        <div className="bg-yellow-900 border-b border-yellow-700 px-6 py-3 text-center">
+          <p className="text-yellow-300 font-semibold">🟡 This property is currently under offer</p>
+        </div>
+      )}
       <div className="max-w-5xl mx-auto px-6 py-10">
 
         <PhotoGallery photos={p.photos || []} title={p.title} />

@@ -24,6 +24,7 @@ interface PropertyWithStats {
   avg_time_seconds: number
   enquiries: number
   heat_score: number
+  status: string
 }
 
 export default function DashboardPage() {
@@ -113,6 +114,11 @@ export default function DashboardPage() {
 
     setProperties(withStats)
     setLoading(false)
+  }
+
+  const updateStatus = async (propertyId: string, status: string) => {
+    await supabase.from('properties').update({ status }).eq('id', propertyId)
+    setProperties(prev => prev.map(p => p.id === propertyId ? { ...p, status } : p))
   }
 
   const getAiInsight = async (property: PropertyWithStats) => {
@@ -264,7 +270,7 @@ export default function DashboardPage() {
                   <div className="flex-1 p-6">
                     <div className="flex justify-between items-start mb-4">
                       <div>
-                        <div className="flex items-center gap-3 mb-1">
+                        <div className="flex items-center gap-3 mb-1 flex-wrap">
                           <h2 className="text-xl font-bold">{property.title}</h2>
                           <span className={`text-xs px-2 py-1 rounded-full font-bold ${getHeatColor(property.heat_score)}`}>
                             {getHeatLabel(property.heat_score)} {property.heat_score}
