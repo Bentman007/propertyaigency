@@ -246,7 +246,7 @@ export default function DashboardPage() {
                           className="text-sm bg-gray-700 hover:bg-gray-600 px-3 py-1.5 rounded-lg">
                           View Listing
                         </Link>
-                        <Link href={`/list?edit=${property.id}`}
+                        <Link href={`/list/edit/${property.id}`}
                           className="text-sm bg-orange-500 hover:bg-orange-400 text-black px-3 py-1.5 rounded-lg font-semibold">
                           Edit
                         </Link>
