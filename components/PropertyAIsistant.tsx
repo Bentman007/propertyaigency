@@ -76,8 +76,8 @@ export default function PropertyAIsistant({ agentId }: { agentId: string }) {
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs">PA</div>
           <div>
-            <p className="font-bold text-sm">Property AIsistant</p>
-            <p className="text-xs text-green-400">● Your AI property assistant</p>
+            <p className="font-bold text-sm">Property <span className="text-orange-500">AI</span>sistant</p>
+            <p className="text-xs text-green-400">● Your Personal Assistant</p>
           </div>
         </div>
         {unreadCount > 0 && (
