@@ -28,6 +28,7 @@ function ListPropertyInner() {
   const [showAvailabilityNudge, setShowAvailabilityNudge] = useState(true)
   const [editId, setEditId] = useState<string | null>(null)
   const [isEditing, setIsEditing] = useState(false)
+  const [editLoading, setEditLoading] = useState(false)
   const searchParams = useSearchParams()
 
   useEffect(() => {
@@ -40,6 +41,7 @@ function ListPropertyInner() {
   }, [])
 
   const loadExistingProperty = async (id: string) => {
+    setEditLoading(true)
     const { data } = await supabase
       .from('properties')
       .select('*')
@@ -73,6 +75,7 @@ function ListPropertyInner() {
       })
       setForm((prev: any) => ({ ...prev, ...features }))
     }
+    setEditLoading(false)
   }
   const [aiLoading, setAiLoading] = useState(false)
   const [valuationLoading, setValuationLoading] = useState(false)
@@ -214,7 +217,7 @@ function ListPropertyInner() {
     <main className="min-h-screen bg-gray-900 text-white">
       <nav className="bg-gray-950 border-b border-gray-800 px-6 py-4 flex justify-between items-center">
         <a href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</a>
-        <a href="/" className="text-gray-400 hover:text-white text-sm">← Back to listings</a>
+        <a href="/dashboard" className="text-gray-400 hover:text-white text-sm">← Back to Dashboard</a>
       </nav>
 
       <div className="max-w-3xl mx-auto px-6 py-12">
