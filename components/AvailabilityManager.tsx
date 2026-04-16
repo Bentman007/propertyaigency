@@ -55,6 +55,7 @@ export default function AvailabilityManager({ agentId }: { agentId: string }) {
 
   const saveTemplate = async () => {
     setSaving(true)
+    console.log('Saving template:', JSON.stringify(template))
     await fetch('/api/availability', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
