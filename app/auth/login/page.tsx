@@ -18,7 +18,9 @@ export default function LoginPage() {
     } else {
       const params = new URLSearchParams(window.location.search)
       const next = params.get('next') || '/dashboard'
-      window.location.href = next
+      setTimeout(() => {
+        window.location.href = next
+      }, 500)
     }
     setLoading(false)
   }
