@@ -290,6 +290,24 @@ export default function DashboardPage() {
                           className="text-sm bg-orange-500 hover:bg-orange-400 text-black px-3 py-1.5 rounded-lg font-semibold">
                           Edit
                         </Link>
+                        {property.status === 'active' && (
+                          <button onClick={() => updateStatus(property.id, 'under_offer')}
+                            className="text-sm bg-yellow-600 hover:bg-yellow-500 text-white px-3 py-1.5 rounded-lg">
+                            🟡 Under Offer
+                          </button>
+                        )}
+                        {(property.status === 'active' || property.status === 'under_offer') && (
+                          <button onClick={() => updateStatus(property.id, 'sold')}
+                            className="text-sm bg-red-700 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg">
+                            🔴 Mark Sold/Rented
+                          </button>
+                        )}
+                        {property.status !== 'active' && (
+                          <button onClick={() => updateStatus(property.id, 'active')}
+                            className="text-sm bg-green-700 hover:bg-green-600 text-white px-3 py-1.5 rounded-lg">
+                            🟢 Re-activate
+                          </button>
+                        )}
                       </div>
                     </div>
 
