@@ -24,11 +24,13 @@ export async function POST(request: NextRequest) {
 
     const { data: property } = await supabase
       .from('properties')
-      .select('title, suburb, city')
+      .select('title, address, suburb, city')
       .eq('id', property_id)
       .single()
 
-    const { error } = await supabase
+    const fullAddress = `${property?.address}, ${property?.suburb}, ${property?.city}`
+
+    const { data: booking, error } = await supabase
       .from('viewing_bookings')
       .insert({
         property_id,
@@ -36,28 +38,38 @@ export async function POST(request: NextRequest) {
         searcher_id,
         date: slot.date,
         start_time: slot.start_time,
-        status: 'confirmed',
+        status: 'pending',
         searcher_profile: profile || {},
         lead_score: conversation?.lead_score || 0,
-        lead_temperature: conversation?.lead_temperature || 'cold'
+        lead_temperature: conversation?.lead_temperature || 'cold',
+        property_address: fullAddress
       })
+      .select()
+      .single()
 
     if (error) throw error
 
+    // Mark slot as booked
+    if (slot.id) {
+      await supabase
+        .from('agent_availability')
+        .update({ is_booked: true })
+        .eq('id', slot.id)
+    }
+
     // Send push notification to agent
-    const notifyUrl = `${request.nextUrl.origin}/api/push`
-    await fetch(notifyUrl, {
+    await fetch(`${request.nextUrl.origin}/api/push`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         user_id: agent_id,
-        title: '📅 New Viewing Booked!',
-        body: `${property?.title} — ${new Date(slot.date).toLocaleDateString('en-ZA', { weekday: 'long', month: 'long', day: 'numeric' })} at ${slot.start_time}`,
+        title: '📅 New Viewing Request!',
+        body: `${property?.title} — ${new Date(slot.date).toLocaleDateString('en-ZA', { weekday: 'long', month: 'long', day: 'numeric' })} at ${slot.start_time}. Please confirm!`,
         url: '/dashboard'
       })
     })
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true, booking_id: booking?.id })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
