@@ -1,6 +1,7 @@
 import PropertyChat from '@/components/PropertyChat'
 import PhotoGallery from '@/components/PhotoGallery'
 import BookViewing from '@/components/BookViewing'
+import EditListingButton from '@/components/EditListingButton'
 import ViewTracker from '@/components/ViewTracker'
 import { supabase } from '@/lib/supabase'
 
@@ -47,7 +48,10 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
       <ViewTracker propertyId={p.id} />
       <nav className="bg-gray-950 border-b border-gray-800 px-6 py-4 flex justify-between items-center">
         <a href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</a>
-        <a href="/dashboard" className="text-gray-400 hover:text-white text-sm">← Back to Dashboard</a>
+        <div className="flex items-center gap-3">
+          <a href="/dashboard" className="text-gray-400 hover:text-white text-sm">← Back to Dashboard</a>
+          <EditListingButton propertyId={p.id} agentId={p.user_id} />
+        </div>
       </nav>
 
       <div className="max-w-5xl mx-auto px-6 py-10">

@@ -175,9 +175,20 @@ export default function DashboardPage() {
         <div className="mb-6">
           <PushNotifications />
         </div>
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">My Dashboard</h1>
-          <p className="text-gray-400 mt-1">Track performance and get AI insights on your listings</p>
+        <div className="mb-8 flex justify-between items-start">
+          <div>
+            <p className="text-gray-400 text-sm mb-1">Welcome back 👋</p>
+            <h1 className="text-3xl font-bold">
+              {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'My Dashboard'}
+            </h1>
+            <p className="text-gray-400 mt-1 text-sm">
+              {user?.email} · <span className="text-orange-500">Agent Dashboard</span>
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="text-gray-500 text-xs">Last updated</p>
+            <p className="text-gray-300 text-sm">{new Date().toLocaleDateString('en-ZA', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+          </div>
         </div>
 
         {/* Summary Stats */}
