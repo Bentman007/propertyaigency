@@ -1,3 +1,6 @@
+export const maxDuration = 30
+export const dynamic = 'force-dynamic'
+
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
