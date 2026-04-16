@@ -165,6 +165,7 @@ Temperatures: hot (80-100, ready to move, specific needs), warm (50-79, actively
     })
 
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Property chat error:', error)
+    return NextResponse.json({ error: error.message, stack: error.stack }, { status: 500 })
   }
 }
