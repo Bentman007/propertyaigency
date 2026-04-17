@@ -10,7 +10,7 @@ export default function AdminPage() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState<any>({})
-  const [activeAI, setActiveAI] = useState<'marketing' | 'sales' | 'support'>('marketing')
+  const [activeAI, setActiveAI] = useState<'marketing' | 'sales' | 'support' | 'finance'>('marketing')
   const [aiInput, setAiInput] = useState('')
   const [aiResponse, setAiResponse] = useState('')
   const [aiLoading, setAiLoading] = useState(false)
