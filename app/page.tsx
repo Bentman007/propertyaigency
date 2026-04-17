@@ -7,19 +7,79 @@ import { supabase } from '@/lib/supabase'
 export default function Home() {
   const [user, setUser] = useState<any>(null)
   const [properties, setProperties] = useState<any[]>([])
+  const [locationLabel, setLocationLabel] = useState('Latest Properties')
+  const [locating, setLocating] = useState(false)
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data.user))
     fetchProperties()
+    getLocation()
   }, [])
 
-  const fetchProperties = async () => {
-    const { data } = await supabase
+  const fetchProperties = async (suburb?: string, city?: string) => {
+    let query = supabase
       .from('properties')
       .select('*')
+      .eq('status', 'active')
       .order('created_at', { ascending: false })
       .limit(6)
-    if (data) setProperties(data)
+
+    if (city) {
+      query = supabase
+        .from('properties')
+        .select('*')
+        .eq('status', 'active')
+        .ilike('city', `%${city}%`)
+        .order('created_at', { ascending: false })
+        .limit(6)
+    }
+
+    const { data } = await query
+    if (data && data.length > 0) {
+      setProperties(data)
+    } else if (city) {
+      // No local results — fall back to all properties
+      const { data: allData } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('status', 'active')
+        .order('created_at', { ascending: false })
+        .limit(6)
+      if (allData) setProperties(allData)
+      setLocationLabel('Latest Properties')
+    }
+  }
+
+  const getLocation = () => {
+    if (!navigator.geolocation) return
+    setLocating(true)
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords
+          const response = await fetch(
+            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_KEY}`
+          )
+          const data = await response.json()
+          const components = data.results?.[0]?.address_components || []
+          const city = components.find((c: any) => c.types.includes('locality'))?.long_name
+          const suburb = components.find((c: any) => c.types.includes('sublocality'))?.long_name
+
+          if (city) {
+            setLocationLabel(`Properties Near You — ${suburb || city}`)
+            fetchProperties(suburb, city)
+          }
+        } catch (e) {
+          fetchProperties()
+        }
+        setLocating(false)
+      },
+      () => {
+        fetchProperties()
+        setLocating(false)
+      },
+      { timeout: 5000 }
+    )
   }
 
   const formatPrice = (price: number, type: string) => 
@@ -73,7 +133,10 @@ export default function Home() {
       {/* Featured Properties */}
       <section className="px-6 py-16 max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold">Latest Properties</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-3xl font-bold">{locationLabel}</h2>
+            {locating && <span className="text-orange-500 text-sm animate-pulse">📍 Finding nearby...</span>}
+          </div>
           <Link href="/search" className="text-orange-500 hover:underline text-sm">Find my perfect match →</Link>
         </div>
         <div className="grid grid-cols-3 gap-6">
