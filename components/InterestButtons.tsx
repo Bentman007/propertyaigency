@@ -117,11 +117,7 @@ export default function InterestButtons({ propertyId, agentId }: { propertyId: s
       </button>
 
       <button onClick={handleNotInterested} disabled={loading}
-        className={`w-full py-2.5 rounded-xl text-sm font-bold transition border-2 ${
-          status === 'rejected'
-            ? 'bg-red-600 border-red-600 text-white'
-            : 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-red-600 hover:border-red-600 hover:text-white'
-        }`}>
+        className="w-full py-2.5 rounded-xl text-sm font-bold transition border-2 bg-gray-700 border-gray-600 text-gray-300 hover:bg-red-600 hover:border-red-600 hover:text-white">
         👎 Not Interested — Don&apos;t Show Again
       </button>
     </div>
