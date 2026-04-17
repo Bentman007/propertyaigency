@@ -142,7 +142,7 @@ export default function DashboardPage() {
             body: JSON.stringify({
               user_id: s.user_id,
               title: '🏠 Property Update',
-              body: \`"\${property?.title}" has been sold/rented. Shall we find you something similar?\`,
+              body: `"${property?.title}" has been sold/rented. Shall we find you something similar?`,
               url: '/search'
             })
           })
