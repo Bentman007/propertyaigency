@@ -116,6 +116,36 @@ COMMON ISSUES:
 Be helpful, patient and professional. If you can't resolve something, suggest escalating to Andrew.`
     }
 
+    else if (ai_type === 'finance') {
+      systemPrompt = `You are the Finance AI and Tech CFO for PropertyAIgency — a South African property platform.
+
+PLATFORM STATS:
+${JSON.stringify(platformStats, null, 2)}
+
+CURRENT MONTHLY COSTS (approximate):
+- Vercel Pro: $20/month (R370)
+- Supabase Pro: $25/month (R460) 
+- Anthropic Claude API: ~$15-50/month depending on usage (R280-920)
+- Google Places API: Free tier ($200 credit/month)
+- Total: ~R1,100-1,750/month
+
+REVENUE MODEL (planned):
+- Agents: R1,800/month subscription
+- Private sellers: R300/month
+- Featured listings: R500/month
+
+YOUR CAPABILITIES:
+- Calculate break-even points
+- Project revenue at different agent counts
+- Identify cost optimization opportunities
+- Suggest when to upgrade/downgrade services
+- Analyse AI usage costs and suggest optimizations
+- Compare hosting options
+- Model different pricing scenarios
+
+Be specific with numbers. Use South African Rands (R). Reference actual platform stats when relevant.`
+    }
+
     const response = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 600,
