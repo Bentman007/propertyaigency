@@ -15,11 +15,13 @@ export async function POST(request: NextRequest) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
     // Store escalation for admin to see
-    await supabase.from('contact_escalations').insert({
-      name: body.name,
-      email: body.email,
-      conversation: JSON.stringify(body.conversation)
-    }).catch(() => {}) // Fail silently if table doesn't exist yet
+    try {
+      await supabase.from('contact_escalations').insert({
+        name: body.name,
+        email: body.email,
+        conversation: JSON.stringify(body.conversation)
+      })
+    } catch (_) {} // Fail silently if table doesn't exist yet
     
     return NextResponse.json({ success: true })
   }
