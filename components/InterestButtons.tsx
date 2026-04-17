@@ -99,22 +99,30 @@ export default function InterestButtons({ propertyId, agentId }: { propertyId: s
   return (
     <div className="space-y-2 mb-3">
       <button onClick={() => handleInterest('very_interested')} disabled={loading}
-        className={`w-full py-2.5 rounded-xl text-sm font-bold transition ${
-          status === 'very_interested' ? 'bg-red-500 text-white' : 'bg-gray-700 hover:bg-red-500 hover:text-white text-gray-300'
+        className={`w-full py-2.5 rounded-xl text-sm font-bold transition border-2 ${
+          status === 'very_interested' 
+            ? 'bg-green-500 border-green-500 text-white' 
+            : 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-green-500 hover:border-green-500 hover:text-white'
         }`}>
         {status === 'very_interested' ? '🔥 Very Interested!' : '🔥 Very Interested'}
       </button>
 
       <button onClick={() => handleInterest('interested')} disabled={loading}
-        className={`w-full py-2.5 rounded-xl text-sm font-bold transition ${
-          status === 'interested' ? 'bg-yellow-500 text-black' : 'bg-gray-700 hover:bg-yellow-500 hover:text-black text-gray-300'
+        className={`w-full py-2.5 rounded-xl text-sm font-bold transition border-2 ${
+          status === 'interested' 
+            ? 'bg-amber-500 border-amber-500 text-black' 
+            : 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-amber-500 hover:border-amber-500 hover:text-black'
         }`}>
         {status === 'interested' ? '💛 Saved — Still Looking' : '💛 Still Looking But Like It'}
       </button>
 
       <button onClick={handleNotInterested} disabled={loading}
-        className="w-full py-2 rounded-xl text-xs text-gray-500 hover:text-red-400 transition">
-        👎 Not Interested — Don't Show Again
+        className={`w-full py-2.5 rounded-xl text-sm font-bold transition border-2 ${
+          status === 'rejected'
+            ? 'bg-red-600 border-red-600 text-white'
+            : 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-red-600 hover:border-red-600 hover:text-white'
+        }`}>
+        👎 Not Interested — Don&apos;t Show Again
       </button>
     </div>
   )
