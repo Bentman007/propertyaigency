@@ -125,6 +125,30 @@ export default function DashboardPage() {
   const updateStatus = async (propertyId: string, status: string) => {
     await supabase.from('properties').update({ status }).eq('id', propertyId)
     setProperties(prev => prev.map(p => p.id === propertyId ? { ...p, status } : p))
+
+    // Notify saved buyers if sold or rented
+    if (status === 'sold') {
+      const property = properties.find(p => p.id === propertyId)
+      const { data: saved } = await supabase
+        .from('saved_properties')
+        .select('user_id')
+        .eq('property_id', propertyId)
+
+      if (saved && saved.length > 0) {
+        for (const s of saved) {
+          await fetch('/api/push', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: s.user_id,
+              title: '🏠 Property Update',
+              body: \`"\${property?.title}" has been sold/rented. Shall we find you something similar?\`,
+              url: '/search'
+            })
+          })
+        }
+      }
+    }
   }
 
   const getAiInsight = async (property: PropertyWithStats) => {
