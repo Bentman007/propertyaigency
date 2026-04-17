@@ -193,6 +193,14 @@ export default function Home() {
         <p>© 2025 PropertyAIgency · <Link href="/auth/login" className="text-orange-500 hover:underline">Sign In</Link> · <Link href="/auth/register" className="text-orange-500 hover:underline">Register</Link></p>
       </footer>
       <MobileBanner />
+      <footer className="border-t border-gray-800 px-6 py-8 mt-12 text-center text-gray-500 text-sm">
+        <div className="flex justify-center gap-6">
+          <a href="/terms" className="hover:text-white">Terms of Service</a>
+          <a href="/privacy" className="hover:text-white">Privacy Policy</a>
+          <a href="/contact" className="hover:text-white">Contact</a>
+        </div>
+        <p className="mt-3">© 2026 PropertyAIgency. All rights reserved.</p>
+      </footer>
     </main>
   )
 }
