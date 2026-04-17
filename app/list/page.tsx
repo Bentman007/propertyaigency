@@ -84,6 +84,8 @@ function ListPropertyInner() {
   const [aiLoading, setAiLoading] = useState(false)
   const [valuationLoading, setValuationLoading] = useState(false)
   const [valuation, setValuation] = useState<any>(null)
+  const [videoUrl, setVideoUrl] = useState('')
+  const [virtualTourUrl, setVirtualTourUrl] = useState('')
   const [form, setForm] = useState({
     title: '', description: '', price: '', price_type: 'sale',
     bedrooms: '', bathrooms: '', garages: '', size_sqm: '',
