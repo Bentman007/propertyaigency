@@ -69,8 +69,6 @@ function ListPropertyInner() {
         province: data.province || '',
         latitude: data.latitude?.toString() || '',
         longitude: data.longitude?.toString() || '',
-        video_url: '',
-        virtual_tour_url: '',
         ...defaultFeatures
       })
       if (data.photos) setPhotos(data.photos)
@@ -171,6 +169,8 @@ function ListPropertyInner() {
       latitude: parseFloat(form.latitude as string) || null,
       longitude: parseFloat(form.longitude as string) || null,
       user_id: user.id,
+      video_url: videoUrl || null,
+      virtual_tour_url: virtualTourUrl || null,
       photos
     }
 
