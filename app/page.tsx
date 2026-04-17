@@ -1,4 +1,5 @@
 'use client'
+import MobileBanner from '@/components/MobileBanner'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -128,6 +129,7 @@ export default function Home() {
       <footer className="text-center py-8 text-gray-500 text-sm">
         <p>© 2025 PropertyAIgency · <Link href="/auth/login" className="text-orange-500 hover:underline">Sign In</Link> · <Link href="/auth/register" className="text-orange-500 hover:underline">Register</Link></p>
       </footer>
+      <MobileBanner />
     </main>
   )
 }
