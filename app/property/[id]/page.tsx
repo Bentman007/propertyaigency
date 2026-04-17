@@ -200,7 +200,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
           <div className="space-y-4">
 
             {/* Price card - sticky on desktop */}
-            <div className="bg-gray-800 border border-orange-500 rounded-xl p-5 lg:sticky lg:top-6">
+            <div className="bg-gray-800 border border-orange-500 rounded-xl p-5">
               <div className="text-2xl md:text-3xl font-bold text-orange-500 mb-1">
                 {formatPrice(p.price, p.price_type)}
               </div>
