@@ -345,7 +345,7 @@ export default function AdminPage() {
               </button>
             ))}
             {activeAI === 'support' && [
-              'Agent can't edit their listing',
+              'Agent cannot edit their listing',
               'Buyer not receiving notifications',
               'How to handle a refund request',
             ].map(prompt => (
