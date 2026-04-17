@@ -132,6 +132,41 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
               </div>
             )}
 
+            {/* Video */}
+            {p.video_url && (
+              <div className="bg-gray-800 border border-gray-700 rounded-xl p-5">
+                <h2 className="text-lg font-bold mb-3 text-orange-500">🎥 Property Video</h2>
+                <div className="relative w-full" style={{paddingBottom: '56.25%'}}>
+                  <iframe
+                    src={p.video_url.includes('youtube.com/watch') 
+                      ? p.video_url.replace('watch?v=', 'embed/')
+                      : p.video_url.includes('youtu.be')
+                      ? p.video_url.replace('youtu.be/', 'www.youtube.com/embed/')
+                      : p.video_url.includes('vimeo.com')
+                      ? p.video_url.replace('vimeo.com/', 'player.vimeo.com/video/')
+                      : p.video_url}
+                    className="absolute inset-0 w-full h-full rounded-lg"
+                    allowFullScreen
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Virtual Tour */}
+            {p.virtual_tour_url && (
+              <div className="bg-gray-800 border border-gray-700 rounded-xl p-5">
+                <h2 className="text-lg font-bold mb-3 text-orange-500">🏠 Virtual Tour</h2>
+                <div className="relative w-full" style={{paddingBottom: '56.25%'}}>
+                  <iframe
+                    src={p.virtual_tour_url}
+                    className="absolute inset-0 w-full h-full rounded-lg"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            )}
+
             {/* Features */}
             {activeFeatures.length > 0 && (
               <div className="bg-gray-800 border border-gray-700 rounded-xl p-5">

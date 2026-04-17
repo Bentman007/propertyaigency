@@ -69,6 +69,8 @@ function ListPropertyInner() {
         province: data.province || '',
         latitude: data.latitude?.toString() || '',
         longitude: data.longitude?.toString() || '',
+        video_url: '',
+        virtual_tour_url: '',
         ...defaultFeatures
       })
       if (data.photos) setPhotos(data.photos)
