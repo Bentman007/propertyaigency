@@ -176,40 +176,6 @@ export default function PricingPage() {
           </div>
         </div>
 
-        {/* vs Property24 */}
-        <div className="mb-16 bg-gray-800 border border-gray-700 rounded-2xl p-8">
-          <h2 className="text-2xl font-bold text-center mb-8">How We Compare to Property24</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-gray-700">
-                  <th className="text-left py-3 text-gray-400">Feature</th>
-                  <th className="text-center py-3 text-orange-500 font-bold">PropertyAIgency</th>
-                  <th className="text-center py-3 text-gray-500">Property24</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-700">
-                {[
-                  ['Monthly cost (10 listings)', 'R800', 'R1,400+'],
-                  ['AI lead qualification', '✅ Included', '❌ Not available'],
-                  ['Instant viewing bookings', '✅ Automated', '❌ Manual'],
-                  ['Lead briefs for agents', '✅ AI-generated', '❌ Not available'],
-                  ['Transparent pricing', '✅ Flat rate', '❌ Per lead (unverified)'],
-                  ['Long-term contracts', '❌ Month to month', '⚠️ Multi-year'],
-                  ['Free trial', '✅ 2 months free', '❌ None'],
-                  ['South African focused', '✅ Built for SA', '✅ Yes'],
-                ].map(([feature, us, them]) => (
-                  <tr key={feature}>
-                    <td className="py-3 text-gray-300">{feature}</td>
-                    <td className="py-3 text-center font-semibold text-green-400">{us}</td>
-                    <td className="py-3 text-center text-gray-500">{them}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
         {/* CTA */}
         <div className="text-center bg-gradient-to-r from-orange-900 to-gray-800 border border-orange-700 rounded-2xl p-12">
           <h2 className="text-3xl font-bold mb-3">Start Your Free 2-Month Trial</h2>
