@@ -10,6 +10,11 @@ export default function AdminPage() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState<any>({})
+  const [activeAI, setActiveAI] = useState<'marketing' | 'sales' | 'support'>('marketing')
+  const [aiInput, setAiInput] = useState('')
+  const [aiResponse, setAiResponse] = useState('')
+  const [aiLoading, setAiLoading] = useState(false)
+  const [aiHistory, setAiHistory] = useState<{role: string, content: string}[]>([])
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
@@ -76,6 +81,23 @@ export default function AdminPage() {
       totalSearches: searches?.length || 0,
       propViewCounts
     })
+  }
+
+  const askAI = async () => {
+    if (!aiInput.trim()) return
+    setAiLoading(true)
+    const newHistory = [...aiHistory, { role: 'user', content: aiInput }]
+    setAiHistory(newHistory)
+    setAiInput('')
+    
+    const response = await fetch('/api/admin-ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ai_type: activeAI, context: aiInput })
+    })
+    const data = await response.json()
+    setAiHistory([...newHistory, { role: 'assistant', content: data.message || 'Sorry, something went wrong.' }])
+    setAiLoading(false)
   }
 
   if (loading) return (
@@ -245,6 +267,115 @@ export default function AdminPage() {
             </tbody>
           </table>
         </div>
+        {/* AI Team */}
+        <h2 className="text-lg font-bold text-orange-500 mb-3 mt-8">🤖 Your AI Team</h2>
+        <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden mb-8">
+          {/* AI selector */}
+          <div className="grid grid-cols-3 border-b border-gray-700">
+            {[
+              { id: 'marketing', label: '🎯 Marketing AI', desc: 'Social media, campaigns, growth' },
+              { id: 'sales', label: '📞 Sales AI', desc: 'Agent acquisition, outreach' },
+              { id: 'support', label: '💬 Support AI', desc: 'Handle queries, troubleshoot' },
+            ].map(ai => (
+              <button key={ai.id} onClick={() => { setActiveAI(ai.id as any); setAiHistory([]) }}
+                className={`p-4 text-left transition ${activeAI === ai.id ? 'bg-gray-700 border-b-2 border-orange-500' : 'hover:bg-gray-750'}`}>
+                <p className="font-semibold text-sm">{ai.label}</p>
+                <p className="text-gray-400 text-xs mt-0.5">{ai.desc}</p>
+              </button>
+            ))}
+          </div>
+
+          {/* Chat area */}
+          <div className="h-80 overflow-y-auto p-4 space-y-3">
+            {aiHistory.length === 0 && (
+              <div className="text-center py-8">
+                <p className="text-3xl mb-2">
+                  {activeAI === 'marketing' ? '🎯' : activeAI === 'sales' ? '📞' : '💬'}
+                </p>
+                <p className="text-gray-400 text-sm font-semibold">
+                  {activeAI === 'marketing' ? 'Marketing AI ready' : activeAI === 'sales' ? 'Sales AI ready' : 'Support AI ready'}
+                </p>
+                <p className="text-gray-500 text-xs mt-1">
+                  {activeAI === 'marketing' ? 'Ask me to write a social post, email campaign, or growth strategy' :
+                   activeAI === 'sales' ? 'Ask me to draft an outreach email or handle an objection' :
+                   'Ask me how to handle a support query or create an FAQ'}
+                </p>
+              </div>
+            )}
+            {aiHistory.map((msg, i) => (
+              <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                {msg.role === 'assistant' && (
+                  <div className="w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs flex-shrink-0">AI</div>
+                )}
+                <div className={`max-w-2xl rounded-xl px-4 py-2.5 text-sm whitespace-pre-wrap ${
+                  msg.role === 'user' ? 'bg-orange-500 text-black' : 'bg-gray-700 text-gray-200'
+                }`}>
+                  {msg.content}
+                </div>
+              </div>
+            ))}
+            {aiLoading && (
+              <div className="flex gap-3">
+                <div className="w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs">AI</div>
+                <div className="bg-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-400 animate-pulse">Thinking...</div>
+              </div>
+            )}
+          </div>
+
+          {/* Quick prompts */}
+          <div className="px-4 py-2 border-t border-gray-700 flex gap-2 overflow-x-auto">
+            {activeAI === 'marketing' && [
+              'Write a LinkedIn post about our AI Concierge',
+              'Draft an email to estate agents in Johannesburg',
+              'Suggest 3 growth strategies for this month',
+            ].map(prompt => (
+              <button key={prompt} onClick={() => setAiInput(prompt)}
+                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-1.5 rounded-full whitespace-nowrap transition">
+                {prompt}
+              </button>
+            ))}
+            {activeAI === 'sales' && [
+              'Draft outreach email to Pam Golding',
+              'Handle objection: We already use Property24',
+              'Create a pitch for a small agency',
+            ].map(prompt => (
+              <button key={prompt} onClick={() => setAiInput(prompt)}
+                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-1.5 rounded-full whitespace-nowrap transition">
+                {prompt}
+              </button>
+            ))}
+            {activeAI === 'support' && [
+              'Agent can't edit their listing',
+              'Buyer not receiving notifications',
+              'How to handle a refund request',
+            ].map(prompt => (
+              <button key={prompt} onClick={() => setAiInput(prompt)}
+                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-1.5 rounded-full whitespace-nowrap transition">
+                {prompt}
+              </button>
+            ))}
+          </div>
+
+          {/* Input */}
+          <div className="p-4 border-t border-gray-700 flex gap-3">
+            <input
+              value={aiInput}
+              onChange={e => setAiInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && askAI()}
+              placeholder={
+                activeAI === 'marketing' ? 'Ask your Marketing AI...' :
+                activeAI === 'sales' ? 'Ask your Sales AI...' :
+                'Ask your Support AI...'
+              }
+              className="flex-1 bg-gray-700 text-white rounded-xl px-4 py-3 outline-none border border-gray-600 focus:border-orange-500 text-sm"
+            />
+            <button onClick={askAI} disabled={aiLoading || !aiInput.trim()}
+              className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-5 py-3 rounded-xl disabled:opacity-50 transition">
+              Send
+            </button>
+          </div>
+        </div>
+
       </div>
     </main>
   )
