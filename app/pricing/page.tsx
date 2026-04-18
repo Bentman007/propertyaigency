@@ -26,7 +26,7 @@ export default function PricingPage() {
             Simple, Transparent Pricing
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            40% cheaper than Property24 — with AI that does the work for you. 
+            AI-powered property listings at a fraction of the cost. 
             No hidden fees, no per-lead charges, no surprises.
           </p>
         </div>
