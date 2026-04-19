@@ -1,79 +1,84 @@
 'use client'
-
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import Link from 'next/link'
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
-  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [done, setDone] = useState(false)
+  const [message, setMessage] = useState('')
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleReset = async (e: React.FormEvent) => {
     e.preventDefault()
     if (password !== confirm) {
-      setError('Passwords do not match')
+      setMessage('Passwords do not match')
       return
     }
-    setLoading(true)
-    setError('')
+    if (password.length < 6) {
+      setMessage('Password must be at least 6 characters')
+      return
+    }
 
+    setLoading(true)
     const { error } = await supabase.auth.updateUser({ password })
 
     if (error) {
-      setError(error.message)
+      setMessage(error.message)
     } else {
-      window.location.href = '/auth/login?reset=success'
+      setDone(true)
     }
     setLoading(false)
   }
+
+  if (done) return (
+    <main className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
+      <div className="bg-gray-800 rounded-2xl p-8 w-full max-w-md border border-gray-700 text-center">
+        <p className="text-4xl mb-4">🎉</p>
+        <h2 className="text-xl font-bold text-green-300 mb-2">Password updated!</h2>
+        <p className="text-gray-400 text-sm mb-6">Your password has been changed successfully.</p>
+        <Link href="/auth/login" className="inline-block bg-orange-500 text-black font-bold px-8 py-3 rounded-xl hover:bg-orange-400">
+          Sign In →
+        </Link>
+      </div>
+    </main>
+  )
 
   return (
     <main className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
       <div className="bg-gray-800 rounded-2xl p-8 w-full max-w-md border border-gray-700">
         <div className="text-center mb-8">
-          <a href="/" className="text-3xl font-bold text-white">
+          <Link href="/" className="text-3xl font-bold text-white">
             Property<span className="text-orange-500">AI</span>gency
-          </a>
+          </Link>
           <p className="text-gray-400 mt-2">Set your new password</p>
         </div>
 
-        {error && (
+        {message && (
           <div className="mb-4 p-3 bg-red-900 border border-red-700 text-red-300 rounded-lg text-sm">
-            {error}
+            {message}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleReset} className="space-y-4">
           <div>
-            <label className="text-gray-300 text-sm mb-1 block">New password</label>
-            <input
-              type="password"
-              required
-              minLength={8}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
-            />
+            <label className="text-gray-300 text-sm mb-1 block">New Password</label>
+            <input type="password" required value={password}
+              onChange={e => setPassword(e.target.value)}
+              placeholder="Minimum 6 characters"
+              className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"/>
           </div>
           <div>
-            <label className="text-gray-300 text-sm mb-1 block">Confirm password</label>
-            <input
-              type="password"
-              required
-              minLength={8}
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-              className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
-            />
+            <label className="text-gray-300 text-sm mb-1 block">Confirm New Password</label>
+            <input type="password" required value={confirm}
+              onChange={e => setConfirm(e.target.value)}
+              placeholder="Repeat your new password"
+              className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"/>
           </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-3 rounded-lg transition-colors disabled:opacity-50"
-          >
-            {loading ? 'Updating...' : 'Update password'}
+          <button type="submit" disabled={loading}
+            className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-3 rounded-xl disabled:opacity-50 transition">
+            {loading ? 'Updating...' : '🔐 Update Password'}
           </button>
         </form>
       </div>
