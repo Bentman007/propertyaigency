@@ -6,6 +6,7 @@ import ViewTracker from '@/components/ViewTracker'
 import EditListingButton from '@/components/EditListingButton'
 import InterestButtons from '@/components/InterestButtons'
 import MakeOffer from '@/components/MakeOffer'
+import MortgageCalculator from '@/components/MortgageCalculator'
 
 const featureGroups = [
   { label: 'Outdoor & Entertainment', features: [['has_braai','Braai Area / Built-in Braai'],['has_patio','Entertainers Patio'],['has_pool','Swimming Pool'],['has_jacuzzi','Jacuzzi / Splash Pool'],['has_tennis_court','Tennis Court'],['has_putting_green','Putting Green'],['has_outdoor_shower','Outdoor Shower']] },
@@ -216,6 +217,8 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
               <BookViewing property={p} />
               <MakeOffer property={p} />
               <InterestButtons propertyId={p.id} agentId={p.user_id} />
+
+              <MortgageCalculator price={p.price} priceType={p.price_type} />
 
               <div className="mt-4 pt-4 border-t border-gray-700">
                 <div className="flex items-center gap-2 text-xs text-gray-500">
