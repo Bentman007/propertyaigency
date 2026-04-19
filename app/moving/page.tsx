@@ -19,35 +19,29 @@ export default function MovingServicesPage() {
   const [user, setUser] = useState<any>(null)
   const [hasAccess, setHasAccess] = useState(false)
   const [checkingAccess, setCheckingAccess] = useState(true)
-  const [fromRef, setFromRef] = useState<any>(null)
-  const [toRef, setToRef] = useState<any>(null)
   const [selectedServices, setSelectedServices] = useState<string[]>([])
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const [form, setForm] = useState({
-    from_address: '', to_address: '', move_date: ''
-  })
+  const [form, setForm] = useState({ from_address: '', to_address: '', move_date: '' })
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
       if (!data.user) { setCheckingAccess(false); return }
       setUser(data.user)
 
-      // Check if they have moving services access
       const { data: profile } = await supabase
         .from('profiles')
         .select('has_moving_access')
         .eq('id', data.user.id)
         .single()
-      
-      setHasAccess(profile?.has_moving_access || false)
-      setCheckingAccess(false)
 
-      // Pre-populate from latest confirmed booking
+      setHasAccess(profile?.has_moving_access || false)
+
+      // Pre-populate to_address from latest confirmed booking
       const { data: booking } = await supabase
         .from('viewing_bookings')
-        .select('property_address, properties(address, suburb, city)')
+        .select('property_address')
         .eq('searcher_id', data.user.id)
         .eq('status', 'confirmed')
         .order('created_at', { ascending: false })
@@ -57,46 +51,10 @@ export default function MovingServicesPage() {
       if (booking?.property_address) {
         setForm(p => ({ ...p, to_address: booking.property_address }))
       }
+
+      setCheckingAccess(false)
     })
-
-    // Load Google Places
-    if (!(window as any).google) {
-      const script = document.createElement('script')
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_KEY}&libraries=places`
-      script.async = true
-      script.onload = initAutocomplete
-      document.head.appendChild(script)
-    } else {
-      initAutocomplete()
-    }
   }, [])
-
-  const initAutocomplete = () => {
-    const fromInput = document.getElementById('from-address') as HTMLInputElement
-    const toInput = document.getElementById('to-address') as HTMLInputElement
-
-    if (fromInput && (window as any).google) {
-      const fromAC = new (window as any).google.maps.places.Autocomplete(fromInput, {
-        componentRestrictions: { country: 'za' },
-        fields: ['formatted_address']
-      })
-      fromAC.addListener('place_changed', () => {
-        const place = fromAC.getPlace()
-        setForm(p => ({ ...p, from_address: place.formatted_address || '' }))
-      })
-    }
-
-    if (toInput && (window as any).google) {
-      const toAC = new (window as any).google.maps.places.Autocomplete(toInput, {
-        componentRestrictions: { country: 'za' },
-        fields: ['formatted_address']
-      })
-      toAC.addListener('place_changed', () => {
-        const place = toAC.getPlace()
-        setForm(p => ({ ...p, to_address: place.formatted_address || '' }))
-      })
-    }
-  }
 
   const toggleService = (value: string) => {
     setSelectedServices(prev =>
@@ -104,10 +62,15 @@ export default function MovingServicesPage() {
     )
   }
 
+  const handleUpgrade = async () => {
+    if (!user) return
+    await supabase.from('profiles').update({ has_moving_access: true }).eq('id', user.id)
+    setHasAccess(true)
+  }
+
   const handleSubmit = async () => {
     if (!user) { window.location.href = '/auth/login?next=/moving'; return }
     setLoading(true)
-
     for (const service of selectedServices) {
       await supabase.from('move_quote_requests').insert({
         user_id: user.id,
@@ -118,17 +81,89 @@ export default function MovingServicesPage() {
         status: 'pending'
       })
     }
-
     setSubmitted(true)
     setLoading(false)
   }
+
+  if (checkingAccess) return (
+    <main className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <p className="text-orange-500 animate-pulse">Loading...</p>
+    </main>
+  )
+
+  if (!user) return (
+    <main className="min-h-screen bg-gray-900 text-white flex items-center justify-center px-6">
+      <div className="text-center">
+        <p className="text-4xl mb-4">🔐</p>
+        <h2 className="text-xl font-bold mb-2">Sign in to access Moving Services</h2>
+        <Link href="/auth/login?next=/moving" className="inline-block bg-orange-500 text-black font-bold px-8 py-3 rounded-xl hover:bg-orange-400 mt-4">
+          Sign In
+        </Link>
+      </div>
+    </main>
+  )
+
+  if (!hasAccess) return (
+    <main className="min-h-screen bg-gray-900 text-white">
+      <nav className="bg-gray-950 border-b border-gray-800 px-6 py-4 flex justify-between items-center">
+        <Link href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
+        <Link href="/my-properties" className="text-gray-400 hover:text-white text-sm">← My Dashboard</Link>
+      </nav>
+      <div className="max-w-xl mx-auto px-6 py-12">
+        <div className="text-center mb-8">
+          <p className="text-5xl mb-4">📦</p>
+          <h1 className="text-2xl font-bold mb-2">Moving Services</h1>
+          <p className="text-gray-400">Upgrade your account to get quotes from verified suppliers — all within 24 hours</p>
+        </div>
+
+        <div className="bg-gray-800 border border-orange-500 rounded-2xl p-8 mb-6">
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <p className="text-xl font-bold">Moving Services Package</p>
+              <p className="text-gray-400 text-sm">One-time upgrade</p>
+            </div>
+            <div className="text-right">
+              <p className="text-4xl font-bold text-orange-500">R200</p>
+              <p className="text-gray-400 text-xs">once-off</p>
+            </div>
+          </div>
+
+          <ul className="space-y-3 mb-6">
+            {[
+              '🚛 Up to 3 removal company quotes',
+              '🧹 Cleaning service quotes',
+              '🌿 Garden & pool service in new area',
+              '⚖️ Conveyancing attorney referral',
+              '🏦 Bond originator introduction',
+              '📋 Property surveyor referral',
+              '⭐ All suppliers verified and reviewed',
+              '✅ Quotes within 24 hours guaranteed',
+            ].map(item => (
+              <li key={item} className="flex items-center gap-3 text-sm">
+                <span className="text-green-400">✓</span>
+                <span className="text-gray-300">{item}</span>
+              </li>
+            ))}
+          </ul>
+
+          <button onClick={handleUpgrade}
+            className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-4 rounded-xl text-lg transition">
+            🚀 Upgrade Now — R200
+          </button>
+          <p className="text-xs text-gray-500 text-center mt-3">
+            During beta — access granted instantly. Payment coming soon.
+          </p>
+        </div>
+      </div>
+    </main>
+  )
 
   if (submitted) return (
     <main className="min-h-screen bg-gray-900 text-white flex items-center justify-center px-6">
       <div className="text-center max-w-md">
         <p className="text-6xl mb-6">🎉</p>
         <h1 className="text-3xl font-bold mb-3">Requests Sent!</h1>
-        <p className="text-gray-400 mb-6">We've sent your quote requests to verified suppliers in your area. You'll receive quotes within 24 hours.</p>
+        <p className="text-gray-400 mb-6">We have sent your quote requests to verified suppliers in your area. You will receive quotes within 24 hours.</p>
         <div className="bg-gray-800 border border-gray-700 rounded-xl p-4 mb-6 text-left">
           <p className="text-sm font-semibold mb-2">Services requested:</p>
           {selectedServices.map(s => (
@@ -150,73 +185,9 @@ export default function MovingServicesPage() {
       </nav>
 
       <div className="max-w-3xl mx-auto px-6 py-12">
-        {checkingAccess ? (
-          <div className="text-center py-20">
-            <p className="text-orange-500 animate-pulse">Loading...</p>
-          </div>
-        ) : !user ? (
-          <div className="text-center py-20">
-            <p className="text-2xl mb-4">🔐</p>
-            <h2 className="text-xl font-bold mb-2">Sign in to access Moving Services</h2>
-            <a href="/auth/login?next=/moving" className="inline-block bg-orange-500 text-black font-bold px-8 py-3 rounded-xl hover:bg-orange-400 mt-4">Sign In</a>
-          </div>
-        ) : !hasAccess ? (
-          <div className="max-w-xl mx-auto">
-            <div className="text-center mb-8">
-              <p className="text-5xl mb-4">📦</p>
-              <h2 className="text-2xl font-bold mb-2">Moving Services</h2>
-              <p className="text-gray-400">Upgrade your account to get quotes from verified suppliers</p>
-            </div>
-
-            <div className="bg-gray-800 border border-orange-500 rounded-2xl p-8 mb-6">
-              <div className="flex justify-between items-center mb-6">
-                <div>
-                  <p className="text-2xl font-bold">Moving Services Package</p>
-                  <p className="text-gray-400 text-sm">One-time upgrade</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-4xl font-bold text-orange-500">R200</p>
-                  <p className="text-gray-400 text-xs">once-off</p>
-                </div>
-              </div>
-
-              <ul className="space-y-3 mb-6">
-                {[
-                  '🚛 Up to 3 removal company quotes',
-                  '🧹 Cleaning service quotes',
-                  '🌿 Garden & pool service in new area',
-                  '⚖️ Conveyancing attorney referral',
-                  '🏦 Bond originator introduction',
-                  '📋 Property surveyor referral',
-                  '⭐ All suppliers verified and reviewed',
-                  '✅ Quotes within 24 hours guaranteed',
-                ].map(item => (
-                  <li key={item} className="flex items-center gap-3 text-sm">
-                    <span className="text-green-400">✓</span>
-                    <span className="text-gray-300">{item}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <button 
-                onClick={async () => {
-                  // During beta - grant access directly
-                  await supabase.from('profiles').update({ has_moving_access: true }).eq('id', user.id)
-                  setHasAccess(true)
-                }}
-                className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-4 rounded-xl text-lg transition">
-                🚀 Upgrade Now — R200
-              </button>
-              <p className="text-xs text-gray-500 text-center mt-3">
-                During beta — access granted instantly. Payment coming soon.
-              </p>
-            </div>
-          </div>
-        ) : null}
-
-        {hasAccess && <div className="text-center mb-10">
+        <div className="text-center mb-10">
           <h1 className="text-3xl font-bold mb-2">📦 Moving Services</h1>
-          <p className="text-gray-400">Get quotes from verified suppliers — all in one place. We do the legwork, you choose the best offer.</p>
+          <p className="text-gray-400">Get quotes from verified suppliers — all in one place.</p>
         </div>
 
         {step === 1 && (
@@ -224,8 +195,7 @@ export default function MovingServicesPage() {
             <h2 className="text-xl font-bold mb-4">What do you need help with?</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
               {SERVICES.map(service => (
-                <button key={service.value}
-                  onClick={() => toggleService(service.value)}
+                <button key={service.value} onClick={() => toggleService(service.value)}
                   className={`text-left p-4 rounded-xl border transition ${
                     selectedServices.includes(service.value)
                       ? 'border-orange-500 bg-orange-950'
@@ -239,8 +209,7 @@ export default function MovingServicesPage() {
                 </button>
               ))}
             </div>
-            <button onClick={() => setStep(2)}
-              disabled={selectedServices.length === 0}
+            <button onClick={() => setStep(2)} disabled={selectedServices.length === 0}
               className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-4 rounded-xl disabled:opacity-50 transition">
               Continue with {selectedServices.length} service{selectedServices.length !== 1 ? 's' : ''} →
             </button>
@@ -257,17 +226,15 @@ export default function MovingServicesPage() {
             <div>
               <label className="text-gray-400 text-sm mb-1 block">Moving from</label>
               <input value={form.from_address} onChange={e => setForm(p => ({ ...p, from_address: e.target.value }))}
-                id="from-address"
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
-                placeholder="Start typing your current address..."/>
+                placeholder="Current address or suburb"/>
             </div>
 
             <div>
               <label className="text-gray-400 text-sm mb-1 block">Moving to</label>
               <input value={form.to_address} onChange={e => setForm(p => ({ ...p, to_address: e.target.value }))}
-                id="to-address"
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
-                placeholder="Start typing your new address..."/>
+                placeholder="New address or suburb"/>
             </div>
 
             <div>
@@ -291,7 +258,7 @@ export default function MovingServicesPage() {
             <p className="text-xs text-gray-500 text-center">Suppliers will respond within 24 hours. No obligation to accept any quote.</p>
           </div>
         )}
-      </div>}
+      </div>
     </main>
   )
 }
