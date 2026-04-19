@@ -123,6 +123,39 @@ export default function DashboardPage() {
     setLoading(false)
   }
 
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [deleteReason, setDeleteReason] = useState('')
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
+
+  const initiateDelete = (propertyId: string) => {
+    setPendingDeleteId(propertyId)
+    setShowDeleteModal(true)
+    setDeleteReason('')
+  }
+
+  const confirmDelete = async () => {
+    if (!pendingDeleteId) return
+    setDeletingId(pendingDeleteId)
+
+    // Save deletion reason to admin
+    await supabase.from('aisistant_messages').insert({
+      agent_id: 'a947747b-d98c-4d77-8647-c4dd930d3fe7',
+      property_id: pendingDeleteId,
+      message_type: 'listing_insight',
+      title: '🗑️ Listing Deleted',
+      content: `Agent deleted listing. Reason: ${deleteReason || 'No reason provided'}`,
+      is_read: false
+    })
+
+    await supabase.from('properties').delete().eq('id', pendingDeleteId)
+    setProperties(prev => prev.filter(p => p.id !== pendingDeleteId))
+    setShowDeleteModal(false)
+    setPendingDeleteId(null)
+    setDeletingId(null)
+    setDeleteReason('')
+  }
+
   const toggleFeatured = async (propertyId: string, currentFeatured: boolean) => {
     await supabase.from('properties').update({ featured: !currentFeatured }).eq('id', propertyId)
     setProperties(prev => prev.map(p => p.id === propertyId ? { ...p, featured: !currentFeatured } : p))
@@ -372,6 +405,11 @@ export default function DashboardPage() {
                           }`}>
                           {property.featured ? '⭐ Featured' : '☆ Mark Featured'}
                         </button>
+                        <button onClick={() => initiateDelete(property.id)}
+                          disabled={deletingId === property.id}
+                          className="text-sm bg-gray-700 hover:bg-red-700 text-gray-400 hover:text-white px-3 py-1.5 rounded-lg transition">
+                          🗑️ Delete
+                        </button>
                         {property.status !== 'active' && (
                           <button onClick={() => updateStatus(property.id, 'active')}
                             className="text-sm bg-green-700 hover:bg-green-600 text-white px-3 py-1.5 rounded-lg">
@@ -437,6 +475,51 @@ export default function DashboardPage() {
       {user && (
         <div className="max-w-6xl mx-auto px-6 pb-8 mt-6">
           <AvailabilityManager agentId={user.id} />
+        </div>
+      )}
+      {/* Delete confirmation modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4">
+          <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 max-w-md w-full">
+            <h3 className="text-lg font-bold mb-2">🗑️ Delete Listing</h3>
+            <p className="text-gray-400 text-sm mb-4">This will permanently remove the listing. Please let us know why you are deleting it.</p>
+            
+            <div className="space-y-2 mb-4">
+              {[
+                'Property has been sold/rented privately',
+                'Taking the property off the market',
+                'Switching to a different platform',
+                'Listing was created by mistake',
+                'Other reason'
+              ].map(reason => (
+                <button key={reason} onClick={() => setDeleteReason(reason)}
+                  className={`w-full text-left px-4 py-2.5 rounded-lg text-sm transition ${
+                    deleteReason === reason ? 'bg-orange-500 text-black font-semibold' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}>
+                  {reason}
+                </button>
+              ))}
+            </div>
+
+            {deleteReason === 'Other reason' && (
+              <textarea value={deleteReason === 'Other reason' ? '' : deleteReason}
+                onChange={e => setDeleteReason(e.target.value)}
+                placeholder="Please tell us more..."
+                rows={2}
+                className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500 mb-4"/>
+            )}
+
+            <div className="flex gap-3">
+              <button onClick={() => { setShowDeleteModal(false); setPendingDeleteId(null) }}
+                className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2.5 rounded-lg transition">
+                Cancel
+              </button>
+              <button onClick={confirmDelete} disabled={!deleteReason}
+                className="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 rounded-lg disabled:opacity-50 transition">
+                Delete Listing
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </main>
