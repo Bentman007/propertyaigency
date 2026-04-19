@@ -10,7 +10,7 @@ export default function AdminPage() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState<any>({})
-  const [activeAI, setActiveAI] = useState<'marketing' | 'sales' | 'support' | 'finance'>('marketing')
+  const [activeAI, setActiveAI] = useState<'marketing' | 'sales' | 'support' | 'finance' | 'developer' | 'security'>('marketing')
   const [aiInput, setAiInput] = useState('')
   const [aiResponse, setAiResponse] = useState('')
   const [aiLoading, setAiLoading] = useState(false)
@@ -271,12 +271,14 @@ export default function AdminPage() {
         <h2 className="text-lg font-bold text-orange-500 mb-3 mt-8">🤖 Your AI Team</h2>
         <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden mb-8">
           {/* AI selector */}
-          <div className="grid grid-cols-4 border-b border-gray-700">
+          <div className="grid grid-cols-3 md:grid-cols-6 border-b border-gray-700">
             {[
               { id: 'marketing', label: '🎯 Marketing AI', desc: 'Social media, campaigns, growth' },
               { id: 'sales', label: '📞 Sales AI', desc: 'Agent acquisition, outreach' },
               { id: 'support', label: '💬 Support AI', desc: 'Handle queries, troubleshoot' },
               { id: 'finance', label: '💰 Finance AI', desc: 'Costs, revenue, CFO insights' },
+              { id: 'developer', label: '💻 Developer AI', desc: 'Tech issues, plain English' },
+              { id: 'security', label: '🔐 Security AI', desc: 'Threats, hacking, protection' },
             ].map(ai => (
               <button key={ai.id} onClick={() => { setActiveAI(ai.id as any); setAiHistory([]) }}
                 className={`p-4 text-left transition ${activeAI === ai.id ? 'bg-gray-700 border-b-2 border-orange-500' : 'hover:bg-gray-750'}`}>
@@ -291,10 +293,10 @@ export default function AdminPage() {
             {aiHistory.length === 0 && (
               <div className="text-center py-8">
                 <p className="text-3xl mb-2">
-                  {activeAI === 'marketing' ? '🎯' : activeAI === 'sales' ? '📞' : activeAI === 'finance' ? '💰' : '💬'}
+                  {activeAI === 'marketing' ? '🎯' : activeAI === 'sales' ? '📞' : activeAI === 'finance' ? '💰' : activeAI === 'developer' ? '💻' : activeAI === 'security' ? '🔐' : '💬'}
                 </p>
                 <p className="text-gray-400 text-sm font-semibold">
-                  {activeAI === 'marketing' ? 'Marketing AI ready' : activeAI === 'sales' ? 'Sales AI ready' : activeAI === 'finance' ? 'Finance AI ready' : 'Support AI ready'}
+                  {activeAI === 'marketing' ? 'Marketing AI ready' : activeAI === 'sales' ? 'Sales AI ready' : activeAI === 'finance' ? 'Finance AI ready' : activeAI === 'developer' ? 'Developer AI ready' : activeAI === 'security' ? 'Security AI ready' : 'Support AI ready'}
                 </p>
                 <p className="text-gray-500 text-xs mt-1">
                   {activeAI === 'marketing' ? 'Ask me to write a social post, email campaign, or growth strategy' :
@@ -349,6 +351,26 @@ export default function AdminPage() {
               'What are my current monthly costs?',
               'When will I break even with 50 agents?',
               'How can I reduce my Anthropic costs?',
+            ].map(prompt => (
+              <button key={prompt} onClick={() => setAiInput(prompt)}
+                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-1.5 rounded-full whitespace-nowrap transition">
+                {prompt}
+              </button>
+            ))}
+            {activeAI === 'developer' && [
+              'Explain how the AI search works',
+              'What would it take to add a new feature?',
+              'How do I read my Vercel error logs?',
+            ].map(prompt => (
+              <button key={prompt} onClick={() => setAiInput(prompt)}
+                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-1.5 rounded-full whitespace-nowrap transition">
+                {prompt}
+              </button>
+            ))}
+            {activeAI === 'security' && [
+              'How secure is the platform right now?',
+              'What should I do if we get hacked?',
+              'How do I report a data breach under POPIA?',
             ].map(prompt => (
               <button key={prompt} onClick={() => setAiInput(prompt)}
                 className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-1.5 rounded-full whitespace-nowrap transition">
