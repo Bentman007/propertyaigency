@@ -220,6 +220,9 @@ export default function DashboardPage() {
           <Link href="/list" className="bg-orange-500 text-black px-4 py-2 rounded-lg font-semibold hover:bg-orange-400 text-sm">
             + New Listing
           </Link>
+          <Link href="/bulk-upload" className="bg-gray-700 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-600 text-sm">
+            📦 Bulk Upload
+          </Link>
           <Link href="/profile" className="text-gray-400 hover:text-white text-sm">
             👤 Profile
           </Link>
