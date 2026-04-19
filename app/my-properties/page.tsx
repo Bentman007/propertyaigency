@@ -189,6 +189,19 @@ export default function MyPropertiesPage() {
           </div>
         )}
 
+        {/* Moving Services CTA */}
+        <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-bold mb-1">📦 Need Help Moving?</h2>
+              <p className="text-gray-300 text-sm">Get quotes from verified removal companies, cleaners, attorneys and more</p>
+            </div>
+            <a href="/moving" className="bg-gray-700 hover:bg-gray-600 text-white font-bold px-5 py-2.5 rounded-xl transition flex-shrink-0 text-sm">
+              Get Quotes →
+            </a>
+          </div>
+        </div>
+
         {/* Saved properties */}
         <div>
           <div className="flex justify-between items-center mb-4">
