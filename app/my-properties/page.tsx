@@ -99,7 +99,7 @@ export default function MyPropertiesPage() {
 
   return (
     <main className="min-h-screen bg-gray-900 text-white">
-      <nav className="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center">
+      <nav className="bg-gray-800 border-b border-gray-700 px-4 md:px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">
           Property<span className="text-orange-500">AI</span>gency
         </Link>
@@ -130,7 +130,7 @@ export default function MyPropertiesPage() {
         </div>
 
         {/* Quick stats */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-3 gap-3 mb-6">
           <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
             <p className="text-3xl font-bold text-orange-500">{savedProperties.length}</p>
             <p className="text-gray-400 text-sm mt-1">Saved Properties</p>
@@ -222,7 +222,7 @@ export default function MyPropertiesPage() {
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {savedProperties.slice(0, 4).map(property => {
                 const viewsInfo = getViewsLabel(property.total_views)
                 return (

@@ -220,7 +220,7 @@ export default function DashboardPage() {
   return (
     <main className="min-h-screen bg-gray-900 text-white">
       {/* Header */}
-      <nav className="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center">
+      <nav className="bg-gray-800 border-b border-gray-700 px-4 md:px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">
           Property<span className="text-orange-500">AI</span>gency
         </Link>
@@ -278,7 +278,7 @@ export default function DashboardPage() {
       )}
 
         {properties.length > 0 && (
-          <div className="grid grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
             <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
               <p className="text-gray-400 text-sm">Total Listings</p>
               <p className="text-3xl font-bold text-white mt-1">{properties.length}</p>
@@ -382,7 +382,7 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Stats Grid */}
-                    <div className="grid grid-cols-5 gap-3">
+                    <div className="grid grid-cols-3 md:grid-cols-5 gap-2 md:gap-3">
                       <div className="bg-gray-700 rounded-lg p-3 text-center">
                         <p className="text-2xl font-bold text-white">{property.views}</p>
                         <p className="text-gray-400 text-xs mt-1">Total Views</p>

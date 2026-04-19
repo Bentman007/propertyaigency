@@ -129,7 +129,7 @@ export default function SearchPage() {
   return (
     <main className="min-h-screen bg-gray-900 text-white flex flex-col">
       {/* Nav */}
-      <nav className="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center flex-shrink-0">
+      <nav className="bg-gray-800 border-b border-gray-700 px-4 md:px-6 py-4 flex justify-between items-center flex-shrink-0">
         <Link href="/" className="text-2xl font-bold">
           Property<span className="text-orange-500">AI</span>gency
         </Link>
@@ -151,9 +151,9 @@ export default function SearchPage() {
         </div>
       </nav>
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
         {/* Chat Panel */}
-        <div className="flex flex-col w-full max-w-2xl border-r border-gray-700">
+        <div className="flex flex-col w-full md:w-96 md:max-w-sm border-b md:border-b-0 md:border-r border-gray-700 md:h-full" style={{height: "50vh"}}>
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-6 space-y-4">
             {messages.map((message, i) => (
@@ -217,7 +217,7 @@ export default function SearchPage() {
         </div>
 
         {/* Properties Panel */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-4 md:p-6">
           {properties.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <div className="text-6xl mb-4">🏡</div>
@@ -227,7 +227,7 @@ export default function SearchPage() {
               </p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <h3 className="text-lg font-bold text-gray-300">
                 🏡 Properties Found ({properties.filter(p => !rejectedIds.includes(p.id)).length})
               </h3>

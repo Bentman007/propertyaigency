@@ -100,23 +100,25 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gray-900 text-white">
-      <nav className="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center">
-        <div className="text-2xl font-bold">
+      <nav className="bg-gray-800 border-b border-gray-700 px-4 md:px-6 py-4 flex justify-between items-center">
+        <div className="text-xl md:text-2xl font-bold flex-shrink-0">
           Property<span className="text-orange-500">AI</span>gency
         </div>
-        <div className="flex gap-6 text-gray-300 text-sm">
+        {/* Desktop nav */}
+        <div className="hidden md:flex gap-4 text-gray-300 text-sm">
           <Link href="/search" className="hover:text-orange-500">🔍 AI Search</Link>
           <Link href="/buy" className="hover:text-orange-500">Buy</Link>
           <Link href="/rent" className="hover:text-orange-500">Rent</Link>
-          <Link href="/list" className="hover:text-orange-500">List Property</Link>
+          <Link href="/list" className="hover:text-orange-500">List</Link>
           <Link href="/pricing" className="hover:text-orange-500">Pricing</Link>
           <Link href="/contact" className="hover:text-orange-500">Contact</Link>
-          {user && <Link href="/dashboard" className="hover:text-orange-500">My Dashboard</Link>}
+          {user && <Link href="/dashboard" className="hover:text-orange-500">Dashboard</Link>}
         </div>
         {user ? (
-          <div className="flex gap-3 items-center">
-            <Link href="/dashboard" className="bg-orange-500 text-black px-4 py-2 rounded-lg font-semibold hover:bg-orange-400 text-sm">
-              My Dashboard
+          <div className="flex gap-2 items-center">
+            <Link href="/dashboard" className="bg-orange-500 text-black px-3 py-2 rounded-lg font-semibold hover:bg-orange-400 text-sm">
+              <span className="hidden md:inline">My Dashboard</span>
+              <span className="md:hidden">Dashboard</span>
             </Link>
             <button onClick={() => supabase.auth.signOut().then(() => setUser(null))} className="text-gray-400 hover:text-white text-sm">
               Sign Out
@@ -182,7 +184,7 @@ export default function Home() {
       )}
 
       {/* Latest Properties */}
-      <section className="px-6 py-16 max-w-6xl mx-auto">
+      <section className="px-4 md:px-6 py-10 md:py-16 max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-3">
             <h2 className="text-3xl font-bold">{locationLabel}</h2>
@@ -190,7 +192,7 @@ export default function Home() {
           </div>
           <Link href="/search" className="text-orange-500 hover:underline text-sm">Find my perfect match →</Link>
         </div>
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {properties.length > 0 ? properties.map((p, i) => (
             <Link href={`/property/${p.id}`} key={i} className="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 hover:border-orange-500 transition-colors block">
               <div className="h-48 bg-gray-700">
