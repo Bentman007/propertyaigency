@@ -21,10 +21,8 @@ function ListPropertyInner() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [photos, setPhotos] = useState<string[]>([])
-  const [availabilitySlots, setAvailabilitySlots] = useState<{date: string, time: string}[]>([])
   const [newSlotDate, setNewSlotDate] = useState('')
   const [newSlotTime, setNewSlotTime] = useState('morning')
-  const [showAvailabilityNudge, setShowAvailabilityNudge] = useState(true)
   const [editId, setEditId] = useState<string | null>(null)
   const [isEditing, setIsEditing] = useState(false)
   const [editLoading, setEditLoading] = useState(false)
@@ -222,7 +220,6 @@ function ListPropertyInner() {
     price: !!form.price,
     ai: !!(form.title && form.description),
     photos: photos.length >= 3,
-        availability: availabilitySlots
   }
 
   return (
