@@ -28,6 +28,19 @@ export default function RegisterPage() {
         agency_name: agencyName || null
       })
       setMessage('Success! Check your email to confirm your account.')
+      // Notify admin of new signup
+      if (accountType === 'agent') {
+        await fetch('/api/push', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: 'a947747b-d98c-4d77-8647-c4dd930d3fe7', // Admin user ID
+            title: '🎉 New Agent Registered!',
+            body: `${agencyName || name} just signed up as an agent. Check your admin panel!`,
+            url: '/admin'
+          })
+        })
+      }
     }
     setLoading(false)
   }

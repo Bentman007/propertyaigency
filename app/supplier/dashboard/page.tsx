@@ -62,6 +62,26 @@ export default function SupplierDashboard() {
       valid_until: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
     })
     await supabase.from('move_quote_requests').update({ status: 'quoted' }).eq('id', requestId)
+    
+    // Notify buyer of new quote
+    const { data: req } = await supabase
+      .from('move_quote_requests')
+      .select('user_id, service_type')
+      .eq('id', requestId)
+      .single()
+    
+    if (req?.user_id) {
+      await fetch('/api/push', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: req.user_id,
+          title: '💬 New Quote Received!',
+          body: `${supplier?.business_name} sent you a quote for your ${req.service_type} request. View it now!`,
+          url: '/my-properties'
+        })
+      })
+    }
     setRequests(prev => prev.filter(r => r.id !== requestId))
     setQuoteAmounts(prev => { const p = {...prev}; delete p[requestId]; return p })
   }

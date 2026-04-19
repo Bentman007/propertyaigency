@@ -59,6 +59,13 @@ export default function EditListing() {
 
   const handleSave = async () => {
     setSaving(true)
+    // Check if price dropped
+    const { data: oldProp } = await supabase
+      .from('properties')
+      .select('price, title')
+      .eq('id', id)
+      .single()
+
     const { error } = await supabase
       .from('properties')
       .update({
@@ -76,6 +83,31 @@ export default function EditListing() {
       setMessage('Error: ' + error.message)
     } else {
       setMessage('✅ Listing updated successfully!')
+      
+      // Notify saved buyers if price dropped
+      const newPrice = parseFloat(form.price)
+      if (oldProp && newPrice < oldProp.price) {
+        const { data: saved } = await supabase
+          .from('saved_properties')
+          .select('user_id')
+          .eq('property_id', id)
+
+        if (saved && saved.length > 0) {
+          for (const s of saved) {
+            await fetch('/api/push', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                user_id: s.user_id,
+                title: '📉 Price Drop Alert!',
+                body: `${oldProp.title} price reduced to R${newPrice.toLocaleString()}. View it now!`,
+                url: `/property/${id}`
+              })
+            })
+          }
+        }
+      }
+      
       setTimeout(() => router.push('/dashboard'), 1500)
     }
     setSaving(false)

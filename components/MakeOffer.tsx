@@ -57,6 +57,18 @@ export default function MakeOffer({ property }: { property: any }) {
       })
     })
 
+    // Notify agent of new offer
+    await fetch('/api/push', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_id: property.user_id,
+        title: isRent ? '📋 New Rental Application!' : '💰 New Offer Received!',
+        body: `${isRent ? 'Application' : 'Offer'} received for ${property.title}. Log in to review!`,
+        url: '/dashboard'
+      })
+    })
+
     setSubmitted(true)
     setLoading(false)
   }
