@@ -17,6 +17,8 @@ const SERVICES = [
 
 export default function MovingServicesPage() {
   const [user, setUser] = useState<any>(null)
+  const [hasAccess, setHasAccess] = useState(false)
+  const [checkingAccess, setCheckingAccess] = useState(true)
   const [fromRef, setFromRef] = useState<any>(null)
   const [toRef, setToRef] = useState<any>(null)
   const [selectedServices, setSelectedServices] = useState<string[]>([])
@@ -29,8 +31,18 @@ export default function MovingServicesPage() {
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
-      if (!data.user) return
+      if (!data.user) { setCheckingAccess(false); return }
       setUser(data.user)
+
+      // Check if they have moving services access
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('has_moving_access')
+        .eq('id', data.user.id)
+        .single()
+      
+      setHasAccess(profile?.has_moving_access || false)
+      setCheckingAccess(false)
 
       // Pre-populate from latest confirmed booking
       const { data: booking } = await supabase
@@ -138,7 +150,71 @@ export default function MovingServicesPage() {
       </nav>
 
       <div className="max-w-3xl mx-auto px-6 py-12">
-        <div className="text-center mb-10">
+        {checkingAccess ? (
+          <div className="text-center py-20">
+            <p className="text-orange-500 animate-pulse">Loading...</p>
+          </div>
+        ) : !user ? (
+          <div className="text-center py-20">
+            <p className="text-2xl mb-4">🔐</p>
+            <h2 className="text-xl font-bold mb-2">Sign in to access Moving Services</h2>
+            <a href="/auth/login?next=/moving" className="inline-block bg-orange-500 text-black font-bold px-8 py-3 rounded-xl hover:bg-orange-400 mt-4">Sign In</a>
+          </div>
+        ) : !hasAccess ? (
+          <div className="max-w-xl mx-auto">
+            <div className="text-center mb-8">
+              <p className="text-5xl mb-4">📦</p>
+              <h2 className="text-2xl font-bold mb-2">Moving Services</h2>
+              <p className="text-gray-400">Upgrade your account to get quotes from verified suppliers</p>
+            </div>
+
+            <div className="bg-gray-800 border border-orange-500 rounded-2xl p-8 mb-6">
+              <div className="flex justify-between items-center mb-6">
+                <div>
+                  <p className="text-2xl font-bold">Moving Services Package</p>
+                  <p className="text-gray-400 text-sm">One-time upgrade</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-4xl font-bold text-orange-500">R200</p>
+                  <p className="text-gray-400 text-xs">once-off</p>
+                </div>
+              </div>
+
+              <ul className="space-y-3 mb-6">
+                {[
+                  '🚛 Up to 3 removal company quotes',
+                  '🧹 Cleaning service quotes',
+                  '🌿 Garden & pool service in new area',
+                  '⚖️ Conveyancing attorney referral',
+                  '🏦 Bond originator introduction',
+                  '📋 Property surveyor referral',
+                  '⭐ All suppliers verified and reviewed',
+                  '✅ Quotes within 24 hours guaranteed',
+                ].map(item => (
+                  <li key={item} className="flex items-center gap-3 text-sm">
+                    <span className="text-green-400">✓</span>
+                    <span className="text-gray-300">{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <button 
+                onClick={async () => {
+                  // During beta - grant access directly
+                  await supabase.from('profiles').update({ has_moving_access: true }).eq('id', user.id)
+                  setHasAccess(true)
+                }}
+                className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-4 rounded-xl text-lg transition">
+                🚀 Upgrade Now — R200
+              </button>
+              <p className="text-xs text-gray-500 text-center mt-3">
+                During beta — access granted instantly. Payment coming soon.
+              </p>
+            </div>
+          </div>
+        ) : null}
+
+        {hasAccess && <div className="text-center mb-10">
           <h1 className="text-3xl font-bold mb-2">📦 Moving Services</h1>
           <p className="text-gray-400">Get quotes from verified suppliers — all in one place. We do the legwork, you choose the best offer.</p>
         </div>
@@ -215,7 +291,7 @@ export default function MovingServicesPage() {
             <p className="text-xs text-gray-500 text-center">Suppliers will respond within 24 hours. No obligation to accept any quote.</p>
           </div>
         )}
-      </div>
+      </div>}
     </main>
   )
 }
