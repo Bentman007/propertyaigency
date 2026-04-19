@@ -148,6 +148,16 @@ export default function DashboardPage() {
       is_read: false
     })
 
+    // Notify saved buyers before deleting
+    await fetch('/api/notify-saved-buyers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        property_id: pendingDeleteId,
+        reason: deleteReason
+      })
+    })
+
     await supabase.from('properties').delete().eq('id', pendingDeleteId)
     setProperties(prev => prev.filter(p => p.id !== pendingDeleteId))
     setShowDeleteModal(false)
