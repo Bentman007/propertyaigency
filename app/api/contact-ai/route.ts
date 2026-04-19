@@ -52,7 +52,7 @@ PRICING (planned):
 - Currently FREE during beta period
 
 HOW TO LIST:
-- Register as an agent at propertyaigency.vercel.app/auth/register
+- Register as an agent at www.propertyaigency.co.za/auth/register
 - Click "+ New Listing" on your dashboard
 - Follow the 8-step listing process
 - Set your viewing availability
