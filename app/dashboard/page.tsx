@@ -489,8 +489,8 @@ export default function DashboardPage() {
       )}
       {/* Delete confirmation modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4">
-          <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 max-w-md w-full">
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4" onClick={() => setShowDeleteModal(false)}>
+          <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 max-w-md w-full" onClick={e => e.stopPropagation()}>
             <h3 className="text-lg font-bold mb-2">🗑️ Delete Listing</h3>
             <p className="text-gray-400 text-sm mb-4">This will permanently remove the listing. Please let us know why you are deleting it.</p>
             
@@ -512,11 +512,12 @@ export default function DashboardPage() {
             </div>
 
             {deleteReason === 'Other reason' && (
-              <textarea value={deleteReason === 'Other reason' ? '' : deleteReason}
+              <textarea
                 onChange={e => setDeleteReason(e.target.value)}
                 placeholder="Please tell us more..."
                 rows={2}
-                className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500 mb-4"/>
+                className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500 mb-4"
+                onClick={e => e.stopPropagation()}/>
             )}
 
             <div className="flex gap-3">
