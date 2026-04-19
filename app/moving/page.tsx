@@ -126,6 +126,19 @@ export default function MovingServicesPage() {
         status: 'pending'
       })
     }
+    // Notify matching suppliers
+    for (const service of selectedServices) {
+      await fetch('/api/notify-suppliers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          service_type: service,
+          from_address: form.from_address,
+          to_address: form.to_address
+        })
+      })
+    }
+
     setSubmitted(true)
     setLoading(false)
   }

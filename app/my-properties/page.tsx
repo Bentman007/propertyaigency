@@ -1,4 +1,5 @@
 'use client'
+import BuyerQuotes from '@/components/BuyerQuotes'
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -188,6 +189,9 @@ export default function MyPropertiesPage() {
             </div>
           </div>
         )}
+
+        {/* Moving Quotes */}
+        {user && <BuyerQuotes userId={user.id} />}
 
         {/* Moving Services CTA */}
         <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 mb-8">
