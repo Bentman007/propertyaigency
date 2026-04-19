@@ -110,6 +110,7 @@ export default function Home() {
           <Link href="/buy" className="hover:text-orange-500">Buy</Link>
           <Link href="/rent" className="hover:text-orange-500">Rent</Link>
           <Link href="/list" className="hover:text-orange-500">List</Link>
+          <Link href="/how-it-works" className="hover:text-orange-500">How It Works</Link>
           <Link href="/pricing" className="hover:text-orange-500">Pricing</Link>
           <Link href="/contact" className="hover:text-orange-500">Contact</Link>
           {user && <Link href="/dashboard" className="hover:text-orange-500">Dashboard</Link>}
