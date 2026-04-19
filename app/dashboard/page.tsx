@@ -125,6 +125,7 @@ export default function DashboardPage() {
 
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [deleteReason, setDeleteReason] = useState('')
+  const [customReason, setCustomReason] = useState('')
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
 
@@ -132,6 +133,7 @@ export default function DashboardPage() {
     setPendingDeleteId(propertyId)
     setShowDeleteModal(true)
     setDeleteReason('')
+    setCustomReason('')
   }
 
   const confirmDelete = async () => {
@@ -144,7 +146,7 @@ export default function DashboardPage() {
       property_id: pendingDeleteId,
       message_type: 'listing_insight',
       title: '🗑️ Listing Deleted',
-      content: `Agent deleted listing. Reason: ${deleteReason || 'No reason provided'}`,
+      content: `Agent deleted listing. Reason: ${deleteReason === 'Other reason' ? customReason || 'Other' : deleteReason || 'No reason provided'}`,
       is_read: false
     })
 
@@ -164,6 +166,7 @@ export default function DashboardPage() {
     setPendingDeleteId(null)
     setDeletingId(null)
     setDeleteReason('')
+    setCustomReason('')
   }
 
   const toggleFeatured = async (propertyId: string, currentFeatured: boolean) => {
@@ -489,7 +492,7 @@ export default function DashboardPage() {
       )}
       {/* Delete confirmation modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4" onClick={() => setShowDeleteModal(false)}>
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4">
           <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 max-w-md w-full" onClick={e => e.stopPropagation()}>
             <h3 className="text-lg font-bold mb-2">🗑️ Delete Listing</h3>
             <p className="text-gray-400 text-sm mb-4">This will permanently remove the listing. Please let us know why you are deleting it.</p>
@@ -513,11 +516,11 @@ export default function DashboardPage() {
 
             {deleteReason === 'Other reason' && (
               <textarea
-                onChange={e => setDeleteReason(e.target.value)}
+                value={customReason}
+                onChange={e => setCustomReason(e.target.value)}
                 placeholder="Please tell us more..."
                 rows={2}
-                className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500 mb-4"
-                onClick={e => e.stopPropagation()}/>
+                className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500 mb-4"/>
             )}
 
             <div className="flex gap-3">
