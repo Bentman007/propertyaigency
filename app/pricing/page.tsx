@@ -77,7 +77,7 @@ export default function PricingPage() {
                 <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Virtual tour support</li>
                 <li className="flex items-center gap-2"><span className="text-green-400">✓</span> AI advert writer + valuation</li>
                 <li className="flex items-center gap-2"><span className="text-green-400">✓</span> AI Concierge handles all enquiries</li>
-                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Featured on homepage</li>
+                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Featured on homepage — <span className="text-orange-500 font-bold">R199/month</span></li>
                 <li className="flex items-center gap-2"><span className="text-orange-400">↻</span> Relist for R149</li>
               </ul>
               <Link href="/auth/register" className="block w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-3 rounded-xl text-center transition">
@@ -121,7 +121,27 @@ export default function PricingPage() {
             ))}
           </div>
 
-          {/* Enterprise */}
+          {/* Featured Listings */}
+          <div className="bg-gray-800 border border-yellow-500 rounded-2xl p-6 max-w-2xl mx-auto mb-6">
+            <div className="flex justify-between items-center mb-3">
+              <div>
+                <p className="text-lg font-bold flex items-center gap-2">⭐ Featured Listing <span className="bg-yellow-500 text-black text-xs px-2 py-0.5 rounded-full">ADD-ON</span></p>
+                <p className="text-gray-400 text-sm">Appear above all regular listings on the homepage</p>
+              </div>
+              <div className="text-right">
+                <p className="text-3xl font-bold text-yellow-400">R199</p>
+                <p className="text-gray-400 text-xs">/month per listing</p>
+              </div>
+            </div>
+            <ul className="grid grid-cols-2 gap-2 text-sm text-gray-300">
+              <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Gold border — stands out instantly</li>
+              <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Above all regular listings</li>
+              <li className="flex items-center gap-2"><span className="text-green-400">✓</span> ⭐ Featured badge on listing</li>
+              <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Cancel anytime</li>
+            </ul>
+          </div>
+
+        {/* Enterprise */}
           <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 max-w-2xl mx-auto text-center">
             <h3 className="text-lg font-bold mb-1">Enterprise / National Agencies</h3>
             <p className="text-gray-400 text-sm mb-3">100+ listings? Multiple branches? Let's talk custom pricing.</p>
