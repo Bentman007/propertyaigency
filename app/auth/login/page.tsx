@@ -23,7 +23,13 @@ export default function LoginPage() {
       } else {
         const { data: { user } } = await supabase.auth.getUser()
         const accountType = user?.user_metadata?.account_type || 'buyer'
-        window.location.href = accountType === 'agent' ? '/dashboard' : '/my-properties'
+        if (accountType === 'agent') {
+          window.location.href = '/dashboard'
+        } else if (accountType === 'private_seller') {
+          window.location.href = '/my-listings'
+        } else {
+          window.location.href = '/my-properties'
+        }
       }
     }
     setLoading(false)
