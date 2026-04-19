@@ -39,6 +39,34 @@ export async function POST(request: NextRequest) {
       })
     }
 
+    if (action === 'suspend') {
+      await supabase.from('profiles').update({ 
+        is_suspended: true,
+        suspension_reason: note || 'Suspended by admin'
+      }).eq('id', user_id)
+
+      // Hide all their listings
+      await supabase.from('properties')
+        .update({ status: 'draft' })
+        .eq('user_id', user_id)
+        .eq('status', 'active')
+
+      return NextResponse.json({ 
+        message: '🔴 Account suspended and listings hidden.' 
+      })
+    }
+
+    if (action === 'unsuspend') {
+      await supabase.from('profiles').update({ 
+        is_suspended: false,
+        suspension_reason: null
+      }).eq('id', user_id)
+
+      return NextResponse.json({ 
+        message: '✅ Account reinstated. They can now list properties again.' 
+      })
+    }
+
     return NextResponse.json({ error: 'Unknown action' }, { status: 400 })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })

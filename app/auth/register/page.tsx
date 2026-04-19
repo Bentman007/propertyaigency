@@ -13,6 +13,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
   const [agencyName, setAgencyName] = useState('')
+  const [eaabNumber, setEaabNumber] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
 
@@ -29,7 +30,8 @@ export default function RegisterPage() {
         data: {
           full_name: name,
           agency_name: agencyName || null,
-          account_type: accountType
+          account_type: accountType,
+          eaab_number: eaabNumber || null
         }
       }
     })
@@ -41,7 +43,8 @@ export default function RegisterPage() {
         id: data.user.id,
         full_name: name,
         agency_name: agencyName || null,
-        account_type: accountType
+        account_type: accountType,
+        eaab_number: eaabNumber || null
       })
 
       // Notify admin of new agent signup
@@ -52,7 +55,7 @@ export default function RegisterPage() {
           body: JSON.stringify({
             user_id: 'a947747b-d98c-4d77-8647-c4dd930d3fe7',
             title: '🎉 New Agent Registered!',
-            body: `${agencyName || name} just signed up as an agent. Check your admin panel!`,
+            body: `${agencyName || name} signed up. EAAB: ${eaabNumber || 'NOT PROVIDED'}. Verify at eaab.org.za`,
             url: '/admin'
           })
         })
@@ -161,12 +164,21 @@ export default function RegisterPage() {
               </div>
 
               {accountType === 'agent' && (
-                <div>
-                  <label className="text-gray-400 text-sm mb-1 block">Agency Name</label>
-                  <input value={agencyName} onChange={e => setAgencyName(e.target.value)} required
-                    className="w-full bg-gray-700 text-white rounded-xl px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
-                    placeholder="e.g. Pam Golding, RE/MAX, or your own agency"/>
-                </div>
+                <>
+                  <div>
+                    <label className="text-gray-400 text-sm mb-1 block">Agency Name</label>
+                    <input value={agencyName} onChange={e => setAgencyName(e.target.value)} required
+                      className="w-full bg-gray-700 text-white rounded-xl px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
+                      placeholder="e.g. Pam Golding, RE/MAX, or your own agency"/>
+                  </div>
+                  <div>
+                    <label className="text-gray-400 text-sm mb-1 block">EAAB Registration Number</label>
+                    <input value={eaabNumber} onChange={e => setEaabNumber(e.target.value)} required
+                      className="w-full bg-gray-700 text-white rounded-xl px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
+                      placeholder="e.g. 123456"/>
+                    <p className="text-gray-500 text-xs mt-1">Your Estate Agency Affairs Board registration number</p>
+                  </div>
+                </>
               )}
 
               <div>

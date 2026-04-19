@@ -42,6 +42,8 @@ export async function POST(request: NextRequest) {
         account_type: authUser.user_metadata?.account_type || 'buyer',
         listing_credits: profile?.listing_credits || 0,
         discount_percent: profile?.discount_percent || 0,
+        eaab_number: profile?.eaab_number || null,
+        is_suspended: profile?.is_suspended || false,
         created_at: authUser.created_at
       },
       listings: listings || []

@@ -91,6 +91,22 @@ export default function AdminPage() {
     })
   }
 
+  const suspendUser = async (suspend: boolean) => {
+    if (!foundUser) return
+    const response = await fetch('/api/admin-user-action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_id: foundUser.id,
+        action: suspend ? 'suspend' : 'unsuspend',
+        note: adminNote
+      })
+    })
+    const data = await response.json()
+    setActionMessage(data.message || (suspend ? '✅ Account suspended' : '✅ Account reinstated'))
+    setFoundUser((prev: any) => ({ ...prev, is_suspended: suspend }))
+  }
+
   const searchUser = async () => {
     if (!searchEmail.trim()) return
     setSearchingUser(true)
@@ -381,6 +397,16 @@ export default function AdminPage() {
                     <p className="text-gray-400 text-sm">{foundUser.email}</p>
                     <p className="text-gray-400 text-sm capitalize">Account type: {foundUser.account_type || 'buyer'}</p>
                     {foundUser.agency_name && <p className="text-orange-500 text-sm">{foundUser.agency_name}</p>}
+                    {foundUser.eaab_number && (
+                      <div className="flex items-center gap-2 mt-1">
+                        <p className="text-gray-400 text-sm">EAAB: <span className="text-white font-mono">{foundUser.eaab_number}</span></p>
+                        <a href="https://www.eaab.org.za/registers" target="_blank" rel="noopener noreferrer"
+                          className="text-orange-500 text-xs hover:underline">Verify →</a>
+                      </div>
+                    )}
+                    {foundUser.is_suspended && (
+                      <p className="text-red-400 text-sm font-bold mt-1">🔴 Account Suspended</p>
+                    )}
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-gray-500">Member since</p>
@@ -446,6 +472,24 @@ export default function AdminPage() {
                     </button>
                   </div>
                 </div>
+              </div>
+
+              {/* Suspend / Unsuspend */}
+              <div className="bg-gray-700 rounded-xl p-4">
+                <p className="font-semibold text-sm mb-2">{foundUser.is_suspended ? '✅ Reinstate Account' : '🔴 Suspend Account'}</p>
+                <p className="text-gray-400 text-xs mb-3">
+                  {foundUser.is_suspended 
+                    ? 'Reinstating will allow them to list properties again' 
+                    : 'Suspending will hide all their listings and block new ones'}
+                </p>
+                <button onClick={() => suspendUser(!foundUser.is_suspended)}
+                  className={`w-full font-bold py-2 rounded-lg text-sm transition ${
+                    foundUser.is_suspended 
+                      ? 'bg-green-600 hover:bg-green-500 text-white' 
+                      : 'bg-red-600 hover:bg-red-500 text-white'
+                  }`}>
+                  {foundUser.is_suspended ? '✅ Reinstate Account' : '🔴 Suspend Account'}
+                </button>
               </div>
 
               {/* Note */}
