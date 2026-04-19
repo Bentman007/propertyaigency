@@ -54,7 +54,34 @@ export default function BulkUploadPage() {
     setLoading(true)
     const uploadResults = []
 
-    for (const row of csvData) {
+    // Check current listing count vs plan limit
+    const { count } = await supabase
+      .from('properties')
+      .select('id', { count: 'exact' })
+      .eq('user_id', user.id)
+      .eq('status', 'active')
+
+    const planLimits: {[key: string]: number} = {
+      starter: 10, growth: 30, pro: 50, agency: 100
+    }
+    const userPlan = user.user_metadata?.plan || 'starter'
+    const limit = planLimits[userPlan] || 10
+    const currentCount = count || 0
+    const availableSlots = Math.max(0, limit - currentCount)
+
+    if (availableSlots === 0) {
+      setError(`You have reached your ${limit} listing limit on your current plan. Please upgrade to add more listings.`)
+      setLoading(false)
+      return
+    }
+
+    if (csvData.length > availableSlots) {
+      setError(`You can only upload ${availableSlots} more properties on your current plan (${currentCount}/${limit} used). Only the first ${availableSlots} will be uploaded. Consider upgrading your plan.`)
+    }
+
+    const dataToUpload = csvData.slice(0, availableSlots)
+
+    for (const row of dataToUpload) {
       try {
         const { data, error } = await supabase.from('properties').insert({
           user_id: user.id,
