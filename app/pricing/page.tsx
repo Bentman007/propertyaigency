@@ -42,7 +42,7 @@ export default function PricingPage() {
               <h3 className="text-xl font-bold mb-1">Standard Listing</h3>
               <p className="text-gray-400 text-sm mb-4">Perfect for a single property</p>
               <div className="mb-6">
-                <span className="text-4xl font-bold text-orange-500">R199</span>
+                <span className="text-4xl font-bold text-orange-500">R99</span>
                 <span className="text-gray-400 text-sm ml-2">per listing</span>
               </div>
               <ul className="space-y-2 mb-6 text-sm text-gray-300">
@@ -77,7 +77,7 @@ export default function PricingPage() {
                 <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Virtual tour support</li>
                 <li className="flex items-center gap-2"><span className="text-green-400">✓</span> AI advert writer + valuation</li>
                 <li className="flex items-center gap-2"><span className="text-green-400">✓</span> AI Concierge handles all enquiries</li>
-                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Featured on homepage — <span className="text-orange-500 font-bold">R199/month</span></li>
+                <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Featured on homepage — <span className="text-orange-500 font-bold">R99/month</span></li>
                 <li className="flex items-center gap-2"><span className="text-orange-400">↻</span> Relist for R149</li>
               </ul>
               <Link href="/auth/register" className="block w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-3 rounded-xl text-center transition">
@@ -129,7 +129,7 @@ export default function PricingPage() {
                 <p className="text-gray-400 text-sm">Appear above all regular listings on the homepage</p>
               </div>
               <div className="text-right">
-                <p className="text-3xl font-bold text-yellow-400">R199</p>
+                <p className="text-3xl font-bold text-yellow-400">R99</p>
                 <p className="text-gray-400 text-xs">/month per listing</p>
               </div>
             </div>

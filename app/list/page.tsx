@@ -203,6 +203,14 @@ function ListPropertyInner() {
     else { 
       setMessage(isEditing ? 'Property updated successfully!' : 'Property listed successfully!')
       window.scrollTo(0,0)
+      // Notify matching searchers about new listing
+      if (!isEditing && data?.[0]?.id) {
+        fetch('/api/match-notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ property_id: data[0].id })
+        })
+      }
       if (isEditing) setTimeout(() => window.location.href = '/dashboard', 1500)
     }
     setLoading(false)
