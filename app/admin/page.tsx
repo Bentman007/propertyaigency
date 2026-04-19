@@ -10,6 +10,14 @@ export default function AdminPage() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState<any>({})
+  const [searchEmail, setSearchEmail] = useState('')
+  const [foundUser, setFoundUser] = useState<any>(null)
+  const [userListings, setUserListings] = useState<any[]>([])
+  const [creditAmount, setCreditAmount] = useState('')
+  const [discountAmount, setDiscountAmount] = useState('')
+  const [adminNote, setAdminNote] = useState('')
+  const [actionMessage, setActionMessage] = useState('')
+  const [searchingUser, setSearchingUser] = useState(false)
   const [activeAI, setActiveAI] = useState<'marketing' | 'sales' | 'support' | 'finance' | 'developer' | 'security'>('marketing')
   const [aiInput, setAiInput] = useState('')
   const [aiResponse, setAiResponse] = useState('')
@@ -81,6 +89,80 @@ export default function AdminPage() {
       totalSearches: searches?.length || 0,
       propViewCounts
     })
+  }
+
+  const searchUser = async () => {
+    if (!searchEmail.trim()) return
+    setSearchingUser(true)
+    setFoundUser(null)
+    setUserListings([])
+    setActionMessage('')
+
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('*')
+      .ilike('id', '%')
+
+    // Search by email in auth - we'll search profiles and cross reference
+    const { data: allProfiles } = await supabase
+      .from('profiles')
+      .select('*')
+
+    // Get properties for this search
+    const { data: properties } = await supabase
+      .from('properties')
+      .select('id, title, status, created_at')
+      .order('created_at', { ascending: false })
+
+    // Find user by matching email pattern in metadata
+    const response = await fetch('/api/admin-user-search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: searchEmail })
+    })
+    const data = await response.json()
+    
+    if (data.user) {
+      setFoundUser(data.user)
+      setUserListings(data.listings || [])
+    } else {
+      setActionMessage('No user found with that email')
+    }
+    setSearchingUser(false)
+  }
+
+  const applyCredit = async () => {
+    if (!foundUser || !creditAmount) return
+    const response = await fetch('/api/admin-user-action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        user_id: foundUser.id, 
+        action: 'add_credit',
+        amount: parseInt(creditAmount),
+        note: adminNote
+      })
+    })
+    const data = await response.json()
+    setActionMessage(data.message || '✅ Credit applied!')
+    setCreditAmount('')
+  }
+
+  const applyDiscount = async () => {
+    if (!foundUser || !discountAmount) return
+    const response = await fetch('/api/admin-user-action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_id: foundUser.id,
+        action: 'add_discount',
+        amount: parseInt(discountAmount),
+        note: adminNote
+      })
+    })
+    const data = await response.json()
+    setActionMessage(data.message || '✅ Discount applied!')
+    setDiscountAmount('')
   }
 
   const askAI = async () => {
@@ -267,6 +349,116 @@ export default function AdminPage() {
             </tbody>
           </table>
         </div>
+        {/* User Management */}
+        <h2 className="text-lg font-bold text-orange-500 mb-3 mt-8">👤 User Management</h2>
+        <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 mb-8">
+          <p className="text-gray-400 text-sm mb-4">Search for any user to view their account, apply credits or discounts</p>
+          
+          <div className="flex gap-3 mb-4">
+            <input value={searchEmail} onChange={e => setSearchEmail(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && searchUser()}
+              placeholder="Search by email address..."
+              className="flex-1 bg-gray-700 text-white rounded-xl px-4 py-3 outline-none border border-gray-600 focus:border-orange-500 text-sm"/>
+            <button onClick={searchUser} disabled={searchingUser}
+              className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-6 py-3 rounded-xl disabled:opacity-50 transition text-sm">
+              {searchingUser ? 'Searching...' : 'Search'}
+            </button>
+          </div>
+
+          {actionMessage && (
+            <div className={`p-3 rounded-lg text-sm mb-4 ${actionMessage.includes('✅') ? 'bg-green-900 text-green-300' : 'bg-red-900 text-red-300'}`}>
+              {actionMessage}
+            </div>
+          )}
+
+          {foundUser && (
+            <div className="space-y-4">
+              {/* User details */}
+              <div className="bg-gray-700 rounded-xl p-4">
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <p className="font-bold">{foundUser.full_name || 'No name'}</p>
+                    <p className="text-gray-400 text-sm">{foundUser.email}</p>
+                    <p className="text-gray-400 text-sm capitalize">Account type: {foundUser.account_type || 'buyer'}</p>
+                    {foundUser.agency_name && <p className="text-orange-500 text-sm">{foundUser.agency_name}</p>}
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-gray-500">Member since</p>
+                    <p className="text-sm">{new Date(foundUser.created_at).toLocaleDateString('en-ZA', { month: 'long', year: 'numeric' })}</p>
+                    {foundUser.listing_credits > 0 && (
+                      <p className="text-green-400 text-sm mt-1">🎁 {foundUser.listing_credits} credits</p>
+                    )}
+                    {foundUser.discount_percent > 0 && (
+                      <p className="text-yellow-400 text-sm">💰 {foundUser.discount_percent}% discount</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Listings */}
+                {userListings.length > 0 && (
+                  <div>
+                    <p className="text-xs text-gray-400 mb-2 font-semibold uppercase tracking-wide">Their Listings ({userListings.length})</p>
+                    <div className="space-y-1">
+                      {userListings.slice(0, 5).map((l: any) => (
+                        <div key={l.id} className="flex justify-between items-center text-sm">
+                          <span className="text-gray-300">{l.title}</span>
+                          <span className={`text-xs px-2 py-0.5 rounded-full ${
+                            l.status === 'active' ? 'bg-green-900 text-green-300' :
+                            l.status === 'draft' ? 'bg-gray-600 text-gray-300' :
+                            'bg-red-900 text-red-300'
+                          }`}>{l.status}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Actions */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Add credits */}
+                <div className="bg-gray-700 rounded-xl p-4">
+                  <p className="font-semibold text-sm mb-2">🎁 Add Free Listing Credits</p>
+                  <p className="text-gray-400 text-xs mb-3">Give them extra listing slots as compensation</p>
+                  <div className="flex gap-2">
+                    <input type="number" value={creditAmount} onChange={e => setCreditAmount(e.target.value)}
+                      placeholder="No. of listings"
+                      className="flex-1 bg-gray-600 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-500 focus:border-orange-500"/>
+                    <button onClick={applyCredit} disabled={!creditAmount}
+                      className="bg-green-600 hover:bg-green-500 text-white font-bold px-4 py-2 rounded-lg text-sm disabled:opacity-50">
+                      Apply
+                    </button>
+                  </div>
+                </div>
+
+                {/* Apply discount */}
+                <div className="bg-gray-700 rounded-xl p-4">
+                  <p className="font-semibold text-sm mb-2">💰 Apply Discount</p>
+                  <p className="text-gray-400 text-xs mb-3">Discount on their next invoice (%)</p>
+                  <div className="flex gap-2">
+                    <input type="number" value={discountAmount} onChange={e => setDiscountAmount(e.target.value)}
+                      placeholder="% discount (e.g. 50)"
+                      min="1" max="100"
+                      className="flex-1 bg-gray-600 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-500 focus:border-orange-500"/>
+                    <button onClick={applyDiscount} disabled={!discountAmount}
+                      className="bg-yellow-600 hover:bg-yellow-500 text-white font-bold px-4 py-2 rounded-lg text-sm disabled:opacity-50">
+                      Apply
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Note */}
+              <div>
+                <label className="text-gray-400 text-xs mb-1 block">Internal note (optional)</label>
+                <input value={adminNote} onChange={e => setAdminNote(e.target.value)}
+                  placeholder="e.g. Compensated for 3 days downtime..."
+                  className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* AI Team */}
         <h2 className="text-lg font-bold text-orange-500 mb-3 mt-8">🤖 Your AI Team</h2>
         <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden mb-8">
