@@ -62,9 +62,30 @@ export default function MakeOffer({ property }: { property: any }) {
   }
 
   if (submitted) return (
-    <div className="bg-green-900 border border-green-700 rounded-xl p-4 mb-3 text-center">
-      <p className="text-green-300 font-bold">✅ {isRent ? 'Application' : 'Offer'} Submitted!</p>
-      <p className="text-green-400 text-xs mt-1">The agent will be in touch shortly via your dashboard</p>
+    <div className="space-y-3 mb-3">
+      <div className="bg-green-900 border border-green-700 rounded-xl p-4 text-center">
+        <p className="text-green-300 font-bold">✅ {isRent ? 'Application' : 'Offer'} Submitted!</p>
+        <p className="text-green-400 text-xs mt-1">The agent will be in touch shortly via your dashboard</p>
+      </div>
+
+      {/* Moving Services Upsell */}
+      <div className="bg-gray-700 rounded-xl p-4 border border-orange-500">
+        <div className="flex gap-3">
+          <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs flex-shrink-0">AI</div>
+          <div>
+            <p className="text-sm text-gray-200 leading-relaxed mb-3">
+              🎉 <strong>Great move!</strong> While you wait to hear back, would you like help planning your move? 
+              For just <strong className="text-orange-500">R200</strong>, our Moving Services team will get you quotes from removal companies, 
+              attorneys, cleaners and more — all pre-filled with your details!
+            </p>
+            <a href="/moving"
+              className="inline-block bg-orange-500 hover:bg-orange-400 text-black font-bold px-4 py-2 rounded-lg text-sm transition">
+              📦 Get Moving Quotes — R200
+            </a>
+            <button className="ml-3 text-gray-500 hover:text-gray-300 text-xs">No thanks</button>
+          </div>
+        </div>
+      </div>
     </div>
   )
 
