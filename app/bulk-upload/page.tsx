@@ -71,9 +71,35 @@ export default function BulkUploadPage() {
           suburb: row.suburb || '',
           city: row.city || '',
           province: row.province || '',
-          status: 'active',
+          status: 'draft',
           photos: []
         }).select()
+
+        // Generate AI description if none provided
+        if (data?.[0]?.id && !row.description) {
+          try {
+            const aiRes = await fetch('/api/generate-listing', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                title: row.title,
+                bedrooms: row.bedrooms,
+                bathrooms: row.bathrooms,
+                suburb: row.suburb,
+                city: row.city,
+                price: row.price,
+                price_type: row.price_type,
+                property_type: row.property_type
+              })
+            })
+            const aiData = await aiRes.json()
+            if (aiData.description) {
+              await supabase.from('properties')
+                .update({ description: aiData.description })
+                .eq('id', data[0].id)
+            }
+          } catch (e) {}
+        }
 
         if (error) {
           uploadResults.push({ title: row.title, status: 'error', message: error.message })

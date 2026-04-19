@@ -191,6 +191,14 @@ export default function DashboardPage() {
     return `${Math.round(seconds / 60)}m ${seconds % 60}s`
   }
 
+  const getStatusBadgeColor = (status: string) => {
+    if (status === 'active') return 'bg-green-500'
+    if (status === 'under_offer') return 'bg-yellow-500'
+    if (status === 'sold') return 'bg-red-500'
+    if (status === 'draft') return 'bg-gray-500'
+    return 'bg-gray-500'
+  }
+
   const getHeatColor = (score: number) => {
     if (score >= 70) return 'text-green-400 bg-green-900'
     if (score >= 40) return 'text-yellow-400 bg-yellow-900'
@@ -338,6 +346,12 @@ export default function DashboardPage() {
                           className="text-sm bg-orange-500 hover:bg-orange-400 text-black px-3 py-1.5 rounded-lg font-semibold">
                           Edit
                         </Link>
+                        {property.status === 'draft' && (
+                          <button onClick={() => updateStatus(property.id, 'active')}
+                            className="text-sm bg-green-600 hover:bg-green-500 text-white px-3 py-1.5 rounded-lg font-bold animate-pulse">
+                            ✅ Approve & Go Live
+                          </button>
+                        )}
                         {property.status === 'active' && (
                           <button onClick={() => updateStatus(property.id, 'under_offer')}
                             className="text-sm bg-yellow-600 hover:bg-yellow-500 text-white px-3 py-1.5 rounded-lg">
