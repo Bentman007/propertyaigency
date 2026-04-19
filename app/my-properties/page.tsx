@@ -131,17 +131,22 @@ export default function MyPropertiesPage() {
 
         {/* Quick stats */}
         <div className="grid grid-cols-3 gap-3 mb-6">
-          <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
+          <a href="/saved" className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center hover:border-orange-500 transition cursor-pointer block">
             <p className="text-3xl font-bold text-orange-500">{savedProperties.length}</p>
             <p className="text-gray-400 text-sm mt-1">Saved Properties</p>
-          </div>
-          <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
+            <p className="text-orange-500 text-xs mt-1">View all →</p>
+          </a>
+          <div onClick={() => document.getElementById('viewings')?.scrollIntoView({behavior: 'smooth'})}
+            className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center hover:border-green-500 transition cursor-pointer">
             <p className="text-3xl font-bold text-green-400">{bookings.filter(b => b.status === 'confirmed').length}</p>
             <p className="text-gray-400 text-sm mt-1">Confirmed Viewings</p>
+            <p className="text-green-500 text-xs mt-1">View →</p>
           </div>
-          <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
+          <div onClick={() => document.getElementById('viewings')?.scrollIntoView({behavior: 'smooth'})}
+            className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center hover:border-yellow-500 transition cursor-pointer">
             <p className="text-3xl font-bold text-yellow-400">{bookings.filter(b => b.status === 'pending').length}</p>
             <p className="text-gray-400 text-sm mt-1">Pending Viewings</p>
+            <p className="text-yellow-500 text-xs mt-1">View →</p>
           </div>
         </div>
 
@@ -160,7 +165,7 @@ export default function MyPropertiesPage() {
 
         {/* Upcoming viewings */}
         {bookings.length > 0 && (
-          <div className="mb-8">
+          <div className="mb-8" id="viewings">
             <h2 className="text-xl font-bold mb-4">📅 My Viewings</h2>
             <div className="space-y-3">
               {bookings.map(booking => (

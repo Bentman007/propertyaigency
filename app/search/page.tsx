@@ -1,4 +1,5 @@
 'use client'
+import React from 'react'
 
 import { useState, useEffect, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -29,6 +30,7 @@ interface Property {
 }
 
 export default function SearchPage() {
+  const [mobileTab, setMobileTab] = React.useState<'chat' | 'results'>('chat')
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
@@ -151,9 +153,20 @@ export default function SearchPage() {
         </div>
       </nav>
 
+      {/* Mobile tab switcher */}
+      <div className="md:hidden flex border-b border-gray-700 flex-shrink-0">
+        <button onClick={() => setMobileTab('chat')}
+          className={`flex-1 py-3 text-sm font-semibold transition ${mobileTab === 'chat' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-400'}`}>
+          💬 AI Chat
+        </button>
+        <button onClick={() => setMobileTab('results')}
+          className={`flex-1 py-3 text-sm font-semibold transition ${mobileTab === 'results' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-400'}`}>
+          🏠 Properties
+        </button>
+      </div>
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
         {/* Chat Panel */}
-        <div className="flex flex-col w-full md:w-96 md:max-w-sm border-b md:border-b-0 md:border-r border-gray-700 md:h-full" style={{height: "50vh"}}>
+        <div className={`flex-col w-full md:w-96 md:max-w-sm border-b md:border-b-0 md:border-r border-gray-700 md:flex ${mobileTab === "chat" ? "flex" : "hidden md:flex"}`} style={{height: "50vh"}}>
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-6 space-y-4">
             {messages.map((message, i) => (
@@ -217,7 +230,7 @@ export default function SearchPage() {
         </div>
 
         {/* Properties Panel */}
-        <div className="flex-1 overflow-y-auto p-4 md:p-6">
+        <div className={`flex-1 overflow-y-auto p-4 md:p-6 ${mobileTab === "results" ? "block" : "hidden md:block"}`}>
           {properties.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <div className="text-6xl mb-4">🏡</div>

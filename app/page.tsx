@@ -118,15 +118,16 @@ export default function Home() {
           <div className="flex gap-2 items-center">
             <Link href="/dashboard" className="bg-orange-500 text-black px-3 py-2 rounded-lg font-semibold hover:bg-orange-400 text-sm">
               <span className="hidden md:inline">My Dashboard</span>
-              <span className="md:hidden">Dashboard</span>
+              <span className="md:hidden">🏠</span>
             </Link>
             <button onClick={() => supabase.auth.signOut().then(() => setUser(null))} className="text-gray-400 hover:text-white text-sm">
               Sign Out
             </button>
           </div>
         ) : (
-          <Link href="/auth/login" className="bg-orange-500 text-black px-4 py-2 rounded-lg font-semibold hover:bg-orange-400">
-            Sign In
+          <Link href="/auth/login" className="bg-orange-500 text-black px-3 py-2 rounded-lg font-semibold hover:bg-orange-400 text-sm">
+            <span className="hidden md:inline">Sign In</span>
+            <span className="md:hidden">→</span>
           </Link>
         )}
       </nav>
