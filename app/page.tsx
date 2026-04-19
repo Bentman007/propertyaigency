@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase'
 export default function Home() {
   const [user, setUser] = useState<any>(null)
   const [properties, setProperties] = useState<any[]>([])
+  const [featuredProperties, setFeaturedProperties] = useState<any[]>([])
   const [locationLabel, setLocationLabel] = useState('Latest Properties')
   const [locating, setLocating] = useState(false)
 
@@ -14,7 +15,19 @@ export default function Home() {
     supabase.auth.getUser().then(({ data }) => setUser(data.user))
     fetchProperties()
     getLocation()
+    fetchFeatured()
   }, [])
+
+  const fetchFeatured = async () => {
+    const { data } = await supabase
+      .from('properties')
+      .select('*')
+      .eq('status', 'active')
+      .eq('featured', true)
+      .order('created_at', { ascending: false })
+      .limit(3)
+    if (data && data.length > 0) setFeaturedProperties(data)
+  }
 
   const fetchProperties = async (suburb?: string, city?: string) => {
     let query = supabase
@@ -132,7 +145,43 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Properties */}
+      {/* Featured / Sponsored Listings */}
+      {featuredProperties.length > 0 && (
+        <section className="px-6 py-8 max-w-6xl mx-auto">
+          <div className="flex items-center gap-3 mb-6">
+            <span className="bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-full">⭐ FEATURED</span>
+            <h2 className="text-2xl font-bold">Featured Properties</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {featuredProperties.map((p, i) => (
+              <Link href={`/property/${p.id}`} key={i}
+                className="bg-gray-800 rounded-2xl overflow-hidden border-2 border-yellow-500 hover:border-yellow-400 transition-colors block relative">
+                <div className="absolute top-3 left-3 z-10">
+                  <span className="bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded-full">⭐ Featured</span>
+                </div>
+                <div className="h-48 bg-gray-700">
+                  {p.photos?.[0] ? (
+                    <img src={p.photos[0]} alt={p.title} className="w-full h-full object-cover"/>
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-4xl">🏠</div>
+                  )}
+                </div>
+                <div className="p-4">
+                  <span className={`text-xs px-2 py-1 rounded font-bold ${p.price_type === 'rent' ? 'bg-blue-500' : 'bg-orange-500'} text-black`}>
+                    {p.price_type === 'rent' ? 'To Rent' : 'For Sale'}
+                  </span>
+                  <h3 className="text-lg font-bold mt-2">{p.title}</h3>
+                  <p className="text-gray-400 text-sm">📍 {p.suburb}, {p.city}</p>
+                  <p className="text-yellow-400 font-bold text-xl mt-2">{formatPrice(p.price, p.price_type)}</p>
+                  <p className="text-gray-400 text-sm mt-1">🛏 {p.bedrooms} beds · 🚿 {p.bathrooms} baths · ⭐ Featured</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Latest Properties */}
       <section className="px-6 py-16 max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-3">

@@ -122,6 +122,11 @@ export default function DashboardPage() {
     setLoading(false)
   }
 
+  const toggleFeatured = async (propertyId: string, currentFeatured: boolean) => {
+    await supabase.from('properties').update({ featured: !currentFeatured }).eq('id', propertyId)
+    setProperties(prev => prev.map(p => p.id === propertyId ? { ...p, featured: !currentFeatured } : p))
+  }
+
   const updateStatus = async (propertyId: string, status: string) => {
     await supabase.from('properties').update({ status }).eq('id', propertyId)
     setProperties(prev => prev.map(p => p.id === propertyId ? { ...p, status } : p))
@@ -341,6 +346,14 @@ export default function DashboardPage() {
                             🔴 Mark Sold/Rented
                           </button>
                         )}
+                        <button onClick={() => toggleFeatured(property.id, property.featured)}
+                          className={`text-sm px-3 py-1.5 rounded-lg transition ${
+                            property.featured 
+                              ? 'bg-yellow-500 text-black hover:bg-yellow-400' 
+                              : 'bg-gray-700 hover:bg-yellow-500 hover:text-black text-gray-300'
+                          }`}>
+                          {property.featured ? '⭐ Featured' : '☆ Mark Featured'}
+                        </button>
                         {property.status !== 'active' && (
                           <button onClick={() => updateStatus(property.id, 'active')}
                             className="text-sm bg-green-700 hover:bg-green-600 text-white px-3 py-1.5 rounded-lg">
