@@ -371,7 +371,14 @@ function ListPropertyInner() {
               </button>
             </div>
             {!form.suburb && <p className="text-yellow-500 text-xs">Complete Step 1 and 2 first to get an AI estimate</p>}
-            {valuation && (
+            {valuation?.insufficient_data && (
+            <div className="bg-gray-700 border border-gray-600 rounded-xl p-4 text-sm text-gray-400">
+              <p className="font-semibold text-gray-300 mb-1">📊 Valuation Data Building...</p>
+              <p>{valuation.message}</p>
+              <p className="text-xs mt-2 text-gray-500">Currently have {valuation.comparable_count} comparable listings. We need at least 5 to provide accurate estimates.</p>
+            </div>
+          )}
+          {valuation && !valuation.insufficient_data && (
               <div className="bg-gray-900 border border-blue-500 rounded-xl p-4 mt-3">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="text-blue-400 font-bold text-sm">🤖 AI Market Estimate</span>
