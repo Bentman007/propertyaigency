@@ -102,6 +102,7 @@ export default function PrivacyPage() {
 
       <footer className="border-t border-gray-800 px-6 py-8 text-center text-gray-500 text-sm">
         <div className="flex justify-center gap-6">
+          <Link href="/how-it-works" className="hover:text-white">How It Works</Link>
           <Link href="/terms" className="hover:text-white">Terms of Service</Link>
           <Link href="/privacy" className="hover:text-white">Privacy Policy</Link>
           <Link href="/contact" className="hover:text-white">Contact</Link>
