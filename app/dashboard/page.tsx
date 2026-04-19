@@ -25,6 +25,7 @@ interface PropertyWithStats {
   enquiries: number
   heat_score: number
   status: string
+  featured: boolean
 }
 
 export default function DashboardPage() {
