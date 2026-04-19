@@ -17,6 +17,8 @@ const SERVICES = [
 
 export default function MovingServicesPage() {
   const [user, setUser] = useState<any>(null)
+  const [fromRef, setFromRef] = useState<any>(null)
+  const [toRef, setToRef] = useState<any>(null)
   const [selectedServices, setSelectedServices] = useState<string[]>([])
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
@@ -26,8 +28,63 @@ export default function MovingServicesPage() {
   })
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data.user))
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (!data.user) return
+      setUser(data.user)
+
+      // Pre-populate from latest confirmed booking
+      const { data: booking } = await supabase
+        .from('viewing_bookings')
+        .select('property_address, properties(address, suburb, city)')
+        .eq('searcher_id', data.user.id)
+        .eq('status', 'confirmed')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single()
+
+      if (booking?.property_address) {
+        setForm(p => ({ ...p, to_address: booking.property_address }))
+      }
+    })
+
+    // Load Google Places
+    if (!(window as any).google) {
+      const script = document.createElement('script')
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_KEY}&libraries=places`
+      script.async = true
+      script.onload = initAutocomplete
+      document.head.appendChild(script)
+    } else {
+      initAutocomplete()
+    }
   }, [])
+
+  const initAutocomplete = () => {
+    const fromInput = document.getElementById('from-address') as HTMLInputElement
+    const toInput = document.getElementById('to-address') as HTMLInputElement
+
+    if (fromInput && (window as any).google) {
+      const fromAC = new (window as any).google.maps.places.Autocomplete(fromInput, {
+        componentRestrictions: { country: 'za' },
+        fields: ['formatted_address']
+      })
+      fromAC.addListener('place_changed', () => {
+        const place = fromAC.getPlace()
+        setForm(p => ({ ...p, from_address: place.formatted_address || '' }))
+      })
+    }
+
+    if (toInput && (window as any).google) {
+      const toAC = new (window as any).google.maps.places.Autocomplete(toInput, {
+        componentRestrictions: { country: 'za' },
+        fields: ['formatted_address']
+      })
+      toAC.addListener('place_changed', () => {
+        const place = toAC.getPlace()
+        setForm(p => ({ ...p, to_address: place.formatted_address || '' }))
+      })
+    }
+  }
 
   const toggleService = (value: string) => {
     setSelectedServices(prev =>
@@ -124,15 +181,17 @@ export default function MovingServicesPage() {
             <div>
               <label className="text-gray-400 text-sm mb-1 block">Moving from</label>
               <input value={form.from_address} onChange={e => setForm(p => ({ ...p, from_address: e.target.value }))}
+                id="from-address"
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
-                placeholder="Current address or suburb"/>
+                placeholder="Start typing your current address..."/>
             </div>
 
             <div>
               <label className="text-gray-400 text-sm mb-1 block">Moving to</label>
               <input value={form.to_address} onChange={e => setForm(p => ({ ...p, to_address: e.target.value }))}
+                id="to-address"
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
-                placeholder="New address or suburb"/>
+                placeholder="Start typing your new address..."/>
             </div>
 
             <div>
