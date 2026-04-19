@@ -4,6 +4,7 @@ export const dynamic = 'force-dynamic'
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
+import { rateLimit } from '@/lib/rateLimit'
 
 export async function POST(request: NextRequest) {
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
@@ -11,6 +12,12 @@ export async function POST(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
+
+  // Rate limit: 20 searches per minute per IP
+  const ip = request.headers.get('x-forwarded-for') || 'unknown'
+  if (!rateLimit(`ai-search:${ip}`, 20, 60000)) {
+    return NextResponse.json({ error: 'Too many requests. Please wait a moment.' }, { status: 429 })
+  }
 
   try {
     const { messages, user_id } = await request.json()
@@ -111,7 +118,13 @@ Lead score guide:
     // Extract properties
     const propertiesMatch = content.match(/<properties>([\s\S]*?)<\/properties>/)
     if (propertiesMatch) {
-      try {
+      // Rate limit: 20 searches per minute per IP
+  const ip = request.headers.get('x-forwarded-for') || 'unknown'
+  if (!rateLimit(`ai-search:${ip}`, 20, 60000)) {
+    return NextResponse.json({ error: 'Too many requests. Please wait a moment.' }, { status: 429 })
+  }
+
+  try {
         const propertyIds = JSON.parse(propertiesMatch[1])
         matchedProperties = propertyIds.map((match: any) => {
           const prop = availableProperties.find(p => p.id === match.id)
@@ -124,7 +137,13 @@ Lead score guide:
     // Extract profile updates
     const profileMatch = content.match(/<profile>([\s\S]*?)<\/profile>/)
     if (profileMatch) {
-      try {
+      // Rate limit: 20 searches per minute per IP
+  const ip = request.headers.get('x-forwarded-for') || 'unknown'
+  if (!rateLimit(`ai-search:${ip}`, 20, 60000)) {
+    return NextResponse.json({ error: 'Too many requests. Please wait a moment.' }, { status: 429 })
+  }
+
+  try {
         profileUpdate = JSON.parse(profileMatch[1])
         if (user_id && Object.keys(profileUpdate).length > 0) {
           await supabase.from('searcher_profiles').upsert({
@@ -141,7 +160,13 @@ Lead score guide:
     // Extract lead score
     const leadMatch = content.match(/<lead>([\s\S]*?)<\/lead>/)
     if (leadMatch) {
-      try {
+      // Rate limit: 20 searches per minute per IP
+  const ip = request.headers.get('x-forwarded-for') || 'unknown'
+  if (!rateLimit(`ai-search:${ip}`, 20, 60000)) {
+    return NextResponse.json({ error: 'Too many requests. Please wait a moment.' }, { status: 429 })
+  }
+
+  try {
         leadData = JSON.parse(leadMatch[1])
       } catch (e) {}
       cleanContent = cleanContent.replace(/<lead>[\s\S]*?<\/lead>/, '').trim()

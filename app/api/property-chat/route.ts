@@ -1,10 +1,17 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
+import { rateLimit } from '@/lib/rateLimit'
 
 export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextRequest) {
+  // Rate limit: 30 messages per minute per IP
+  const ip = request.headers.get('x-forwarded-for') || 'unknown'
+  if (!rateLimit(`property-chat:${ip}`, 30, 60000)) {
+    return NextResponse.json({ error: 'Too many requests. Please wait a moment.' }, { status: 429 })
+  }
+
   try {
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
     const supabase = createClient(
@@ -48,7 +55,13 @@ Include at end of every message:
 
     const leadMatch = content.match(/<lead>([\s\S]*?)<\/lead>/)
     if (leadMatch) {
-      try { leadData = JSON.parse(leadMatch[1]) } catch (e) {}
+      // Rate limit: 30 messages per minute per IP
+  const ip = request.headers.get('x-forwarded-for') || 'unknown'
+  if (!rateLimit(`property-chat:${ip}`, 30, 60000)) {
+    return NextResponse.json({ error: 'Too many requests. Please wait a moment.' }, { status: 429 })
+  }
+
+  try { leadData = JSON.parse(leadMatch[1]) } catch (e) {}
       cleanContent = cleanContent.replace(/<lead>[\s\S]*?<\/lead>/, '').trim()
     }
 

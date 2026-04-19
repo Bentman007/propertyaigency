@@ -1,6 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
+import { rateLimit } from '@/lib/rateLimit'
 
 export const maxDuration = 15
 export const dynamic = 'force-dynamic'
@@ -24,6 +25,12 @@ export async function POST(request: NextRequest) {
     } catch (_) {} // Fail silently if table doesn't exist yet
     
     return NextResponse.json({ success: true })
+  }
+
+  // Rate limit: 10 messages per minute per IP
+  const ip = request.headers.get('x-forwarded-for') || 'unknown'
+  if (!rateLimit(`contact-ai:${ip}`, 10, 60000)) {
+    return NextResponse.json({ message: 'Too many requests. Please wait a moment.', escalate: false }, { status: 429 })
   }
 
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
