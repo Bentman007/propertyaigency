@@ -22,8 +22,11 @@ export default function LoginPage() {
         window.location.href = next
       } else {
         const { data: { user } } = await supabase.auth.getUser()
+        const email = user?.email || ''
         const accountType = user?.user_metadata?.account_type || 'buyer'
-        if (accountType === 'agent') {
+        if (email === 'sharp61@hotmail.com') {
+          window.location.href = '/admin'
+        } else if (accountType === 'agent') {
           window.location.href = '/dashboard'
         } else if (accountType === 'private_seller') {
           window.location.href = '/my-listings'
