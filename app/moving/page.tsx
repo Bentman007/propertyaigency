@@ -56,6 +56,51 @@ export default function MovingServicesPage() {
     })
   }, [])
 
+  useEffect(() => {
+    if (step === 2) {
+      setTimeout(() => {
+        const loadAutocomplete = () => {
+          const fromInput = document.getElementById('from-address') as HTMLInputElement
+          const toInput = document.getElementById('to-address') as HTMLInputElement
+          if (!fromInput || !toInput || !(window as any).google) return
+
+          const fromAC = new (window as any).google.maps.places.Autocomplete(fromInput, {
+            componentRestrictions: { country: 'za' },
+            fields: ['formatted_address']
+          })
+          fromAC.addListener('place_changed', () => {
+            const place = fromAC.getPlace()
+            setForm(p => ({ ...p, from_address: place.formatted_address || fromInput.value }))
+          })
+
+          const toAC = new (window as any).google.maps.places.Autocomplete(toInput, {
+            componentRestrictions: { country: 'za' },
+            fields: ['formatted_address']
+          })
+          toAC.addListener('place_changed', () => {
+            const place = toAC.getPlace()
+            setForm(p => ({ ...p, to_address: place.formatted_address || toInput.value }))
+          })
+        }
+
+        if ((window as any).google) {
+          loadAutocomplete()
+        } else {
+          const existing = document.querySelector('script[src*="maps.googleapis"]')
+          if (!existing) {
+            const script = document.createElement('script')
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_KEY}&libraries=places`
+            script.async = true
+            script.onload = loadAutocomplete
+            document.head.appendChild(script)
+          } else {
+            existing.addEventListener('load', loadAutocomplete)
+          }
+        }
+      }, 300)
+    }
+  }, [step])
+
   const toggleService = (value: string) => {
     setSelectedServices(prev =>
       prev.includes(value) ? prev.filter(s => s !== value) : [...prev, value]
@@ -227,14 +272,16 @@ export default function MovingServicesPage() {
               <label className="text-gray-400 text-sm mb-1 block">Moving from</label>
               <input value={form.from_address} onChange={e => setForm(p => ({ ...p, from_address: e.target.value }))}
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
-                placeholder="Current address or suburb"/>
+                id="from-address"
+                placeholder="Start typing your current address..."/>
             </div>
 
             <div>
               <label className="text-gray-400 text-sm mb-1 block">Moving to</label>
               <input value={form.to_address} onChange={e => setForm(p => ({ ...p, to_address: e.target.value }))}
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
-                placeholder="New address or suburb"/>
+                id="to-address"
+                placeholder="Start typing your new address..."/>
             </div>
 
             <div>
