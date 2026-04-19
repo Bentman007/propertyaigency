@@ -32,8 +32,6 @@ function ListPropertyInner() {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search)
       const id = params.get('edit')
-      console.log('URL params:', window.location.search)
-      console.log('Edit ID:', id)
       if (id) {
         setEditId(id)
         setIsEditing(true)
@@ -44,14 +42,12 @@ function ListPropertyInner() {
 
   const loadExistingProperty = async (id: string) => {
     setEditLoading(true)
-    console.log('Loading property with id:', id)
     const { data } = await supabase
       .from('properties')
       .select('*')
       .eq('id', id)
       .single()
     
-    console.log('Property data:', data)
     if (data) {
       setForm({
         title: data.title || '',
