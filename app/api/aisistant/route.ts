@@ -61,6 +61,33 @@ Viewing booked: ${data.date} at ${data.start_time}`
       content = data.insight
     }
 
+    else if (type === 'recommend_property') {
+      // Agent wants to recommend one of their listings to a buyer
+      const { data: property } = await supabase
+        .from('properties')
+        .select('id, title, suburb, city, price, price_type')
+        .eq('id', data.property_id)
+        .eq('user_id', agent_id)
+        .single()
+
+      if (property && data.buyer_id) {
+        await fetch(`${request.nextUrl.origin}/api/agent-recommend`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            agent_id,
+            buyer_id: data.buyer_id,
+            property_id: data.property_id
+          })
+        })
+        title = `✅ Recommendation Sent`
+        content = `Your listing **${property.title}** has been recommended to the buyer. They will receive a notification and see it in their Concierge chat!`
+      } else {
+        title = `❌ Recommendation Failed`
+        content = `Could not send recommendation. Make sure the property is active and belongs to you.`
+      }
+    }
+
     else if (type === 'hot_lead') {
       title = `🔥 Hot Lead Alert — ${property?.title}`
       content = `Someone has viewed **${property?.title}** ${data.view_count} times this week. This buyer is showing strong interest — they may be ready to make a decision. Consider reviewing your price or reaching out.`

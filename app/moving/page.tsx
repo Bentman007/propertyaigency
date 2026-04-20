@@ -13,6 +13,9 @@ const SERVICES = [
   { value: 'mortgage', label: '🏦 Bond Originator', desc: 'Find the best home loan rate' },
   { value: 'surveyor', label: '📋 Property Surveyor', desc: 'Building and compliance inspection' },
   { value: 'handyman', label: '🔧 Handyman / Contractor', desc: 'Repairs and small renovations' },
+  { value: 'photography', label: '📸 Property Photographer', desc: 'Professional photos and video tours' },
+  { value: 'virtual_tour', label: '🏠 3D Virtual Tour', desc: 'Matterport and 3D property walkthroughs' },
+  { value: 'staging', label: '🛋 Home Staging', desc: 'Stage your home to sell faster' },
 ]
 
 export default function MovingServicesPage() {

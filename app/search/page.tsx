@@ -40,6 +40,12 @@ export default function SearchPage() {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [properties, setProperties] = useState<Property[]>([])
+  const [suggestedPrompts, setSuggestedPrompts] = useState<string[]>([
+    'Find me a 3 bed in Sandton',
+    'I want to rent under R20,000',
+    'Show me pet friendly homes',
+    'I need a garden and pool'
+  ])
   const [savedIds, setSavedIds] = useState<string[]>([])
   const [rejectedIds, setRejectedIds] = useState<string[]>([])
   const [user, setUser] = useState<any>(null)
@@ -85,6 +91,7 @@ export default function SearchPage() {
 
       const data = await response.json()
       setMessages(prev => [...prev, { role: 'assistant', content: data.message }])
+      if (data.suggested_prompts?.length > 0) setSuggestedPrompts(data.suggested_prompts)
       if (data.properties?.length > 0) {
         setProperties(prev => {
           const existingIds = prev.map(p => p.id)
@@ -206,6 +213,14 @@ export default function SearchPage() {
 
           {/* Input */}
           <div className="p-4 border-t border-gray-700">
+            <div className="flex gap-2 mb-3 overflow-x-auto pb-1">
+              {suggestedPrompts.map((p, i) => (
+                <button key={i} onClick={() => setInput(p)}
+                  className="whitespace-nowrap text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-600 rounded-full px-3 py-1.5 transition flex-shrink-0">
+                  {p}
+                </button>
+              ))}
+            </div>
             <div className="flex gap-3">
               <input
                 type="text"

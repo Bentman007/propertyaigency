@@ -20,7 +20,13 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const { messages, user_id } = await request.json()
+    const body = await request.json()
+    const user_id = body.user_id
+    // Support both messages array and legacy message+history format
+    const messages = body.messages || [
+      ...( body.history || []),
+      { role: 'user', content: body.message || '' }
+    ]
 
     const { data: properties } = await supabase
       .from('properties')
@@ -80,16 +86,32 @@ INSTRUCTIONS:
 6. Show properties after MAX 2 exchanges - people want to see results quickly
 7. Maximum 3 properties per response
 8. After showing properties, THEN refine based on their reaction
+9. If the user asks to set an alert or be notified of new properties: tell them "✅ You're all set! Based on our conversation I've already built your search profile. You'll automatically get a push notification the moment a matching property is listed." Never pretend to do something you haven't done.
+10. If no properties match exactly, say something like: "I don't have an exact match for you right now — but I've found some close options I can send to your dashboard. I'll also automatically alert you the moment something matching your criteria gets listed. Please make sure your notifications are on so you don't miss out! 🔔" Then include the closest properties in the <properties> tag.
 
 PRESENTING PROPERTIES - include at end of message:
 <properties>
 [{"id": "id", "match_score": 95, "match_reason": "Matches all requirements"}]
 </properties>
 
-PROFILE UPDATES - include at end of message when you learn something:
+PROFILE UPDATES - include at end of message when you learn something new about the buyer:
 <profile>
-{"budget_min": 10000, "budget_max": 15000, "move_timeline": "end of May", "has_kids": true, "locations": ["Benoni", "Boksburg"]}
+{"budget_min": 10000, "budget_max": 15000, "move_timeline": "end of May", "has_kids": true, "locations": ["Benoni", "Boksburg"], "must_haves": ["pet friendly", "garden"], "deal_breakers": ["no garden"], "nice_to_have": ["pool", "solar"], "worth_more": ["bar area", "man cave", "extra garage"], "budget_flexible": true}
 </profile>
+
+Profile field guide:
+- must_haves: absolute requirements, will not consider without
+- deal_breakers: will immediately reject if present
+- nice_to_have: would love but not essential
+- worth_more: features they would stretch their budget for
+- budget_flexible: true if they indicate willingness to pay more for the right features
+
+Listen carefully for budget flexibility cues like "I would pay more for...", "worth stretching for...", "if it had X I would consider higher price"
+
+SUGGESTED PROMPTS - include at end of every message, 3-4 short tap-able responses the user might want to say next, based on the conversation:
+<prompts>
+["Option 1", "Option 2", "Option 3"]
+</prompts>
 
 LEAD SCORING - include at end of every message:
 <lead>
@@ -157,6 +179,14 @@ Lead score guide:
       cleanContent = cleanContent.replace(/<profile>[\s\S]*?<\/profile>/, '').trim()
     }
 
+    // Extract suggested prompts
+    let suggestedPrompts: string[] = []
+    const promptsMatch = content.match(/<prompts>([\s\S]*?)<\/prompts>/)
+    if (promptsMatch) {
+      try { suggestedPrompts = JSON.parse(promptsMatch[1]) } catch (e) {}
+      cleanContent = cleanContent.replace(/<prompts>[\s\S]*?<\/prompts>/, '').trim()
+    }
+
     // Extract lead score
     const leadMatch = content.match(/<lead>([\s\S]*?)<\/lead>/)
     if (leadMatch) {
@@ -175,7 +205,9 @@ Lead score guide:
     return NextResponse.json({ 
       message: cleanContent,
       properties: matchedProperties,
-      lead: leadData
+      lead: leadData,
+      suggested_prompts: suggestedPrompts,
+      property_count: matchedProperties.length
     })
 
   } catch (error: any) {

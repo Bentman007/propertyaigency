@@ -7,6 +7,14 @@
     {
       "path": "/api/cron/infrastructure-check",
       "schedule": "0 9 * * 1"
+    },
+    {
+      "path": "/api/cron/reset-listing-credits",
+      "schedule": "0 0 1 * *"
+    },
+    {
+      "path": "/api/cron/weekly-summary",
+      "schedule": "0 8 * * 1"
     }
   ]
 }
