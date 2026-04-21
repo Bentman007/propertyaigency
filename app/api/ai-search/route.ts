@@ -1,6 +1,10 @@
 export const maxDuration = 10
 export const dynamic = 'force-dynamic'
 
+// Simple cache for common searches — resets on deployment
+const searchCache = new Map<string, {result: any, timestamp: number}>()
+const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
@@ -187,6 +191,14 @@ Lead score guide:
 - 50-79 = Warm (actively looking, has general requirements)  
 - 0-49 = Cold (just browsing, no urgency)`
 
+    // Check cache first
+    const lastUserMessage = messages[messages.length - 1]?.content || ''
+    const cacheKey = `${lastUserMessage.toLowerCase().trim().slice(0, 100)}`
+    const cached = searchCache.get(cacheKey)
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+      return NextResponse.json(cached.result)
+    }
+
     // Retry logic for rate limits
     let response: any = null
     let attempts = 0
@@ -307,13 +319,18 @@ ${feedbackData.text}`,
       cleanContent = cleanContent.replace(/<lead>[\s\S]*?<\/lead>/, '').trim()
     }
 
-    return NextResponse.json({ 
+    const result = { 
       message: cleanContent,
       properties: matchedProperties,
       lead: leadData,
       suggested_prompts: suggestedPrompts,
       property_count: matchedProperties.length
-    })
+    }
+    
+    // Cache this result
+    searchCache.set(cacheKey, { result, timestamp: Date.now() })
+    
+    return NextResponse.json(result)
 
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
