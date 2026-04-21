@@ -21,7 +21,7 @@ export default function AdminPage() {
   const [activeAI, setActiveAI] = useState<'marketing' | 'sales' | 'support' | 'finance' | 'developer' | 'security'>('marketing')
   const [aiInput, setAiInput] = useState('')
   const [aiLoading, setAiLoading] = useState(false)
-  const [aiHistory, setAiHistory] = useState<{role: string, content: string}[]>([])
+  const [aiHistory, setAiHistory] = useState<{role: string, content: string, created_at?: string}[]>([])
   const [feedback, setFeedback] = useState<any[]>([])
 
   useEffect(() => {
@@ -35,6 +35,19 @@ export default function AdminPage() {
       setLoading(false)
     })
   }, [])
+
+  const loadChatHistory = async (userId: string, aiType: string) => {
+    const { data } = await supabase
+      .from('ai_chat_history')
+      .select('role, content, created_at')
+      .eq('user_id', userId)
+      .eq('chat_type', 'admin_' + aiType)
+      .order('created_at', { ascending: true })
+      .limit(50)
+    if (data && data.length > 0) {
+      setAiHistory(data.map(m => ({ role: m.role, content: m.content, created_at: m.created_at })))
+    }
+  }
 
   const fetchStats = async () => {
     const today = new Date().toISOString().split('T')[0]
@@ -140,7 +153,16 @@ export default function AdminPage() {
       body: JSON.stringify({ ai_type: activeAI, context: aiInput, history: newHistory })
     })
     const data = await response.json()
-    setAiHistory([...newHistory, { role: 'assistant', content: data.message || 'Sorry, something went wrong.' }])
+    const aiReply = data.message || 'Sorry, something went wrong.'
+    setAiHistory([...newHistory, { role: 'assistant', content: aiReply, created_at: new Date().toISOString() }])
+    // Save both messages to database
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      await supabase.from('ai_chat_history').insert([
+        { user_id: user.id, chat_type: 'admin_' + activeAI, role: 'user', content: newHistory[newHistory.length-1].content },
+        { user_id: user.id, chat_type: 'admin_' + activeAI, role: 'assistant', content: aiReply }
+      ])
+    }
     setAiLoading(false)
   }
 
