@@ -70,12 +70,26 @@ Never try to collect contact details or process bookings/offers yourself — alw
 Include at end of every message:
 <lead>{"score": 20, "temperature": "cold", "reason": "Initial contact"}</lead>`
 
-    const response = await anthropic.messages.create({
+    let response: any = null
+    let attempts = 0
+    while (attempts < 3) {
+      try {
+        response = await anthropic.messages.create({
       model: 'claude-opus-4-6',
       max_tokens: 500,
       system: systemPrompt,
-      messages: messages
-    })
+          messages: messages
+        })
+        break
+      } catch (err: any) {
+        attempts++
+        if (err?.status === 429 && attempts < 3) {
+          await new Promise(r => setTimeout(r, 1000 * attempts))
+          continue
+        }
+        throw err
+      }
+    }
 
     const aiText = response.content[0].type === 'text' ? response.content[0].text : ''
     

@@ -187,12 +187,27 @@ Lead score guide:
 - 50-79 = Warm (actively looking, has general requirements)  
 - 0-49 = Cold (just browsing, no urgency)`
 
-    const response = await anthropic.messages.create({
+    // Retry logic for rate limits
+    let response: any = null
+    let attempts = 0
+    while (attempts < 3) {
+      try {
+        response = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 400,
       system: systemPrompt,
-      messages: messages
-    })
+          messages: messages
+        })
+        break // Success — exit retry loop
+      } catch (err: any) {
+        attempts++
+        if (err?.status === 429 && attempts < 3) {
+          await new Promise(r => setTimeout(r, 1000 * attempts)) // Wait 1s, 2s, 3s
+          continue
+        }
+        throw err // Give up after 3 attempts
+      }
+    }
 
     const content = response.content[0].type === 'text' ? response.content[0].text : ''
     
