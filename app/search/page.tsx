@@ -175,7 +175,7 @@ export default function SearchPage() {
       </div>
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
         {/* Chat Panel */}
-        <div className={`flex-col w-full md:w-96 md:max-w-sm border-b md:border-b-0 md:border-r border-gray-700 md:flex ${mobileTab === "chat" ? "flex" : "hidden md:flex"}`} style={{height: "50vh"}}>
+        <div className={`flex-col w-full md:w-96 md:max-w-sm border-b md:border-b-0 md:border-r border-gray-700 md:flex ${mobileTab === "chat" ? "flex" : "hidden md:flex"}`} style={{height: "calc(100vh - 120px)"}}>
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-6 space-y-4">
             {messages.map((message, i) => (
