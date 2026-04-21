@@ -76,6 +76,16 @@ If the user wants to make an offer, say: "Fantastic! Tap the 💰 Make an Offer 
 If the user wants to save the property, say: "Tap the ❤️ heart icon at the top to save this property to your favourites."
 Never try to collect contact details or process bookings/offers yourself — always direct to the relevant button.
 
+Include at end of every message, 3-4 contextual prompts the user might want to tap next:
+<prompts>["Option 1", "Option 2", "Option 3"]</prompts>
+
+Good prompt examples based on context:
+- After greeting: ["Is this still available?", "What are schools nearby?", "What is the area like?", "Book a viewing"]
+- After availability question: ["Book a viewing", "What is the price?", "Tell me about the area", "How much are transfer costs?"]
+- After area question: ["What schools are nearby?", "How far to the highway?", "Is it pet friendly?", "Book a viewing"]
+- After price question: ["Calculate my bond", "What are transfer costs?", "Is the price negotiable?", "Book a viewing"]
+- After bond calc: ["Book a viewing", "Make an offer", "What is included?", "Tell me more about the property"]
+
 Include at end of every message:
 <lead>{"score": 20, "temperature": "cold", "reason": "Initial contact"}</lead>`
 
@@ -174,6 +184,14 @@ Include at end of every message:
       }
     }
 
+    // Extract suggested prompts
+    let propertySuggestedPrompts: string[] = []
+    const propertyPromptsMatch = aiText.match(/<prompts>([\s\S]*?)<\/prompts>/)
+    if (propertyPromptsMatch) {
+      try { propertySuggestedPrompts = JSON.parse(propertyPromptsMatch[1]) } catch(e) {}
+      cleanContent = cleanContent.replace(/<prompts>[\s\S]*?<\/prompts>/, '').trim()
+    }
+
     // Handle service request if AI triggered one
     const serviceMatch = aiText.match(/<service_request>(.*?)<\/service_request>/)
     if (serviceMatch && user_id && session_id) {
@@ -210,7 +228,8 @@ Include at end of every message:
       booking_id: bookingId,
       show_booking: false,
       slots: [],
-      lead: leadData
+      lead: leadData,
+      suggested_prompts: propertySuggestedPrompts
     })
 
   } catch (error: any) {
