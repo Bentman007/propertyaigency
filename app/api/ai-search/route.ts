@@ -28,11 +28,43 @@ export async function POST(request: NextRequest) {
       { role: 'user', content: body.message || '' }
     ]
 
-    const { data: properties } = await supabase
-      .from('properties')
-      .select('*')
-      .eq('status', 'active')
-      .order('created_at', { ascending: false })
+    // Extract basic filters from conversation to pre-filter before sending to AI
+    const allMessages = body.messages || []
+    const conversationText = allMessages.map((m: any) => m.content).join(' ').toLowerCase()
+
+    // Build smart pre-filter
+    let query = supabase.from('properties').select('*').eq('status', 'active')
+
+    // Price filter
+    const budgetMatch = conversationText.match(/r\s*(\d[\d\s,]*)\s*(k|000|million|m)?/i)
+    if (budgetMatch) {
+      let budget = parseInt(budgetMatch[1].replace(/[\s,]/g, ''))
+      if (budgetMatch[2]?.toLowerCase() === 'k') budget *= 1000
+      if (budgetMatch[2]?.toLowerCase().includes('m') || budgetMatch[2]?.toLowerCase().includes('million')) budget *= 1000000
+      if (budget > 0) query = query.lte('price', budget * 1.3) // 30% tolerance
+    }
+
+    // Bedrooms filter
+    const bedroomMatch = conversationText.match(/(\d+)\s*bed/i)
+    if (bedroomMatch) {
+      const beds = parseInt(bedroomMatch[1])
+      if (beds > 0) query = query.gte('bedrooms', beds - 1).lte('bedrooms', beds + 1)
+    }
+
+    // Location filter
+    const locations = ['sandton', 'johannesburg', 'cape town', 'durban', 'pretoria', 'centurion',
+      'midrand', 'fourways', 'randburg', 'roodepoort', 'soweto', 'benoni', 'boksburg',
+      'germiston', 'kempton', 'umhlanga', 'ballito', 'stellenbosch', 'paarl', 'george',
+      'port elizabeth', 'gqeberha', 'bloemfontein', 'east london', 'polokwane', 'nelspruit']
+    const foundLocations = locations.filter(loc => conversationText.includes(loc))
+    if (foundLocations.length > 0) {
+      query = query.or(foundLocations.map(loc => `suburb.ilike.%${loc}%,city.ilike.%${loc}%`).join(','))
+    }
+
+    // Limit results sent to AI — max 50 pre-filtered properties
+    query = query.order('created_at', { ascending: false }).limit(50)
+
+    const { data: properties } = await query
 
     let rejectedIds: string[] = []
     let existingProfile: any = {}
@@ -78,14 +110,26 @@ EXISTING PROFILE FOR THIS USER:
 ${JSON.stringify(existingProfile)}
 
 INSTRUCTIONS:
-1. Be warm and concise - get to property results FAST
-2. If they mention location + rent/buy → search immediately, show results, ask budget AFTER
-3. Only ask ONE follow-up question maximum before showing results
-4. NEVER ask about: age of children, relationship status, personal circumstances
-5. Good questions ONLY: budget range, number of bedrooms (if not mentioned)
-6. Show properties after MAX 2 exchanges - people want to see results quickly
-7. Maximum 3 properties per response
-8. After showing properties, THEN refine based on their reaction
+You are a warm, clever property matchmaker. Your job is to find the PERFECT property — not just any property.
+
+QUALIFICATION FLOW — follow this naturally in conversation:
+1. If the user is vague (no location, no budget, no bedrooms) → do NOT search yet. Say warmly: "We already have hundreds of properties on our books — let's find you something perfect rather than overwhelming you! Just a few quick questions..."
+2. Ask ONE question at a time, conversationally:
+   - First: "How many bedrooms do you need — are we thinking 2, 3 or 4+?"
+   - Then: "And what's a rough monthly budget? Even a ballpark helps narrow things down nicely"
+   - Then: "Great! What area or areas are you considering?"
+   - Then (optional): "Any must-haves? Pool, braai area, garden, pet friendly, maids quarters?"
+3. Once you have AT LEAST: bedrooms + budget + area → search and show results
+4. Keep it conversational and warm — never feel like an interrogation
+5. After showing results, ask: "Any of these catch your eye? Or shall we tweak the search?"
+
+SEARCH RULES:
+- NEVER search with less than 2 criteria (need at least area OR budget + bedrooms)
+- Maximum 3 properties per response
+- Always explain WHY each property matches their criteria
+- If nothing matches exactly, say so honestly and show closest options
+
+NEVER ask about: relationship status, age of children, employment details, personal circumstances
 9. If the user asks to set an alert or be notified of new properties: tell them "✅ You're all set! Based on our conversation I've already built your search profile. You'll automatically get a push notification the moment a matching property is listed." Never pretend to do something you haven't done.
 10. If no properties match exactly, say something like: "I don't have an exact match for you right now — but I've found some close options I can send to your dashboard. I'll also automatically alert you the moment something matching your criteria gets listed. Please make sure your notifications are on so you don't miss out! 🔔" Then include the closest properties in the <properties> tag.
 
