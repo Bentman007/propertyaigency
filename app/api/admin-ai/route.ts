@@ -208,11 +208,14 @@ THREAT RESPONSES:
 Be calm, clear and actionable. Business owner is non-technical.`
     }
 
+    // Append feedback context to the user message if relevant
+    const enrichedContext = context
+
     const response = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 600,
       system: systemPrompt,
-      messages: [{ role: 'user', content: context }]
+      messages: [{ role: 'user', content: enrichedContext }]
     })
 
     const message = response.content[0].type === 'text' ? response.content[0].text : ''

@@ -324,26 +324,53 @@ export default function AdminPage() {
           )}
         </div>
 
-        {/* User Feedback */}
+        {/* User Feedback Summary */}
         <h2 className="text-lg font-bold text-orange-500 mb-3">💬 User Feedback</h2>
         <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6 mb-8">
           {feedback.length === 0 ? (
-            <p className="text-gray-400 text-center py-4">No feedback yet — it will appear here once users have been on the platform for a while</p>
+            <p className="text-gray-400 text-center py-4">No feedback yet — it will appear once users have been on the platform for a while</p>
           ) : (
-            <div className="space-y-4">
-              {feedback.map((f: any) => (
-                <div key={f.id} className="bg-gray-700 rounded-xl p-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className={`text-xs font-bold px-2 py-1 rounded-full ${
+            <div>
+              {/* Summary stats */}
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                {[
+                  { label: 'Positive', count: feedback.filter((f:any) => f.sentiment === 'positive').length, color: 'text-green-400', bg: 'bg-green-900' },
+                  { label: 'Neutral', count: feedback.filter((f:any) => f.sentiment === 'neutral' || !f.sentiment).length, color: 'text-yellow-400', bg: 'bg-yellow-900' },
+                  { label: 'Negative', count: feedback.filter((f:any) => f.sentiment === 'negative').length, color: 'text-red-400', bg: 'bg-red-900' },
+                ].map(s => (
+                  <div key={s.label} className={`${s.bg} rounded-xl p-4 text-center`}>
+                    <p className={`text-3xl font-bold ${s.color}`}>{s.count}</p>
+                    <p className="text-gray-300 text-sm mt-1">{s.label}</p>
+                    <p className={`text-xs ${s.color} font-bold mt-1`}>
+                      {feedback.length > 0 ? Math.round((s.count / feedback.length) * 100) : 0}%
+                    </p>
+                  </div>
+                ))}
+              </div>
+              {/* Positive % headline */}
+              <div className="bg-gray-700 rounded-xl p-4 mb-4 text-center">
+                <p className="text-2xl font-bold text-green-400">
+                  ⭐ {feedback.length > 0 ? Math.round((feedback.filter((f:any) => f.sentiment === 'positive').length / feedback.length) * 100) : 0}% Positive Rating
+                </p>
+                <p className="text-gray-400 text-sm mt-1">from {feedback.length} user responses</p>
+              </div>
+              {/* Latest 3 feedback items */}
+              <div className="space-y-3 mb-4">
+                {feedback.slice(0, 3).map((f: any) => (
+                  <div key={f.id} className="bg-gray-700 rounded-xl p-3 flex gap-3 items-start">
+                    <span className={`text-xs font-bold px-2 py-1 rounded-full flex-shrink-0 ${
                       f.sentiment === 'positive' ? 'bg-green-900 text-green-300' :
                       f.sentiment === 'negative' ? 'bg-red-900 text-red-300' :
                       'bg-gray-600 text-gray-300'
                     }`}>{f.sentiment || 'neutral'}</span>
-                    <span className="text-gray-400 text-xs">{f.user_type} — {new Date(f.created_at).toLocaleDateString('en-ZA')}</span>
+                    <p className="text-gray-200 text-sm flex-1" style={{display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>{f.feedback}</p>
+                    <span className="text-gray-500 text-xs flex-shrink-0">{f.user_type}</span>
                   </div>
-                  <p className="text-gray-200 text-sm">{f.feedback}</p>
-                </div>
-              ))}
+                ))}
+              </div>
+              <a href="/admin/feedback" className="block w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-2.5 rounded-xl text-center text-sm transition">
+                View All Feedback →
+              </a>
             </div>
           )}
         </div>
