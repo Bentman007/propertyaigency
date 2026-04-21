@@ -15,6 +15,14 @@
     {
       "path": "/api/cron/weekly-summary",
       "schedule": "0 8 * * 1"
+    },
+    {
+      "path": "/api/cron/listing-health",
+      "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/subscription-health",
+      "schedule": "0 8 * * *"
     }
   ]
 }

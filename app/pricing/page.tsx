@@ -27,7 +27,7 @@ export default function PricingPage() {
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             AI-powered property listings at a fraction of the cost. 
-            No hidden fees, no per-lead charges, no surprises.
+            No hidden fees, no lock-in contracts, no surprises. Use your credits at your own pace.
           </p>
         </div>
 
@@ -42,7 +42,7 @@ export default function PricingPage() {
               <h3 className="text-xl font-bold mb-1">Standard Listing</h3>
               <p className="text-gray-400 text-sm mb-4">Perfect for a single property</p>
               <div className="mb-6">
-                <span className="text-4xl font-bold text-orange-500">R99</span>
+                <span className="text-4xl font-bold text-orange-500">R199</span>
                 <span className="text-gray-400 text-sm ml-2">per listing</span>
               </div>
               <ul className="space-y-2 mb-6 text-sm text-gray-300">
@@ -52,7 +52,7 @@ export default function PricingPage() {
                 <li className="flex items-center gap-2"><span className="text-green-400">✓</span> AI valuation tool</li>
                 <li className="flex items-center gap-2"><span className="text-green-400">✓</span> AI Concierge handles all enquiries</li>
                 <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Viewing booking system</li>
-                <li className="flex items-center gap-2"><span className="text-orange-400">↻</span> Relist for R99</li>
+                <li className="flex items-center gap-2"><span className="text-orange-400">↻</span> Relist for R199</li>
               </ul>
               <Link href="/auth/register" className="block w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-xl text-center transition">
                 Get Started
@@ -90,15 +90,16 @@ export default function PricingPage() {
         {/* Estate Agents */}
         <div className="mb-16">
           <h2 className="text-2xl font-bold text-center mb-2">Estate Agents & Agencies</h2>
-          <p className="text-gray-400 text-center mb-2">Monthly subscription — cancel anytime. <span className="text-orange-500 font-semibold">First 2 months FREE.</span></p>
-          <p className="text-gray-500 text-center text-sm mb-8">All plans include AI lead qualification, viewing bookings, Property AIsistant and full analytics</p>
+          <p className="text-gray-400 text-center mb-2">Buy a listing bundle — use them at your own pace. <span className="text-orange-500 font-semibold">First 2 months FREE.</span></p>
+          <p className="text-gray-500 text-center text-sm mb-2">Each listing stays live for 2 months. Use one credit to relist. No monthly lock-in.</p>
+          <p className="text-gray-500 text-center text-sm mb-8">All bundles include AI lead qualification, viewing bookings, Property AIsistant and full analytics</p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             {[
-              { name: 'Starter', listings: '1–10', price: 'R800', color: 'border-gray-700' },
-              { name: 'Growth', listings: '11–30', price: 'R1,500', color: 'border-gray-700', popular: false },
-              { name: 'Pro', listings: '31–50', price: 'R2,500', color: 'border-orange-500', popular: true },
-              { name: 'Agency', listings: '51–100', price: 'R4,000', color: 'border-gray-700' },
+              { name: 'Starter', listings: 10, price: 'R850', perListing: 'R85', color: 'border-gray-700', popular: false },
+              { name: 'Growth', listings: 30, price: 'R2,100', perListing: 'R70', color: 'border-gray-700', popular: false },
+              { name: 'Pro', listings: 50, price: 'R2,750', perListing: 'R55', color: 'border-orange-500', popular: true },
+              { name: 'Agency', listings: 100, price: 'R4,500', perListing: 'R45', color: 'border-gray-700', popular: false },
             ].map(plan => (
               <div key={plan.name} className={`bg-gray-800 border ${plan.color} rounded-2xl p-6 relative`}>
                 {plan.popular && (
@@ -107,11 +108,19 @@ export default function PricingPage() {
                   </div>
                 )}
                 <h3 className="text-lg font-bold mb-1">{plan.name}</h3>
-                <p className="text-gray-400 text-xs mb-3">Up to {plan.listings} listings/month</p>
-                <div className="mb-4">
+                <p className="text-gray-400 text-xs mb-1">{plan.listings} listing credits</p>
+                <p className="text-green-400 text-xs mb-3">Only {plan.perListing} per listing</p>
+                <div className="mb-1">
                   <span className="text-3xl font-bold text-orange-500">{plan.price}</span>
-                  <span className="text-gray-400 text-xs ml-1">/month</span>
                 </div>
+                <p className="text-gray-500 text-xs mb-4">per bundle — use anytime</p>
+                <ul className="space-y-1 mb-4 text-xs text-gray-300">
+                  <li className="flex items-center gap-1"><span className="text-green-400">✓</span> Each listing live for 2 months</li>
+                  <li className="flex items-center gap-1"><span className="text-green-400">✓</span> Use 1 credit to relist</li>
+                  <li className="flex items-center gap-1"><span className="text-green-400">✓</span> Credits never expire</li>
+                  <li className="flex items-center gap-1"><span className="text-green-400">✓</span> AI AIsistant included</li>
+                  <li className="flex items-center gap-1"><span className="text-green-400">✓</span> No monthly lock-in</li>
+                </ul>
                 <Link href="/auth/register" className={`block w-full font-bold py-2.5 rounded-xl text-center text-sm transition ${
                   plan.popular ? 'bg-orange-500 hover:bg-orange-400 text-black' : 'bg-gray-700 hover:bg-gray-600 text-white'
                 }`}>
@@ -119,6 +128,55 @@ export default function PricingPage() {
                 </Link>
               </div>
             ))}
+          </div>
+
+          {/* Why PropertyAIgency callout */}
+          <div className="bg-gray-800 border border-green-700 rounded-2xl p-6 max-w-3xl mx-auto mb-6">
+            <h3 className="text-lg font-bold text-center mb-4">💡 Why agents choose PropertyAIgency</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div className="flex items-start gap-3">
+                <span className="text-green-400 text-lg">✅</span>
+                <div>
+                  <p className="font-bold text-white">No lock-in contracts</p>
+                  <p className="text-gray-400 text-xs">Buy credits when you need them. No monthly obligation.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-green-400 text-lg">✅</span>
+                <div>
+                  <p className="font-bold text-white">AI does the heavy lifting</p>
+                  <p className="text-gray-400 text-xs">Lead qualification, viewing bookings and buyer profiling — all automated.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-green-400 text-lg">✅</span>
+                <div>
+                  <p className="font-bold text-white">Transparent pricing</p>
+                  <p className="text-gray-400 text-xs">R45–R85 per listing. No hidden fees, no surprise invoices.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-green-400 text-lg">✅</span>
+                <div>
+                  <p className="font-bold text-white">2 months free to get started</p>
+                  <p className="text-gray-400 text-xs">Try everything for free. No credit card required.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-green-400 text-lg">✅</span>
+                <div>
+                  <p className="font-bold text-white">Your own AI business partner</p>
+                  <p className="text-gray-400 text-xs">The AIsistant monitors your pipeline and alerts you to opportunities 24/7.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-green-400 text-lg">✅</span>
+                <div>
+                  <p className="font-bold text-white">Built for South African agents</p>
+                  <p className="text-gray-400 text-xs">EAAB verified, POPIA compliant, priced in Rands.</p>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Featured Listings */}
