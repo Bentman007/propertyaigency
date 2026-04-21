@@ -20,6 +20,14 @@ export default function PropertyChat({ property }: PropertyChatProps) {
     }
   ])
   const [input, setInput] = useState('')
+  const [suggestedPrompts, setSuggestedPrompts] = useState<string[]>([
+    'Is this still available?',
+    'What are schools nearby?',
+    'What is the area like?',
+    'Calculate my bond',
+    'Transfer costs?',
+    'Book a viewing'
+  ])
   const [loading, setLoading] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [showBooking, setShowBooking] = useState(false)
@@ -59,6 +67,7 @@ export default function PropertyChat({ property }: PropertyChatProps) {
 
       const data = await response.json()
       setMessages(prev => [...prev, { role: 'assistant', content: data.message }])
+      if (data.suggested_prompts?.length > 0) setSuggestedPrompts(data.suggested_prompts)
       
       if (data.lead?.temperature) setLeadTemp(data.lead.temperature)
       if (data.show_booking) {
@@ -161,6 +170,14 @@ export default function PropertyChat({ property }: PropertyChatProps) {
 
       {/* Input */}
       <div className="px-4 py-3 border-t border-gray-700">
+        <div className="flex gap-2 mb-2" style={{overflowX: 'auto'}}>
+          {suggestedPrompts.map((p, i) => (
+            <button key={i} onClick={() => setInput(p)}
+              className="whitespace-nowrap text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 border border-gray-600 rounded-full px-3 py-1.5 transition flex-shrink-0">
+              {p}
+            </button>
+          ))}
+        </div>
         <div className="flex gap-2">
           <input
             type="text"
