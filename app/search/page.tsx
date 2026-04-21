@@ -215,7 +215,7 @@ export default function SearchPage() {
 
           {/* Input */}
           <div className="p-4 border-t border-gray-700 flex-shrink-0">
-            <div className="flex gap-2 mb-3 overflow-x-auto pb-1 scrollbar-hide">
+            <div className="flex gap-2 mb-3 pb-2" style={{overflowX: "auto", flexWrap: "nowrap"}}>
               {suggestedPrompts.map((p, i) => (
                 <button key={i} onClick={() => { setInput(p) }}
                   className="whitespace-nowrap text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 border border-gray-600 rounded-full px-4 py-2 transition flex-shrink-0 font-medium">
