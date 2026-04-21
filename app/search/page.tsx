@@ -175,7 +175,7 @@ export default function SearchPage() {
       </div>
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
         {/* Chat Panel */}
-        <div className={`flex-col w-full md:w-96 md:max-w-sm border-b md:border-b-0 md:border-r border-gray-700 md:flex ${mobileTab === "chat" ? "flex" : "hidden md:flex"}`} style={{height: "calc(100vh - 120px)"}}>
+        <div className={`flex-col w-full md:w-96 md:max-w-sm border-b md:border-b-0 md:border-r border-gray-700 md:flex ${mobileTab === "chat" ? "flex" : "hidden md:flex"}`} style={{height: "calc(100vh - 60px)", minHeight: "500px"}}>
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-6 space-y-4">
             {messages.map((message, i) => (
@@ -214,7 +214,7 @@ export default function SearchPage() {
           </div>
 
           {/* Input */}
-          <div className="p-4 border-t border-gray-700">
+          <div className="p-4 border-t border-gray-700 flex-shrink-0">
             <div className="flex gap-2 mb-3 overflow-x-auto pb-1 scrollbar-hide">
               {suggestedPrompts.map((p, i) => (
                 <button key={i} onClick={() => { setInput(p) }}
