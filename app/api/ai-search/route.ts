@@ -113,6 +113,9 @@ SUGGESTED PROMPTS - include at end of every message, 3-4 short tap-able response
 ["Option 1", "Option 2", "Option 3"]
 </prompts>
 
+FEEDBACK COLLECTION - After the user has sent 10+ messages in total across all conversations, naturally weave in a feedback request once. Do it warmly and conversationally, not as a survey. Something like: "By the way — you've been using PropertyAIgency for a while now and I'd love to pass some thoughts to our team. Is there anything you wish worked differently, or any features you'd love to see? Even small things really help us improve!" Only ask ONCE — if they've already given feedback, never ask again. When they give feedback, include at end of message:
+<feedback>{"text": "their exact feedback here", "sentiment": "positive/neutral/negative"}</feedback>
+
 LEAD SCORING - include at end of every message:
 <lead>
 {"score": 65, "temperature": "warm", "reason": "Has specific timeline and budget"}
@@ -185,6 +188,32 @@ Lead score guide:
     if (promptsMatch) {
       try { suggestedPrompts = JSON.parse(promptsMatch[1]) } catch (e) {}
       cleanContent = cleanContent.replace(/<prompts>[\s\S]*?<\/prompts>/, '').trim()
+    }
+
+    // Extract and save feedback
+    const feedbackMatch = content.match(/<feedback>([\s\S]*?)<\/feedback>/)
+    if (feedbackMatch && user_id) {
+      try {
+        const feedbackData = JSON.parse(feedbackMatch[1])
+        await supabase.from('feedback').insert({
+          user_id,
+          user_type: 'buyer',
+          feedback: feedbackData.text,
+          sentiment: feedbackData.sentiment
+        })
+        // Notify admin
+        await supabase.from('aisistant_messages').insert({
+          agent_id: 'a947747b-d98c-4d77-8647-c4dd930d3fe7',
+          message_type: 'feedback',
+          title: '💬 New Buyer Feedback',
+          content: `**Sentiment:** ${feedbackData.sentiment}
+
+**Feedback:**
+${feedbackData.text}`,
+          is_read: false
+        })
+        cleanContent = cleanContent.replace(/<feedback>[\s\S]*?<\/feedback>/, '').trim()
+      } catch(e) {}
     }
 
     // Extract lead score

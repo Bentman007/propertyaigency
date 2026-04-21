@@ -61,6 +61,38 @@ Viewing booked: ${data.date} at ${data.start_time}`
       content = data.insight
     }
 
+    else if (type === 'feedback_reply') {
+      // Agent is replying with feedback
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('full_name, agency_name')
+        .eq('id', agent_id)
+        .single()
+
+      await supabase.from('feedback').insert({
+        user_id: agent_id,
+        user_type: 'agent',
+        feedback: data.feedback_text,
+        sentiment: data.sentiment || 'neutral'
+      })
+
+      // Notify admin
+      await supabase.from('aisistant_messages').insert({
+        agent_id: 'a947747b-d98c-4d77-8647-c4dd930d3fe7',
+        message_type: 'feedback',
+        title: `💬 Agent Feedback — ${profile?.full_name || 'Unknown'}`,
+        content: `**From:** ${profile?.full_name} (${profile?.agency_name || 'Independent'})
+**Sentiment:** ${data.sentiment || 'neutral'}
+
+**Feedback:**
+${data.feedback_text}`,
+        is_read: false
+      })
+
+      title = '✅ Feedback Received!'
+      content = 'Thank you so much! Your feedback has been sent directly to our development team. We really appreciate you taking the time — this is exactly how we make PropertyAIgency better for agents like you! 🙏'
+    }
+
     else if (type === 'recommend_property') {
       // Agent wants to recommend one of their listings to a buyer
       const { data: property } = await supabase
@@ -124,6 +156,31 @@ export async function GET(request: NextRequest) {
       .eq('agent_id', agent_id)
       .order('created_at', { ascending: false })
       .limit(20)
+
+    // Check if we should ask for feedback (after 3hrs = ~20+ messages, only once)
+    const totalMessages = messages?.length || 0
+    const { data: existingFeedback } = await supabase
+      .from('feedback')
+      .select('id')
+      .eq('user_id', agent_id)
+      .limit(1)
+
+    const { data: feedbackNudge } = await supabase
+      .from('aisistant_messages')
+      .select('id')
+      .eq('agent_id', agent_id)
+      .eq('message_type', 'feedback_request')
+      .limit(1)
+
+    if (totalMessages >= 20 && !existingFeedback?.length && !feedbackNudge?.length) {
+      await supabase.from('aisistant_messages').insert({
+        agent_id,
+        message_type: 'feedback_request',
+        title: '💬 We would love your feedback!',
+        content: "You've been using PropertyAIgency for a while now and I'd love to pass some thoughts to our development team. Is there anything you wish worked differently on the platform? Any features you'd love to see added, or anything that's been frustrating? Even small things really help us improve. Just reply here and I'll make sure it gets to the right people! 🙏",
+        is_read: false
+      })
+    }
 
     // Mark all as read
     await supabase

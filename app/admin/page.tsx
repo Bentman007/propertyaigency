@@ -22,6 +22,7 @@ export default function AdminPage() {
   const [aiInput, setAiInput] = useState('')
   const [aiLoading, setAiLoading] = useState(false)
   const [aiHistory, setAiHistory] = useState<{role: string, content: string}[]>([])
+  const [feedback, setFeedback] = useState<any[]>([])
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
@@ -43,6 +44,8 @@ export default function AdminPage() {
     const { data: allProps } = await supabase.from('properties').select('id, status, created_at, title, price, price_type, suburb, city')
     const { data: profiles } = await supabase.from('profiles').select('id, full_name, agency_name, account_type, created_at')
     const { data: bookings } = await supabase.from('viewing_bookings').select('id, status, created_at')
+    const { data: feedbackData } = await supabase.from('feedback').select('*').order('created_at', { ascending: false }).limit(20)
+    setFeedback(feedbackData || [])
 
     const todayProps = allProps?.filter(p => p.created_at?.startsWith(today)).length || 0
     const weekProps = allProps?.filter(p => p.created_at >= weekAgo).length || 0
@@ -317,6 +320,30 @@ export default function AdminPage() {
                   placeholder="e.g. Compensated for 3 days downtime..."
                   className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
               </div>
+            </div>
+          )}
+        </div>
+
+        {/* User Feedback */}
+        <h2 className="text-lg font-bold text-orange-500 mb-3">💬 User Feedback</h2>
+        <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6 mb-8">
+          {feedback.length === 0 ? (
+            <p className="text-gray-400 text-center py-4">No feedback yet — it will appear here once users have been on the platform for a while</p>
+          ) : (
+            <div className="space-y-4">
+              {feedback.map((f: any) => (
+                <div key={f.id} className="bg-gray-700 rounded-xl p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className={`text-xs font-bold px-2 py-1 rounded-full ${
+                      f.sentiment === 'positive' ? 'bg-green-900 text-green-300' :
+                      f.sentiment === 'negative' ? 'bg-red-900 text-red-300' :
+                      'bg-gray-600 text-gray-300'
+                    }`}>{f.sentiment || 'neutral'}</span>
+                    <span className="text-gray-400 text-xs">{f.user_type} — {new Date(f.created_at).toLocaleDateString('en-ZA')}</span>
+                  </div>
+                  <p className="text-gray-200 text-sm">{f.feedback}</p>
+                </div>
+              ))}
             </div>
           )}
         </div>
