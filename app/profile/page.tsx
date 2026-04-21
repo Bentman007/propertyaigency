@@ -10,6 +10,12 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
   const [accountType, setAccountType] = useState('buyer')
+  const [newEmail, setNewEmail] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [securityMessage, setSecurityMessage] = useState('')
+  const [savingSecurity, setSavingSecurity] = useState(false)
+
   const [form, setForm] = useState({
     full_name: '',
     agency_name: '',
@@ -40,6 +46,37 @@ export default function ProfilePage() {
       setLoading(false)
     })
   }, [])
+
+  const handleEmailChange = async () => {
+    if (!newEmail.trim()) return
+    setSavingSecurity(true)
+    const { error } = await supabase.auth.updateUser({ email: newEmail })
+    if (error) setSecurityMessage('Error: ' + error.message)
+    else setSecurityMessage('✅ Confirmation email sent to ' + newEmail + '. Check your inbox!')
+    setSavingSecurity(false)
+    setNewEmail('')
+    setTimeout(() => setSecurityMessage(''), 5000)
+  }
+
+  const handlePasswordChange = async () => {
+    if (!newPassword || !confirmPassword) return
+    if (newPassword !== confirmPassword) {
+      setSecurityMessage('Error: Passwords do not match')
+      return
+    }
+    if (newPassword.length < 8) {
+      setSecurityMessage('Error: Password must be at least 8 characters')
+      return
+    }
+    setSavingSecurity(true)
+    const { error } = await supabase.auth.updateUser({ password: newPassword })
+    if (error) setSecurityMessage('Error: ' + error.message)
+    else setSecurityMessage('✅ Password updated successfully!')
+    setSavingSecurity(false)
+    setNewPassword('')
+    setConfirmPassword('')
+    setTimeout(() => setSecurityMessage(''), 5000)
+  }
 
   const handleSave = async () => {
     setSaving(true)
@@ -119,6 +156,66 @@ export default function ProfilePage() {
           className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-4 rounded-xl text-lg disabled:opacity-50 transition">
           {saving ? 'Saving...' : '💾 Save Profile'}
         </button>
+
+        {/* Security Settings */}
+        <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6 space-y-4">
+          <h2 className="text-lg font-bold text-orange-500">🔐 Security Settings</h2>
+          
+          {securityMessage && (
+            <div className={`p-3 rounded-xl text-sm ${securityMessage.includes('Error') ? 'bg-red-900 text-red-300' : 'bg-green-900 text-green-300'}`}>
+              {securityMessage}
+            </div>
+          )}
+
+          {/* Current email display */}
+          <div>
+            <label className="text-gray-400 text-sm mb-1 block">Current Email</label>
+            <div className="w-full bg-gray-700 text-gray-400 rounded-lg px-4 py-3 border border-gray-600">
+              {user?.email}
+            </div>
+          </div>
+
+          {/* Change email */}
+          <div>
+            <label className="text-gray-400 text-sm mb-1 block">New Email Address</label>
+            <div className="flex gap-3">
+              <input value={newEmail} onChange={e => setNewEmail(e.target.value)}
+                className="flex-1 bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
+                placeholder="new@email.com" type="email"/>
+              <button onClick={handleEmailChange} disabled={savingSecurity || !newEmail.trim()}
+                className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-3 rounded-lg disabled:opacity-50 transition text-sm">
+                Update
+              </button>
+            </div>
+            <p className="text-gray-500 text-xs mt-1">A confirmation link will be sent to your new email address</p>
+          </div>
+
+          {/* Change password */}
+          <div>
+            <label className="text-gray-400 text-sm mb-1 block">New Password</label>
+            <input value={newPassword} onChange={e => setNewPassword(e.target.value)}
+              className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500 mb-3"
+              placeholder="Minimum 8 characters" type="password"/>
+            <label className="text-gray-400 text-sm mb-1 block">Confirm New Password</label>
+            <div className="flex gap-3">
+              <input value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}
+                className="flex-1 bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
+                placeholder="Repeat new password" type="password"/>
+              <button onClick={handlePasswordChange} disabled={savingSecurity || !newPassword || !confirmPassword}
+                className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-3 rounded-lg disabled:opacity-50 transition text-sm">
+                Update
+              </button>
+            </div>
+          </div>
+
+          {/* Transfer credits note for agents */}
+          {accountType === 'agent' && (
+            <div className="bg-gray-700 rounded-xl p-4 border border-gray-600">
+              <p className="text-gray-300 text-sm font-bold mb-1">🔄 Transferring Credits to a New Agent?</p>
+              <p className="text-gray-400 text-sm">If you need to transfer your listing credits to a new team member, contact us at <span className="text-orange-500">admin@propertyaigency.co.za</span> and we will assist you promptly.</p>
+            </div>
+          )}
+        </div>
       </div>
     </main>
   )
