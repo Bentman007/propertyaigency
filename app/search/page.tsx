@@ -41,10 +41,12 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false)
   const [properties, setProperties] = useState<Property[]>([])
   const [suggestedPrompts, setSuggestedPrompts] = useState<string[]>([
-    'Find me a 3 bed in Sandton',
-    'I want to rent under R20,000',
-    'Show me pet friendly homes',
-    'I need a garden and pool'
+    '3 bedrooms',
+    'I want to rent',
+    'I want to buy',
+    'Pet friendly',
+    'Pool and garden',
+    'Under R15,000/mo'
   ])
   const [savedIds, setSavedIds] = useState<string[]>([])
   const [rejectedIds, setRejectedIds] = useState<string[]>([])
@@ -213,10 +215,10 @@ export default function SearchPage() {
 
           {/* Input */}
           <div className="p-4 border-t border-gray-700">
-            <div className="flex gap-2 mb-3 overflow-x-auto pb-1">
+            <div className="flex gap-2 mb-3 overflow-x-auto pb-1 scrollbar-hide">
               {suggestedPrompts.map((p, i) => (
-                <button key={i} onClick={() => setInput(p)}
-                  className="whitespace-nowrap text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-600 rounded-full px-3 py-1.5 transition flex-shrink-0">
+                <button key={i} onClick={() => { setInput(p) }}
+                  className="whitespace-nowrap text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 border border-gray-600 rounded-full px-4 py-2 transition flex-shrink-0 font-medium">
                   {p}
                 </button>
               ))}
