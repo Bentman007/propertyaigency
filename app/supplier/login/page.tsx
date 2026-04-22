@@ -41,7 +41,7 @@ export default function SupplierLoginPage() {
           <Link href="/" className="text-3xl font-bold text-white">
             Property<span className="text-orange-500">AI</span>gency
           </Link>
-          <p className="text-gray-400 mt-2">Service Provider Login</p>
+          <p className="text-gray-400 mt-2">Supplier Login</p>
         </div>
 
         <div className="bg-gray-800 rounded-2xl p-8 border border-gray-700">
