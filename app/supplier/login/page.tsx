@@ -79,7 +79,7 @@ export default function SupplierLoginPage() {
           <div className="border-t border-gray-700 mt-6 pt-6 text-center space-y-2">
             <p className="text-gray-400 text-sm">
               Not registered yet?{' '}
-              <Link href="/supplier/register" className="text-orange-500 hover:underline">Join as a service provider</Link>
+              <Link href="/supplier/register" className="text-orange-500 hover:underline">Register here</Link>
             </p>
             <p className="text-gray-600 text-xs">
               Looking for a property?{' '}
