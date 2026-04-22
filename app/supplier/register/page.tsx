@@ -4,57 +4,87 @@ import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 
-const LEAD_TIERS: Record<string, { price: number; label: string; colour: string }> = {
-  high:     { price: 250, label: 'High Value',  colour: 'text-yellow-400' },
-  mid:      { price: 200, label: 'Mid Value',   colour: 'text-blue-400'   },
-  standard: { price: 150, label: 'Standard',    colour: 'text-green-400'  },
-  trade:    { price: 100, label: 'Trade',        colour: 'text-gray-300'   },
+const LEAD_PRICES: Record<string, number> = {
+  bond_originator: 250, conveyancing_attorney: 250, property_valuer: 250, insurance_broker: 250,
+  solar_installer: 200, architect: 200, str_manager: 200, property_management: 200, home_inspector: 200,
+  photographer: 150, videographer: 150, virtual_tour: 150, home_stager: 150, interior_designer: 150,
+  removal: 150, storage: 150,
+  painter: 100, builder: 100, plumber: 100, electrician: 100, handyman: 100,
+  landscaper: 100, pool_service: 100, cleaning: 100, security: 100,
 }
 
-const SERVICE_TYPES = [
-  { value: 'bond_originator',       label: '🏦 Bond Originator',             desc: 'Home loan applications & pre-approvals',    tier: 'high'     },
-  { value: 'conveyancing_attorney', label: '⚖️ Conveyancing Attorney',        desc: 'Property transfers and bond registrations', tier: 'high'     },
-  { value: 'property_valuer',       label: '📊 Property Valuer',             desc: 'Formal valuations for sale or finance',      tier: 'high'     },
-  { value: 'insurance_broker',      label: '🛡️ Insurance Broker',            desc: 'Home, contents & bond protection',           tier: 'high'     },
-  { value: 'solar_installer',       label: '☀️ Solar Installer',             desc: 'Solar panels and battery backup systems',    tier: 'mid'      },
-  { value: 'architect',             label: '📐 Architect',                   desc: 'Plans, extensions and new builds',           tier: 'mid'      },
-  { value: 'str_manager',           label: '🏖️ Short-Term Rental Manager',   desc: 'Airbnb & holiday rental management',         tier: 'mid'      },
-  { value: 'property_management',   label: '🏢 Property Management Company', desc: 'Full rental management services',            tier: 'mid'      },
-  { value: 'home_inspector',        label: '🔍 Home Inspector',              desc: 'Pre-purchase building inspections',          tier: 'mid'      },
-  { value: 'photographer',          label: '📸 Property Photographer',       desc: 'Professional listing photos',                tier: 'standard' },
-  { value: 'videographer',          label: '🎬 Videographer',                desc: 'Property walk-through videos',               tier: 'standard' },
-  { value: 'virtual_tour',          label: '🏠 3D Virtual Tour Specialist',  desc: 'Matterport and 3D walkthroughs',             tier: 'standard' },
-  { value: 'home_stager',           label: '🛋️ Home Stager',                desc: 'Stage your home to sell faster',             tier: 'standard' },
-  { value: 'interior_designer',     label: '🎨 Interior Designer',           desc: 'Interior design and decoration',             tier: 'standard' },
-  { value: 'removal',               label: '🚛 Removal Company',             desc: 'Furniture and household moves',              tier: 'standard' },
-  { value: 'storage',               label: '📦 Storage Facility',            desc: 'Short and long-term storage solutions',      tier: 'standard' },
-  { value: 'painter',               label: '🖌️ Painter',                    desc: 'Interior and exterior painting',             tier: 'trade'    },
-  { value: 'builder',               label: '🏗️ Builder / Contractor',        desc: 'Renovations and construction',               tier: 'trade'    },
-  { value: 'plumber',               label: '🔧 Plumber',                     desc: 'Plumbing repairs and installations',         tier: 'trade'    },
-  { value: 'electrician',           label: '⚡ Electrician',                 desc: 'Electrical work and compliance certs',       tier: 'trade'    },
-  { value: 'handyman',              label: '🛠️ Handyman',                    desc: 'General repairs and odd jobs',               tier: 'trade'    },
-  { value: 'landscaper',            label: '🌿 Landscaper / Garden Service', desc: 'Garden design and maintenance',              tier: 'trade'    },
-  { value: 'pool_service',          label: '🏊 Pool Service',                desc: 'Pool cleaning and maintenance',              tier: 'trade'    },
-  { value: 'cleaning',              label: '🧹 Cleaning Company',            desc: 'Exit cleans and new-home cleans',            tier: 'trade'    },
-  { value: 'security',              label: '🔒 Security Company',            desc: 'Alarms, CCTV and guarding services',         tier: 'trade'    },
+const CATEGORIES = [
+  {
+    label: 'Finance & Legal',
+    icon: '⚖️',
+    desc: 'Financial and legal services for property buyers and sellers',
+    services: [
+      { value: 'bond_originator',       label: 'Bond Originator',           desc: 'Home loan applications & pre-approvals'    },
+      { value: 'conveyancing_attorney', label: 'Conveyancing Attorney',      desc: 'Property transfers and bond registrations' },
+      { value: 'property_valuer',       label: 'Property Valuer',           desc: 'Formal valuations for sale or finance'     },
+      { value: 'insurance_broker',      label: 'Insurance Broker',          desc: 'Home, contents & bond protection'          },
+    ],
+  },
+  {
+    label: 'Property Services',
+    icon: '🏠',
+    desc: 'Specialist services for property owners and investors',
+    services: [
+      { value: 'solar_installer',     label: 'Solar Installer',               desc: 'Solar panels and battery backup systems' },
+      { value: 'architect',           label: 'Architect',                     desc: 'Plans, extensions and new builds'        },
+      { value: 'str_manager',         label: 'Short-Term Rental Manager',     desc: 'Airbnb & holiday rental management'      },
+      { value: 'property_management', label: 'Property Management Company',   desc: 'Full rental management services'         },
+      { value: 'home_inspector',      label: 'Home Inspector',                desc: 'Pre-purchase building inspections'       },
+    ],
+  },
+  {
+    label: 'Photography & Presentation',
+    icon: '📸',
+    desc: 'Make properties look their best for buyers',
+    services: [
+      { value: 'photographer',      label: 'Property Photographer',       desc: 'Professional listing photos'         },
+      { value: 'videographer',      label: 'Videographer',                desc: 'Property walk-through videos'        },
+      { value: 'virtual_tour',      label: '3D Virtual Tour Specialist',  desc: 'Matterport and 3D walkthroughs'      },
+      { value: 'home_stager',       label: 'Home Stager',                 desc: 'Stage your home to sell faster'      },
+      { value: 'interior_designer', label: 'Interior Designer',           desc: 'Interior design and decoration'      },
+    ],
+  },
+  {
+    label: 'Moving & Storage',
+    icon: '🚛',
+    desc: 'Help buyers and sellers with their move',
+    services: [
+      { value: 'removal', label: 'Removal Company',  desc: 'Furniture and household moves'          },
+      { value: 'storage', label: 'Storage Facility', desc: 'Short and long-term storage solutions'  },
+    ],
+  },
+  {
+    label: 'Home & Garden',
+    icon: '🌿',
+    desc: 'Maintenance, improvements and outdoor services',
+    services: [
+      { value: 'painter',     label: 'Painter',           desc: 'Interior and exterior painting'         },
+      { value: 'builder',     label: 'Builder',           desc: 'Renovations and construction'           },
+      { value: 'plumber',     label: 'Plumber',           desc: 'Plumbing repairs and installations'     },
+      { value: 'electrician', label: 'Electrician',       desc: 'Electrical work and compliance certs'   },
+      { value: 'handyman',    label: 'Handyman',          desc: 'General repairs and odd jobs'           },
+      { value: 'landscaper',  label: 'Landscaper',        desc: 'Garden design and maintenance'          },
+      { value: 'pool_service',label: 'Pool Service',      desc: 'Pool cleaning and maintenance'          },
+      { value: 'cleaning',    label: 'Cleaning Company',  desc: 'Exit cleans and new-home cleans'        },
+      { value: 'security',    label: 'Security Company',  desc: 'Alarms, CCTV and guarding services'     },
+    ],
+  },
 ]
 
-const TIER_BULLETS: Record<string, string[]> = {
-  high:     ['R250 per qualified lead', 'Buyers are pre-screened by our AI', 'Leads are exclusive to you in your area', 'Set your weekly lead cap — pause any time'],
-  mid:      ['R200 per qualified lead', 'Buyers are pre-screened by our AI', 'Leads are exclusive to you in your area', 'Set your weekly lead cap — pause any time'],
-  standard: ['R150 per qualified lead', 'Buyers are pre-screened by our AI', 'Leads are exclusive to you in your area', 'Set your weekly lead cap — pause any time'],
-  trade:    ['R100 per qualified lead', 'Buyers are pre-screened by our AI', 'Leads are exclusive to you in your area', 'Set your weekly lead cap — pause any time'],
-}
-
 export default function SupplierRegister() {
-  const [step, setStep]               = useState<1|2|3|4|5>(1)
-  const [loading, setLoading]         = useState(false)
-  const [message, setMessage]         = useState('')
-  const [selectedService, setSelectedService] = useState<typeof SERVICE_TYPES[0] | null>(null)
-  const [logoFile, setLogoFile]       = useState<File | null>(null)
-  const [logoPreview, setLogoPreview] = useState<string>('')
-  const [aiProfile, setAiProfile]     = useState('')
-  const [aiLoading, setAiLoading]     = useState(false)
+  const [step, setStep]                   = useState<1|2|3|4|5>(1)
+  const [loading, setLoading]             = useState(false)
+  const [message, setMessage]             = useState('')
+  const [selectedServices, setSelectedServices] = useState<string[]>([])
+  const [logoFile, setLogoFile]           = useState<File | null>(null)
+  const [logoPreview, setLogoPreview]     = useState<string>('')
+  const [aiProfile, setAiProfile]         = useState('')
+  const [aiLoading, setAiLoading]         = useState(false)
   const [form, setForm] = useState({
     email: '', password: '', business_name: '', description: '',
     phone: '', website: '', areas_served: '', weekly_lead_limit: '5',
@@ -62,36 +92,43 @@ export default function SupplierRegister() {
 
   const update = (field: string, value: string) => setForm(p => ({ ...p, [field]: value }))
 
-  const selectService = (svc: typeof SERVICE_TYPES[0]) => {
-    setSelectedService(svc)
-    setStep(2)
+  const toggleService = (value: string) => {
+    setSelectedServices(prev =>
+      prev.includes(value) ? prev.filter(s => s !== value) : [...prev, value]
+    )
   }
+
+  // Primary service is the first selected (highest lead price)
+  const primaryService = selectedServices[0] || ''
+  const maxLeadPrice   = Math.max(...selectedServices.map(s => LEAD_PRICES[s] || 0), 0)
 
   const generateAIProfile = async () => {
     setAiLoading(true)
     setStep(4)
     try {
       const res = await fetch('/api/supplier-ai-profile', {
-        method: 'POST',
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           business_name: form.business_name,
           website:       form.website,
-          service_type:  selectedService?.value,
-          service_label: selectedService?.label,
+          service_type:  primaryService,
+          service_label: selectedServices.map(s =>
+            CATEGORIES.flatMap(c => c.services).find(sv => sv.value === s)?.label || s
+          ).join(', '),
           areas_served:  form.areas_served,
         }),
       })
       const data = await res.json()
       setAiProfile(data.profile || '')
     } catch {
-      setAiProfile(`${form.business_name} is a professional ${selectedService?.label} business serving ${form.areas_served || 'local areas'}.`)
+      setAiProfile(`${form.business_name} is a professional service provider offering ${selectedServices.length} services to property buyers and sellers across ${form.areas_served || 'South Africa'}.`)
     }
     setAiLoading(false)
   }
 
   const handleRegister = async () => {
-    if (!selectedService) return
+    if (selectedServices.length === 0) return
     setLoading(true)
     setMessage('')
 
@@ -109,48 +146,45 @@ export default function SupplierRegister() {
     if (logoFile) {
       const ext  = logoFile.name.split('.').pop()
       const path = `${userId}/logo.${ext}`
-      const { error: uploadErr } = await supabase.storage
+      const { error: upErr } = await supabase.storage
         .from('supplier-logos')
         .upload(path, logoFile, { upsert: true })
-      if (!uploadErr) {
+      if (!upErr) {
         const { data: urlData } = supabase.storage.from('supplier-logos').getPublicUrl(path)
         logoUrl = urlData.publicUrl
       }
     }
 
-    const tier        = LEAD_TIERS[selectedService.tier]
     const trialExpiry = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString()
 
-    const { error: insErr } = await supabase.from('suppliers').insert({
-      user_id:                userId,
-      business_name:          form.business_name,
-      service_type:           selectedService.value,
-      description:            form.description,
-      phone:                  form.phone,
-      website:                form.website,
-      areas_served:           form.areas_served.split(',').map(a => a.trim()).filter(Boolean),
-      email:                  form.email,
-      logo_url:               logoUrl,
-      lead_price:             tier.price,
-      lead_tier:              selectedService.tier,
-      weekly_lead_limit:      parseInt(form.weekly_lead_limit) || 5,
-      ai_profile:             aiProfile || form.description,
-      status:                 'pending_review',
-      subscription_status:    'trial',
-      trial_expires_at:       trialExpiry,
-      is_active:              false,
-      is_paused:              false,
+    await supabase.from('suppliers').insert({
+      user_id:            userId,
+      business_name:      form.business_name,
+      service_type:       primaryService,
+      service_types:      selectedServices,
+      description:        form.description,
+      phone:              form.phone,
+      website:            form.website,
+      areas_served:       form.areas_served.split(',').map(a => a.trim()).filter(Boolean),
+      email:              form.email,
+      logo_url:           logoUrl,
+      lead_price:         maxLeadPrice,
+      lead_tier:          maxLeadPrice >= 250 ? 'high' : maxLeadPrice >= 200 ? 'mid' : maxLeadPrice >= 150 ? 'standard' : 'trade',
+      weekly_lead_limit:  parseInt(form.weekly_lead_limit) || 5,
+      ai_profile:         aiProfile || form.description,
+      status:             'pending_review',
+      subscription_status:'trial',
+      trial_expires_at:   trialExpiry,
+      is_active:          false,
+      is_paused:          false,
     })
 
-    if (insErr) { setMessage(insErr.message); setLoading(false); return }
-
-    // Notify admin
     await fetch('/api/notify-admin-new-supplier', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         business_name: form.business_name,
-        service_type:  selectedService.value,
+        service_type:  selectedServices.join(', '),
         website:       form.website,
         email:         form.email,
         areas_served:  form.areas_served,
@@ -175,83 +209,114 @@ export default function SupplierRegister() {
         <Link href="/supplier/login" className="text-gray-400 hover:text-white text-sm">Already registered? Sign in</Link>
       </nav>
 
-      <div className="max-w-xl mx-auto px-6 py-12">
+      <div className="max-w-2xl mx-auto px-6 py-12">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2">Join as a Service Provider</h1>
-          <p className="text-gray-400">Get leads from people buying, selling and moving home</p>
+          <p className="text-gray-400">Connect with buyers, sellers and movers who need your services</p>
         </div>
 
+        {/* ── Step 1: Select services ── */}
         {step === 1 && (
-          <div className="bg-gray-800 border border-gray-700 rounded-2xl p-8">
-            <h2 className="text-lg font-bold text-orange-500 mb-6">Step 1 — What service do you offer?</h2>
-            {(['high','mid','standard','trade'] as const).map(tier => {
-              const t    = LEAD_TIERS[tier]
-              const svcs = SERVICE_TYPES.filter(s => s.tier === tier)
-              return (
-                <div key={tier} className="mb-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className={`text-xs font-bold uppercase tracking-wider ${t.colour}`}>{t.label}</span>
-                    <span className="text-gray-600 text-xs">· R{t.price}/lead</span>
+          <div>
+            <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 mb-4">
+              <h2 className="text-lg font-bold text-orange-500 mb-1">Step 1 — What services do you offer?</h2>
+              <p className="text-gray-400 text-sm">Select all that apply — you can offer multiple services</p>
+            </div>
+
+            <div className="space-y-4">
+              {CATEGORIES.map(cat => (
+                <div key={cat.label} className="bg-gray-800 border border-gray-700 rounded-2xl overflow-hidden">
+                  <div className="px-5 py-3 border-b border-gray-700 flex items-center gap-2">
+                    <span className="text-xl">{cat.icon}</span>
+                    <div>
+                      <p className="font-bold text-sm">{cat.label}</p>
+                      <p className="text-gray-500 text-xs">{cat.desc}</p>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-1 gap-2">
-                    {svcs.map(svc => (
-                      <button key={svc.value} onClick={() => selectService(svc)}
-                        className="text-left p-4 rounded-xl border border-gray-700 hover:border-orange-500 bg-gray-700 transition">
-                        <p className="font-semibold text-sm">{svc.label}</p>
-                        <p className="text-gray-400 text-xs mt-0.5">{svc.desc}</p>
+                  <div className="p-3 grid grid-cols-1 gap-2">
+                    {cat.services.map(svc => (
+                      <button key={svc.value} onClick={() => toggleService(svc.value)}
+                        className={`text-left px-4 py-3 rounded-xl border transition flex items-center gap-3 ${
+                          selectedServices.includes(svc.value)
+                            ? 'border-orange-500 bg-orange-950'
+                            : 'border-gray-700 hover:border-orange-400 bg-gray-700'
+                        }`}>
+                        <div className={`w-5 h-5 rounded-md border-2 flex-shrink-0 flex items-center justify-center ${
+                          selectedServices.includes(svc.value)
+                            ? 'border-orange-500 bg-orange-500'
+                            : 'border-gray-500'
+                        }`}>
+                          {selectedServices.includes(svc.value) && (
+                            <span className="text-black text-xs font-bold">✓</span>
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-semibold text-sm">{svc.label}</p>
+                          <p className="text-gray-400 text-xs">{svc.desc}</p>
+                        </div>
                       </button>
                     ))}
                   </div>
                 </div>
-              )
-            })}
+              ))}
+            </div>
+
+            {selectedServices.length > 0 && (
+              <div className="sticky bottom-4 mt-6">
+                <button onClick={() => setStep(2)}
+                  className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-4 rounded-2xl shadow-lg transition">
+                  Continue with {selectedServices.length} service{selectedServices.length !== 1 ? 's' : ''} →
+                </button>
+              </div>
+            )}
           </div>
         )}
 
-        {step === 2 && selectedService && (() => {
-          const tier = LEAD_TIERS[selectedService.tier]
-          return (
-            <div className="bg-gray-800 border border-gray-700 rounded-2xl p-8">
-              <button onClick={() => setStep(1)} className="text-gray-400 hover:text-white text-sm mb-6 block">← Back</button>
-              <div className="text-center mb-8">
-                <p className="text-4xl mb-2">{selectedService.label.split(' ')[0]}</p>
-                <h2 className="text-xl font-bold">{selectedService.label.replace(/^[^ ]+ /, '')}</h2>
-                <p className="text-gray-400 text-sm mt-1">{selectedService.desc}</p>
-              </div>
-              <div className="bg-gray-700 border border-orange-500 rounded-2xl p-6 mb-4 text-center">
-                <p className="text-gray-400 text-sm mb-1">Your lead price</p>
-                <p className={`text-5xl font-black mb-1 ${tier.colour}`}>R{tier.price}</p>
-                <p className="text-gray-400 text-sm">per qualified lead</p>
-                <div className="border-t border-gray-600 mt-4 pt-4 space-y-2 text-left">
-                  {TIER_BULLETS[selectedService.tier].map((b, i) => (
-                    <p key={i} className="text-sm text-gray-300 flex items-start gap-2">
-                      <span className="text-orange-500 mt-0.5">✓</span>{b}
-                    </p>
-                  ))}
-                </div>
-              </div>
-              <div className="bg-orange-950 border border-orange-800 rounded-xl p-4 mb-6 text-sm">
-                <p className="font-bold text-orange-400 mb-1">2 Month Free Trial</p>
-                <p className="text-gray-300">Start receiving leads immediately at no cost. After your trial, continue for R2000/year (R167/month). Per-lead fees apply throughout.</p>
-              </div>
-              <div className="bg-gray-700 rounded-xl p-4 mb-6 text-sm text-gray-300">
-                <p className="font-semibold text-white mb-1">How billing works</p>
-                <p>You only pay for leads you receive. Invoiced on the 1st of each month, 7-day payment terms. Pause or stop any time — no lock-in.</p>
-              </div>
-              <button onClick={() => setStep(3)}
-                className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-3 rounded-xl transition">
-                Start My Free Trial →
-              </button>
-            </div>
-          )
-        })()}
+        {/* ── Step 2: Pricing for selected services ── */}
+        {step === 2 && (
+          <div className="bg-gray-800 border border-gray-700 rounded-2xl p-8">
+            <button onClick={() => setStep(1)} className="text-gray-400 hover:text-white text-sm mb-6 block">← Back</button>
+            <h2 className="text-lg font-bold text-orange-500 mb-6">Your Lead Pricing</h2>
 
+            <div className="space-y-3 mb-6">
+              {selectedServices.map(sv => {
+                const svcLabel = CATEGORIES.flatMap(c => c.services).find(s => s.value === sv)?.label || sv
+                const price    = LEAD_PRICES[sv] || 0
+                return (
+                  <div key={sv} className="flex items-center justify-between bg-gray-700 rounded-xl px-4 py-3">
+                    <p className="text-sm font-semibold">{svcLabel}</p>
+                    <span className="text-orange-400 font-bold">R{price}/lead</span>
+                  </div>
+                )
+              })}
+            </div>
+
+            <div className="bg-orange-950 border border-orange-700 rounded-xl p-4 mb-6">
+              <p className="font-bold text-orange-400 mb-1">2 Month Free Trial</p>
+              <p className="text-gray-300 text-sm">Start receiving leads at no cost. After your trial, continue for R2000/year or R199/month. Per-lead fees apply throughout.</p>
+            </div>
+
+            <div className="bg-gray-700 rounded-xl p-4 mb-6 text-sm text-gray-300 space-y-2">
+              {['You only pay for leads you receive', 'Invoiced on the 1st of each month — 7 day payment terms', 'Pause or stop any time — no lock-in', 'Full address only shared after you quote'].map(b => (
+                <p key={b} className="flex items-start gap-2"><span className="text-orange-500 mt-0.5">✓</span>{b}</p>
+              ))}
+            </div>
+
+            <button onClick={() => setStep(3)}
+              className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-3 rounded-xl transition">
+              Continue — Register My Business →
+            </button>
+          </div>
+        )}
+
+        {/* ── Step 3: Business details ── */}
         {step === 3 && (
           <div className="bg-gray-800 border border-gray-700 rounded-2xl p-8 space-y-4">
             <div className="flex items-center gap-3 mb-2">
               <button onClick={() => setStep(2)} className="text-gray-400 hover:text-white text-sm">← Back</button>
-              <h2 className="text-lg font-bold text-orange-500">Step 3 — Business Details</h2>
+              <h2 className="text-lg font-bold text-orange-500">Your Business Details</h2>
             </div>
+
             <div>
               <label className="text-gray-400 text-sm mb-2 block">Business Logo (optional)</label>
               <div className="flex items-center gap-4">
@@ -265,12 +330,14 @@ export default function SupplierRegister() {
                 </label>
               </div>
             </div>
+
             <div>
               <label className="text-gray-400 text-sm mb-1 block">Business Name</label>
               <input value={form.business_name} onChange={e => update('business_name', e.target.value)}
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
-                placeholder="e.g. Speedy Movers JHB"/>
+                placeholder="e.g. Sharp Garden Services"/>
             </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-gray-400 text-sm mb-1 block">Phone</label>
@@ -285,12 +352,14 @@ export default function SupplierRegister() {
                   placeholder="www.yourbusiness.co.za"/>
               </div>
             </div>
+
             <div>
               <label className="text-gray-400 text-sm mb-1 block">Areas Served (comma separated)</label>
               <input value={form.areas_served} onChange={e => update('areas_served', e.target.value)}
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
                 placeholder="Johannesburg, Sandton, Randburg, Midrand"/>
             </div>
+
             <div>
               <label className="text-gray-400 text-sm mb-1 block">Weekly Lead Limit <span className="text-orange-500">(minimum 5)</span></label>
               <div className="flex items-center gap-3">
@@ -300,19 +369,23 @@ export default function SupplierRegister() {
                 <p className="text-gray-400 text-sm">leads per week max. Change any time.</p>
               </div>
             </div>
+
             <div>
               <label className="text-gray-400 text-sm mb-1 block">Email</label>
               <input type="email" value={form.email} onChange={e => update('email', e.target.value)}
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
                 placeholder="you@business.co.za"/>
             </div>
+
             <div>
               <label className="text-gray-400 text-sm mb-1 block">Password</label>
               <input type="password" value={form.password} onChange={e => update('password', e.target.value)}
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
                 placeholder="••••••••"/>
             </div>
+
             {message && <p className="text-red-400 text-sm">{message}</p>}
+
             <button onClick={generateAIProfile}
               disabled={!form.business_name || !form.email || !form.password || !form.website}
               className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-3 rounded-xl disabled:opacity-50 transition">
@@ -322,9 +395,10 @@ export default function SupplierRegister() {
           </div>
         )}
 
+        {/* ── Step 4: AI profile ── */}
         {step === 4 && (
           <div className="bg-gray-800 border border-gray-700 rounded-2xl p-8 space-y-5">
-            <h2 className="text-lg font-bold text-orange-500">Step 4 — Your AI-Generated Profile</h2>
+            <h2 className="text-lg font-bold text-orange-500">Your AI-Generated Profile</h2>
             {aiLoading ? (
               <div className="text-center py-12">
                 <p className="text-orange-500 animate-pulse text-lg">✨ Writing your profile...</p>
@@ -341,7 +415,7 @@ export default function SupplierRegister() {
                     {logoPreview && <img src={logoPreview} alt="" className="w-10 h-10 rounded-lg object-contain bg-gray-600"/>}
                     <div>
                       <p className="font-bold">{form.business_name}</p>
-                      <p className="text-gray-400 text-xs">{selectedService?.label.replace(/^[^ ]+ /, '')} · {form.areas_served || 'Areas not set'}</p>
+                      <p className="text-gray-400 text-xs">{selectedServices.length} service{selectedServices.length !== 1 ? 's' : ''} · {form.areas_served || 'Areas not set'}</p>
                     </div>
                   </div>
                   <p className="text-gray-300 text-xs leading-relaxed line-clamp-3">{aiProfile}</p>
@@ -359,12 +433,13 @@ export default function SupplierRegister() {
           </div>
         )}
 
+        {/* ── Step 5: Success ── */}
         {step === 5 && (
           <div className="bg-green-900 border border-green-700 rounded-2xl p-8 text-center">
             <p className="text-5xl mb-4">🎉</p>
             <h2 className="text-2xl font-bold text-green-300 mb-2">Application Submitted!</h2>
             <p className="text-green-400 text-sm mb-2">Please check your email and confirm your address.</p>
-            <p className="text-green-400 text-sm mb-6">We will review your listing within 24 hours and notify you when you are live. Your 2-month free trial starts from approval.</p>
+            <p className="text-green-400 text-sm mb-6">We will review your listing within 24 hours. Your 2-month free trial starts from approval.</p>
             <Link href="/" className="inline-block bg-orange-500 text-black font-bold px-8 py-3 rounded-xl hover:bg-orange-400 transition">
               Back to Home
             </Link>
