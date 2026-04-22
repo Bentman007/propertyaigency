@@ -39,12 +39,13 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
+    <main className="min-h-screen bg-gray-900 flex items-center justify-center px-4 relative">
+      <Link href="/" className="absolute top-4 left-6 text-gray-400 hover:text-white text-sm">← Back to Home</Link>
       <div className="bg-gray-800 rounded-2xl p-8 w-full max-w-md border border-gray-700">
         <div className="text-center mb-8">
-          <a href="/" className="text-3xl font-bold text-white">
+          <Link href="/" className="text-3xl font-bold text-white">
             Property<span className="text-orange-500">AI</span>gency
-          </a>
+          </Link>
           <p className="text-gray-400 mt-2">Sign in to your account</p>
         </div>
 

@@ -211,11 +211,21 @@ export default function MovingServicesPage() {
   )
 
   if (!user) return (
-    <main className="min-h-screen bg-gray-900 text-white flex items-center justify-center px-6">
-      <div className="text-center">
-        <p className="text-4xl mb-4">🔐</p>
-        <h2 className="text-xl font-bold mb-2">Sign in to access Moving Services</h2>
-        <Link href="/auth/login?next=/moving" className="inline-block bg-orange-500 text-black font-bold px-8 py-3 rounded-xl hover:bg-orange-400 mt-4">Sign In</Link>
+    <main className="min-h-screen bg-gray-900 text-white">
+      <nav className="bg-gray-950 border-b border-gray-800 px-6 py-4 flex justify-between items-center">
+        <Link href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
+        <Link href="/" className="text-gray-400 hover:text-white text-sm">← Back to Home</Link>
+      </nav>
+      <div className="flex items-center justify-center min-h-[80vh] px-6">
+        <div className="text-center">
+          <p className="text-4xl mb-4">🔐</p>
+          <h2 className="text-xl font-bold mb-2">Sign in to access Moving Services</h2>
+          <p className="text-gray-400 text-sm mb-6">You need an account to request quotes from our verified suppliers.</p>
+          <div className="flex gap-3 justify-center">
+            <Link href="/auth/login?next=/moving" className="inline-block bg-orange-500 text-black font-bold px-8 py-3 rounded-xl hover:bg-orange-400">Sign In</Link>
+            <Link href="/auth/register" className="inline-block bg-gray-700 text-white font-bold px-8 py-3 rounded-xl hover:bg-gray-600">Register Free</Link>
+          </div>
+        </div>
       </div>
     </main>
   )

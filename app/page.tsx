@@ -245,7 +245,7 @@ export default function Home() {
       </section>
 
       <footer className="text-center py-8 text-gray-500 text-sm">
-        <p>© 2025 PropertyAIgency · <Link href="/auth/login" className="text-orange-500 hover:underline">Sign In</Link> · <Link href="/auth/register" className="text-orange-500 hover:underline">Register</Link></p>
+        <p>© 2026 PropertyAIgency · <Link href="/auth/login" className="text-orange-500 hover:underline">Sign In</Link> · <Link href="/auth/register" className="text-orange-500 hover:underline">Register</Link></p>
       </footer>
       <MobileBanner />
       <footer className="border-t border-gray-800 px-6 py-8 mt-12 text-center text-gray-500 text-sm">
