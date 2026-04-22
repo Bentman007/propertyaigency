@@ -132,6 +132,36 @@ export default function SupplierRegister() {
     setLoading(true)
     setMessage('')
 
+    // Check phone uniqueness
+    if (form.phone) {
+      const { data: existingPhone } = await supabase
+        .from('suppliers')
+        .select('id')
+        .eq('phone', form.phone)
+        .neq('status', 'rejected')
+        .single()
+      if (existingPhone) {
+        setMessage('A supplier account already exists with this phone number. If you have an existing account please sign in, or contact us at admin@propertyaigency.co.za')
+        setLoading(false)
+        return
+      }
+    }
+
+    // Check for duplicate website (allow but flag)
+    let websiteDuplicate = false
+    if (form.website) {
+      const cleanUrl = form.website.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0].toLowerCase()
+      const { data: existingWebsite } = await supabase
+        .from('suppliers')
+        .select('id, business_name')
+        .ilike('website', `%${cleanUrl}%`)
+        .neq('status', 'rejected')
+        .single()
+      if (existingWebsite) {
+        websiteDuplicate = true
+      }
+    }
+
     const { data, error } = await supabase.auth.signUp({
       email:    form.email,
       password: form.password,
@@ -183,11 +213,12 @@ export default function SupplierRegister() {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        business_name: form.business_name,
-        service_type:  selectedServices.join(', '),
-        website:       form.website,
-        email:         form.email,
-        areas_served:  form.areas_served,
+        business_name:     form.business_name,
+        service_type:      selectedServices.join(', '),
+        website:           form.website,
+        email:             form.email,
+        areas_served:      form.areas_served,
+        website_duplicate: websiteDuplicate,
       }),
     }).catch(() => {})
 
