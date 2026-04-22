@@ -18,21 +18,20 @@ export default function LoginPage() {
     } else {
       const params = new URLSearchParams(window.location.search)
       const next = params.get('next')
-      if (next) {
+      const { data: { user } } = await supabase.auth.getUser()
+      const email = user?.email || ''
+      const accountType = user?.user_metadata?.account_type || 'buyer'
+      // Admin always goes to admin — overrides any next param
+      if (email === 'sharp61@hotmail.com') {
+        window.location.href = '/admin'
+      } else if (next) {
         window.location.href = next
+      } else if (accountType === 'agent') {
+        window.location.href = '/dashboard'
+      } else if (accountType === 'private_seller') {
+        window.location.href = '/my-listings'
       } else {
-        const { data: { user } } = await supabase.auth.getUser()
-        const email = user?.email || ''
-        const accountType = user?.user_metadata?.account_type || 'buyer'
-        if (email === 'sharp61@hotmail.com') {
-          window.location.href = '/admin'
-        } else if (accountType === 'agent') {
-          window.location.href = '/dashboard'
-        } else if (accountType === 'private_seller') {
-          window.location.href = '/my-listings'
-        } else {
-          window.location.href = '/my-properties'
-        }
+        window.location.href = '/my-properties'
       }
     }
     setLoading(false)
