@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
+import SupplierMessageThread from '@/components/SupplierMessageThread'
 
 export default function SupplierDashboard() {
   const [user, setUser]         = useState<any>(null)
@@ -20,6 +21,7 @@ export default function SupplierDashboard() {
   const [quoteNotes, setQuoteNotes]     = useState<{ [k: string]: string }>({})
   const [quoteFiles, setQuoteFiles]     = useState<{ [k: string]: File }>({})
   const [submitting, setSubmitting]     = useState<string | null>(null)
+  const [messagingRequest, setMessagingRequest] = useState<string | null>(null)
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
@@ -353,6 +355,20 @@ export default function SupplierDashboard() {
                         className="w-full bg-green-600 hover:bg-green-500 text-white font-bold px-3 py-2 rounded-lg text-sm disabled:opacity-50 transition">
                         {submitting === req.id ? 'Sending...' : 'Send Quote →'}
                       </button>
+                      <button onClick={() => setMessagingRequest(messagingRequest === req.id ? null : req.id)}
+                        className="w-full text-orange-400 hover:text-orange-300 text-xs py-1">
+                        {messagingRequest === req.id ? 'Hide messages' : '💬 Message client'}
+                      </button>
+                      {messagingRequest === req.id && (
+                        <SupplierMessageThread
+                          requestId={req.id}
+                          supplierId={supplier?.id}
+                          buyerId={req.user_id}
+                          currentUserId={user?.id}
+                          currentUserType="supplier"
+                          serviceType={req.service_type}
+                        />
+                      )}
                     </div>
                   </div>
                 )

@@ -3,12 +3,14 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import SupplierReview from './SupplierReview'
+import SupplierMessageThread from './SupplierMessageThread'
 
 export default function BuyerQuotes({ userId }: { userId: string }) {
   const [requests, setRequests]   = useState<any[]>([])
   const [loading, setLoading]     = useState(true)
   const [reviewingSupplierId, setReviewingSupplierId] = useState<string | null>(null)
   const [findingAlternatives, setFindingAlternatives] = useState<string | null>(null)
+  const [messagingQuote, setMessagingQuote] = useState<string | null>(null)
   const [alternatives, setAlternatives] = useState<{ [reqId: string]: any[] }>({})
 
   useEffect(() => { fetchRequests() }, [userId])
@@ -155,6 +157,26 @@ export default function BuyerQuotes({ userId }: { userId: string }) {
 
                       {quote.status === 'declined' && (
                         <p className="text-gray-500 text-xs">Declined</p>
+                      )}
+
+                      {quote.status === 'pending' && (
+                        <button onClick={() => setMessagingQuote(messagingQuote === quote.id ? null : quote.id)}
+                          className="mt-2 text-orange-400 hover:text-orange-300 text-xs">
+                          {messagingQuote === quote.id ? 'Hide messages' : '💬 Ask a question about this quote'}
+                        </button>
+                      )}
+                      {messagingQuote === quote.id && (
+                        <div className="mt-3">
+                          <SupplierMessageThread
+                            requestId={req.id}
+                            supplierId={quote.suppliers?.id}
+                            buyerId={userId}
+                            currentUserId={userId}
+                            currentUserType="buyer"
+                            supplierName={quote.suppliers?.business_name}
+                            serviceType={req.service_type}
+                          />
+                        </div>
                       )}
 
                       {quote.status === 'accepted' && (
