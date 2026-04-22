@@ -7,15 +7,15 @@ type Intent = 'looking' | 'listing' | null
 type ListingType = 'private' | 'agent' | null
 
 export default function RegisterPage() {
-  const [intent, setIntent] = useState<Intent>(null)
+  const [intent, setIntent]           = useState<Intent>(null)
   const [listingType, setListingType] = useState<ListingType>(null)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [name, setName] = useState('')
-  const [agencyName, setAgencyName] = useState('')
-  const [eaabNumber, setEaabNumber] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [message, setMessage] = useState('')
+  const [email, setEmail]             = useState('')
+  const [password, setPassword]       = useState('')
+  const [name, setName]               = useState('')
+  const [agencyName, setAgencyName]   = useState('')
+  const [eaabNumber, setEaabNumber]   = useState('')
+  const [loading, setLoading]         = useState(false)
+  const [message, setMessage]         = useState('')
 
   const accountType = intent === 'looking' ? 'buyer' : listingType === 'agent' ? 'agent' : 'private_seller'
 
@@ -28,39 +28,37 @@ export default function RegisterPage() {
       password,
       options: {
         data: {
-          full_name: name,
-          agency_name: agencyName || null,
+          full_name:    name,
+          agency_name:  agencyName || null,
           account_type: accountType,
-          eaab_number: eaabNumber || null
-        }
-      }
+          eaab_number:  eaabNumber || null,
+        },
+      },
     })
 
     if (error) {
       setMessage(error.message)
     } else if (data.user) {
       await supabase.from('profiles').upsert({
-        id: data.user.id,
-        full_name: name,
-        agency_name: agencyName || null,
+        id:           data.user.id,
+        full_name:    name,
+        agency_name:  agencyName || null,
         account_type: accountType,
-        eaab_number: eaabNumber || null
+        eaab_number:  eaabNumber || null,
       })
 
-      // Notify admin of new agent signup
       if (accountType === 'agent') {
         await fetch('/api/push', {
-          method: 'POST',
+          method:  'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             user_id: 'a947747b-d98c-4d77-8647-c4dd930d3fe7',
-            title: '🎉 New Agent Registered!',
-            body: `${agencyName || name} signed up. EAAB: ${eaabNumber || 'NOT PROVIDED'}. Verify at eaab.org.za`,
-            url: '/admin'
-          })
+            title:   '🎉 New Agent Registered!',
+            body:    `${agencyName || name} signed up. EAAB: ${eaabNumber || 'NOT PROVIDED'}.`,
+            url:     '/admin',
+          }),
         })
       }
-
       setMessage('Success! Check your email to confirm your account.')
     }
     setLoading(false)
@@ -68,91 +66,117 @@ export default function RegisterPage() {
 
   return (
     <main className="min-h-screen bg-gray-900 flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
+      <div className="w-full max-w-5xl">
+
+        <div className="text-center mb-10">
           <Link href="/" className="text-3xl font-bold text-white">
             Property<span className="text-orange-500">AI</span>gency
           </Link>
           <p className="text-gray-400 mt-2">Create your free account</p>
         </div>
 
+        {/* ── Success ── */}
         {message ? (
-          <div className="bg-green-900 border border-green-700 rounded-2xl p-8 text-center">
+          <div className="max-w-md mx-auto bg-green-900 border border-green-700 rounded-2xl p-8 text-center">
             <p className="text-4xl mb-4">🎉</p>
-            <h2 className="text-xl font-bold text-green-300 mb-2">You're registered!</h2>
+            <h2 className="text-xl font-bold text-green-300 mb-2">You are registered!</h2>
             <p className="text-green-400 text-sm mb-6">{message}</p>
             <Link href="/auth/login" className="inline-block bg-orange-500 text-black font-bold px-8 py-3 rounded-xl hover:bg-orange-400">
               Sign In →
             </Link>
           </div>
+
         ) : !intent ? (
-          /* Step 1 - Intent */
-          <div className="bg-gray-800 border border-gray-700 rounded-2xl p-8">
-            <h2 className="text-xl font-bold text-center mb-6">What brings you to PropertyAIgency?</h2>
-            <div className="space-y-3">
+          /* ── Step 1: Intent — 3 cards landscape ── */
+          <div>
+            <h2 className="text-2xl font-bold text-center text-white mb-8">What brings you to PropertyAIgency?</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+              {/* Looking */}
               <button onClick={() => setIntent('looking')}
-                className="w-full text-left p-5 rounded-xl border border-gray-700 hover:border-orange-500 bg-gray-700 hover:bg-gray-600 transition">
-                <p className="text-2xl mb-2">🔍</p>
-                <p className="font-bold">I'm Looking for a Property</p>
-                <p className="text-gray-400 text-sm mt-1">Buying or renting — let AI find your perfect match</p>
+                className="group text-left p-7 rounded-2xl border-2 border-blue-700 bg-blue-950 hover:bg-blue-900 hover:border-blue-500 transition">
+                <p className="text-4xl mb-4">🔍</p>
+                <p className="text-xl font-bold text-white mb-2">I am Looking for a Property</p>
+                <p className="text-blue-300 text-sm leading-relaxed">Buying or renting — let our AI Concierge find your perfect match from thousands of listings.</p>
+                <div className="mt-5 flex items-center gap-2 text-blue-400 font-semibold text-sm group-hover:text-white transition">
+                  Get started free <span>→</span>
+                </div>
               </button>
+
+              {/* Listing */}
               <button onClick={() => setIntent('listing')}
-                className="w-full text-left p-5 rounded-xl border border-gray-700 hover:border-orange-500 bg-gray-700 hover:bg-gray-600 transition">
-                <p className="text-2xl mb-2">🏡</p>
-                <p className="font-bold">I Want to List a Property</p>
-                <p className="text-gray-400 text-sm mt-1">Selling or renting out — private or as an agent</p>
+                className="group text-left p-7 rounded-2xl border-2 border-orange-700 bg-orange-950 hover:bg-orange-900 hover:border-orange-500 transition">
+                <p className="text-4xl mb-4">🏡</p>
+                <p className="text-xl font-bold text-white mb-2">I Want to List a Property</p>
+                <p className="text-orange-300 text-sm leading-relaxed">Selling or renting out — AI-powered listings with real buyer leads. Private sellers and agents welcome.</p>
+                <div className="mt-5 flex items-center gap-2 text-orange-400 font-semibold text-sm group-hover:text-white transition">
+                  From R199 per listing <span>→</span>
+                </div>
               </button>
+
+              {/* Supplier */}
+              <Link href="/supplier/register"
+                className="group text-left p-7 rounded-2xl border-2 border-green-700 bg-green-950 hover:bg-green-900 hover:border-green-500 transition">
+                <p className="text-4xl mb-4">🏢</p>
+                <p className="text-xl font-bold text-white mb-2">I am a Service Provider</p>
+                <p className="text-green-300 text-sm leading-relaxed">Bond originators, attorneys, removal companies, solar installers and more — connect directly with buyers who need your services.</p>
+                <div className="mt-5 flex items-center gap-2 text-green-400 font-semibold text-sm group-hover:text-white transition">
+                  2 month free trial <span>→</span>
+                </div>
+              </Link>
+
             </div>
-            <p className="text-center text-gray-500 text-sm mt-6">
+            <p className="text-center text-gray-500 text-sm mt-8">
               Already have an account?{' '}
               <Link href="/auth/login" className="text-orange-500 hover:underline">Sign in</Link>
             </p>
           </div>
+
         ) : intent === 'listing' && !listingType ? (
-          /* Step 2 - Listing type */
-          <div className="bg-gray-800 border border-gray-700 rounded-2xl p-8">
-            <button onClick={() => setIntent(null)} className="text-gray-400 hover:text-white text-sm mb-6 flex items-center gap-2">
-              ← Back
-            </button>
-            <h2 className="text-xl font-bold text-center mb-6">Are you a private seller or an estate agent?</h2>
-            <div className="space-y-3">
+          /* ── Step 2: Listing type ── */
+          <div className="max-w-2xl mx-auto">
+            <button onClick={() => setIntent(null)} className="text-gray-400 hover:text-white text-sm mb-6 flex items-center gap-2">← Back</button>
+            <h2 className="text-2xl font-bold text-center text-white mb-8">Are you a private seller or an estate agent?</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <button onClick={() => setListingType('private')}
-                className="w-full text-left p-5 rounded-xl border border-gray-700 hover:border-orange-500 bg-gray-700 hover:bg-gray-600 transition">
-                <p className="text-2xl mb-2">🏠</p>
-                <p className="font-bold">Private Seller or Landlord</p>
-                <p className="text-gray-400 text-sm mt-1">I'm selling or renting my own property</p>
-                <p className="text-orange-500 text-xs mt-2">From R199 per listing · 2 months</p>
+                className="group text-left p-7 rounded-2xl border-2 border-orange-700 bg-orange-950 hover:bg-orange-900 hover:border-orange-400 transition">
+                <p className="text-4xl mb-4">🏠</p>
+                <p className="text-xl font-bold text-white mb-2">Private Seller or Landlord</p>
+                <p className="text-orange-300 text-sm leading-relaxed">I am selling or renting my own property.</p>
+                <div className="mt-4 inline-block bg-orange-800 text-orange-200 text-xs font-bold px-3 py-1.5 rounded-full">
+                  From R199 per listing · 2 months
+                </div>
               </button>
               <button onClick={() => setListingType('agent')}
-                className="w-full text-left p-5 rounded-xl border border-gray-700 hover:border-orange-500 bg-gray-700 hover:bg-gray-600 transition">
-                <p className="text-2xl mb-2">🏢</p>
-                <p className="font-bold">Estate Agent or Agency</p>
-                <p className="text-gray-400 text-sm mt-1">I manage multiple listings professionally</p>
-                <p className="text-orange-500 text-xs mt-2">Free for 2 months · then from R800/month</p>
+                className="group text-left p-7 rounded-2xl border-2 border-yellow-700 bg-yellow-950 hover:bg-yellow-900 hover:border-yellow-400 transition">
+                <p className="text-4xl mb-4">🏢</p>
+                <p className="text-xl font-bold text-white mb-2">Estate Agent or Agency</p>
+                <p className="text-yellow-300 text-sm leading-relaxed">I manage multiple listings professionally.</p>
+                <div className="mt-4 inline-block bg-yellow-800 text-yellow-200 text-xs font-bold px-3 py-1.5 rounded-full">
+                  Free for 2 months · then from R800/month
+                </div>
               </button>
             </div>
-            <p className="text-center text-gray-500 text-sm mt-6">
+            <p className="text-center text-gray-500 text-sm mt-8">
               Already have an account?{' '}
               <Link href="/auth/login" className="text-orange-500 hover:underline">Sign in</Link>
             </p>
           </div>
-        ) : (
-          /* Step 3 - Registration form */
-          <div className="bg-gray-800 border border-gray-700 rounded-2xl p-8">
-            <button onClick={() => intent === 'looking' ? setIntent(null) : setListingType(null)}
-              className="text-gray-400 hover:text-white text-sm mb-6 flex items-center gap-2">
-              ← Back
-            </button>
 
-            {/* Account type badge */}
+        ) : (
+          /* ── Step 3: Registration form ── */
+          <div className="max-w-md mx-auto bg-gray-800 border border-gray-700 rounded-2xl p-8">
+            <button onClick={() => intent === 'looking' ? setIntent(null) : setListingType(null)}
+              className="text-gray-400 hover:text-white text-sm mb-6 flex items-center gap-2">← Back</button>
+
             <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-semibold mb-6 ${
-              accountType === 'buyer' ? 'bg-blue-900 text-blue-300' :
-              accountType === 'agent' ? 'bg-orange-900 text-orange-300' :
-              'bg-green-900 text-green-300'
+              accountType === 'buyer'          ? 'bg-blue-900 text-blue-300' :
+              accountType === 'agent'          ? 'bg-yellow-900 text-yellow-300' :
+                                                 'bg-orange-900 text-orange-300'
             }`}>
-              {accountType === 'buyer' ? '🔍 Property Seeker' :
-               accountType === 'agent' ? '🏢 Estate Agent' :
-               '🏠 Private Seller/Landlord'}
+              {accountType === 'buyer'          ? '🔍 Property Seeker' :
+               accountType === 'agent'          ? '🏢 Estate Agent' :
+                                                  '🏠 Private Seller / Landlord'}
             </div>
 
             <form onSubmit={handleRegister} className="space-y-4">
@@ -190,32 +214,23 @@ export default function RegisterPage() {
 
               <div>
                 <label className="text-gray-400 text-sm mb-1 block">Password</label>
-                <input type="password" value={password} onChange={e => setPassword(e.target.value)} required
-                  minLength={6}
+                <input type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6}
                   className="w-full bg-gray-700 text-white rounded-xl px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
                   placeholder="Minimum 6 characters"/>
               </div>
+
+              {message && <p className="text-red-400 text-sm">{message}</p>}
 
               <button type="submit" disabled={loading}
                 className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-3 rounded-xl disabled:opacity-50 transition mt-2">
                 {loading ? 'Creating account...' : 'Create Free Account →'}
               </button>
 
-              {accountType === 'agent' && (
-                <p className="text-xs text-gray-500 text-center">
-                  🎉 Free for 2 months — no credit card required
-                </p>
-              )}
-              {accountType === 'private_seller' && (
-                <p className="text-xs text-gray-500 text-center">
-                  List your first property from R199 — 2 month listing
-                </p>
-              )}
-              {accountType === 'buyer' && (
-                <p className="text-xs text-gray-500 text-center">
-                  Completely free — no hidden charges ever
-                </p>
-              )}
+              <p className="text-xs text-gray-500 text-center">
+                {accountType === 'agent'          ? '🎉 Free for 2 months — no credit card required' :
+                 accountType === 'private_seller'  ? 'List your first property from R199 — 2 month listing' :
+                                                     'Completely free — no hidden charges ever'}
+              </p>
             </form>
 
             <p className="text-center text-gray-500 text-sm mt-4">
