@@ -137,12 +137,12 @@ export default function ForAgentsPage() {
               { name: 'Starter', listings: '10 credits', price: 'R850' },
               { name: 'Growth', listings: '30 credits', price: 'R2,100' },
               { name: 'Pro', listings: '50 credits', price: 'R2,750', popular: true },
-              { name: 'Agency', listings: '51-100', price: 'R4,000' },
+              { name: 'Agency', listings: '100 credits', price: 'R4,500' },
             ].map(plan => (
               <div key={plan.name} className={`bg-gray-700 rounded-xl p-5 text-center border ${plan.popular ? 'border-orange-500' : 'border-gray-600'}`}>
                 {plan.popular && <p className="text-orange-500 text-xs font-bold mb-2">BEST VALUE</p>}
                 <p className="font-bold">{plan.name}</p>
-                <p className="text-gray-400 text-xs mb-2">Up to {plan.listings} listings</p>
+                <p className="text-gray-400 text-xs mb-2">{plan.listings}</p>
                 <p className="text-2xl font-bold text-orange-500">{plan.price}</p>
                 <p className="text-gray-500 text-xs">/month</p>
               </div>
