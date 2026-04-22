@@ -68,7 +68,7 @@ export default function ForAgentsPage() {
                 <h3 className="text-xl font-bold">Import All Your Listings in Minutes</h3>
                 <span className="bg-orange-500 text-black text-xs font-bold px-2 py-0.5 rounded-full">KEY FEATURE</span>
               </div>
-              <p className="text-gray-400 mb-4">Already listed on another portal? Export your listings to a simple spreadsheet and upload them all at once. Our AI automatically writes professional descriptions for every property. You just review and go live in minutes.</p>
+              <p className="text-gray-400 mb-4">Have existing listings? Export them to a simple spreadsheet and upload them all at once. Our AI automatically writes professional descriptions for every property. You just review and go live in minutes.</p>
               <div className="flex flex-wrap gap-2">
                 {['Export from any portal', 'Upload spreadsheet', 'AI writes descriptions', 'Review and publish'].map((step, i) => (
                   <div key={i} className="flex items-center gap-2 bg-gray-700 px-3 py-1.5 rounded-lg text-sm">

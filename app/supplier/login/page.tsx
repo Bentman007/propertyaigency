@@ -36,6 +36,7 @@ export default function SupplierLoginPage() {
   return (
     <main className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
+        <Link href="/" className="block text-gray-400 hover:text-white text-sm mb-6 text-center">← Back to Home</Link>
 
         <div className="text-center mb-8">
           <Link href="/" className="text-3xl font-bold text-white">
