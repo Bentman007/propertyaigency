@@ -144,7 +144,7 @@ export default function ForAgentsPage() {
                 <p className="font-bold">{plan.name}</p>
                 <p className="text-gray-400 text-xs mb-2">{plan.listings}</p>
                 <p className="text-2xl font-bold text-orange-500">{plan.price}</p>
-                <p className="text-gray-500 text-xs">/month</p>
+                <p className="text-gray-500 text-xs">per bundle</p>
               </div>
             ))}
           </div>
