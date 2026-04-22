@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 
@@ -16,8 +16,20 @@ export default function RegisterPage() {
   const [eaabNumber, setEaabNumber]   = useState('')
   const [loading, setLoading]         = useState(false)
   const [message, setMessage]         = useState('')
+  const [freeTrialActive, setFreeTrialActive] = useState(true)
 
   const accountType = intent === 'looking' ? 'buyer' : listingType === 'agent' ? 'agent' : 'private_seller'
+
+  useEffect(() => {
+    supabase
+      .from('site_settings')
+      .select('value')
+      .eq('key', 'free_trial_active')
+      .single()
+      .then(({ data }) => {
+        setFreeTrialActive(data?.value === 'true')
+      })
+  }, [])
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -87,7 +99,7 @@ export default function RegisterPage() {
           </div>
 
         ) : !intent ? (
-          /* ── Step 1: Intent — 3 cards landscape ── */
+          /* ── Step 1: Intent ── */
           <div>
             <h2 className="text-2xl font-bold text-center text-white mb-8">What brings you to PropertyAIgency?</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -110,7 +122,7 @@ export default function RegisterPage() {
                 <p className="text-xl font-bold text-white mb-2">I Want to List a Property</p>
                 <p className="text-orange-300 text-sm leading-relaxed">Selling or renting out — AI-powered listings with real buyer leads. Private sellers and agents welcome.</p>
                 <div className="mt-5 flex items-center gap-2 text-orange-400 font-semibold text-sm group-hover:text-white transition">
-                  From R199 per listing <span>→</span>
+                  {freeTrialActive ? 'Get started free →' : 'View pricing →'}
                 </div>
               </button>
 
@@ -138,24 +150,33 @@ export default function RegisterPage() {
             <button onClick={() => setIntent(null)} className="text-gray-400 hover:text-white text-sm mb-6 flex items-center gap-2">← Back</button>
             <h2 className="text-2xl font-bold text-center text-white mb-8">Are you a private seller or an estate agent?</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
               <button onClick={() => setListingType('private')}
                 className="group text-left p-7 rounded-2xl border-2 border-orange-700 bg-orange-950 hover:bg-orange-900 hover:border-orange-400 transition">
                 <p className="text-4xl mb-4">🏠</p>
                 <p className="text-xl font-bold text-white mb-2">Private Seller or Landlord</p>
-                <p className="text-orange-300 text-sm leading-relaxed">I am selling or renting my own property.</p>
-                <div className="mt-4 inline-block bg-orange-800 text-orange-200 text-xs font-bold px-3 py-1.5 rounded-full">
+                <p className="text-orange-300 text-sm leading-relaxed mb-4">I am selling or renting my own property.</p>
+                <div className="inline-block bg-orange-800 text-orange-200 text-xs font-bold px-3 py-1.5 rounded-full">
                   From R199 per listing · 2 months
                 </div>
               </button>
+
               <button onClick={() => setListingType('agent')}
                 className="group text-left p-7 rounded-2xl border-2 border-yellow-700 bg-yellow-950 hover:bg-yellow-900 hover:border-yellow-400 transition">
                 <p className="text-4xl mb-4">🏢</p>
                 <p className="text-xl font-bold text-white mb-2">Estate Agent or Agency</p>
-                <p className="text-yellow-300 text-sm leading-relaxed">I manage multiple listings professionally.</p>
-                <div className="mt-4 inline-block bg-yellow-800 text-yellow-200 text-xs font-bold px-3 py-1.5 rounded-full">
-                  Free for 2 months · then from R800/month
-                </div>
+                <p className="text-yellow-300 text-sm leading-relaxed mb-4">I manage multiple listings professionally.</p>
+                {freeTrialActive ? (
+                  <div className="inline-block bg-green-800 text-green-200 text-xs font-bold px-3 py-1.5 rounded-full">
+                    🎉 Free for 2 months · then from R800/month
+                  </div>
+                ) : (
+                  <div className="inline-block bg-yellow-800 text-yellow-200 text-xs font-bold px-3 py-1.5 rounded-full">
+                    From R800/month · no lock-in
+                  </div>
+                )}
               </button>
+
             </div>
             <p className="text-center text-gray-500 text-sm mt-8">
               Already have an account?{' '}
@@ -170,13 +191,13 @@ export default function RegisterPage() {
               className="text-gray-400 hover:text-white text-sm mb-6 flex items-center gap-2">← Back</button>
 
             <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-semibold mb-6 ${
-              accountType === 'buyer'          ? 'bg-blue-900 text-blue-300' :
-              accountType === 'agent'          ? 'bg-yellow-900 text-yellow-300' :
-                                                 'bg-orange-900 text-orange-300'
+              accountType === 'buyer'         ? 'bg-blue-900 text-blue-300' :
+              accountType === 'agent'         ? 'bg-yellow-900 text-yellow-300' :
+                                                'bg-orange-900 text-orange-300'
             }`}>
-              {accountType === 'buyer'          ? '🔍 Property Seeker' :
-               accountType === 'agent'          ? '🏢 Estate Agent' :
-                                                  '🏠 Private Seller / Landlord'}
+              {accountType === 'buyer'        ? '🔍 Property Seeker' :
+               accountType === 'agent'        ? '🏢 Estate Agent' :
+                                                '🏠 Private Seller / Landlord'}
             </div>
 
             <form onSubmit={handleRegister} className="space-y-4">
@@ -227,9 +248,10 @@ export default function RegisterPage() {
               </button>
 
               <p className="text-xs text-gray-500 text-center">
-                {accountType === 'agent'          ? '🎉 Free for 2 months — no credit card required' :
-                 accountType === 'private_seller'  ? 'List your first property from R199 — 2 month listing' :
-                                                     'Completely free — no hidden charges ever'}
+                {accountType === 'agent' && freeTrialActive  ? '🎉 Free for 2 months — no credit card required' :
+                 accountType === 'agent' && !freeTrialActive ? 'No lock-in · cancel any time' :
+                 accountType === 'private_seller'            ? 'List your first property from R199 — 2 month listing' :
+                                                               'Completely free — no hidden charges ever'}
               </p>
             </form>
 
