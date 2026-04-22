@@ -202,23 +202,33 @@ export default function HowItWorksPage() {
               </div>
 
               <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 mb-8">
-                <h3 className="font-bold mb-4">Simple, transparent pricing</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <h3 className="font-bold mb-2">What does a lead actually cost you today?</h3>
+                <p className="text-gray-400 text-sm mb-5">Compare what you currently spend to acquire a new client vs what PropertyAIgency charges for a pre-qualified, ready-to-act lead.</p>
+                <div className="space-y-3">
                   {[
-                    { tier: 'Finance & Legal', price: 'R250', desc: 'Bond originators, attorneys, valuers, insurance' },
-                    { tier: 'Property Services', price: 'R200', desc: 'Solar, architects, STR managers, inspectors' },
-                    { tier: 'Photography & Staging', price: 'R150', desc: 'Photographers, videographers, stagers, designers' },
-                    { tier: 'Home & Garden', price: 'R100', desc: 'Painters, plumbers, electricians, landscapers' },
-                  ].map(t => (
-                    <div key={t.tier} className="text-center p-4 bg-gray-700 rounded-xl">
-                      <p className="text-2xl font-black text-orange-400">{t.price}</p>
-                      <p className="text-xs text-gray-400 mt-1">per lead</p>
-                      <p className="text-xs font-semibold mt-2">{t.tier}</p>
-                      <p className="text-xs text-gray-500 mt-1">{t.desc}</p>
+                    { service: 'Bond Originator', old: 'R1,500–R5,000', new: 'R250', saving: 'Up to 94% less' },
+                    { service: 'Conveyancing Attorney', old: 'R2,000–R8,000', new: 'R250', saving: 'Up to 97% less' },
+                    { service: 'Solar Installer', old: 'R800–R3,000', new: 'R200', saving: 'Up to 93% less' },
+                    { service: 'Removal Company', old: 'R400–R1,500', new: 'R150', saving: 'Up to 90% less' },
+                    { service: 'Painter / Handyman', old: 'R300–R1,200', new: 'R100', saving: 'Up to 92% less' },
+                  ].map(row => (
+                    <div key={row.service} className="grid grid-cols-4 gap-3 items-center text-sm">
+                      <p className="font-semibold text-white">{row.service}</p>
+                      <div className="text-center">
+                        <p className="text-red-400 font-bold">{row.old}</p>
+                        <p className="text-gray-500 text-xs">typical cost today</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-green-400 font-bold">{row.new}</p>
+                        <p className="text-gray-500 text-xs">per lead with us</p>
+                      </div>
+                      <div className="text-center bg-green-950 border border-green-800 rounded-lg px-2 py-1">
+                        <p className="text-green-400 text-xs font-bold">{row.saving}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
-                <p className="text-gray-500 text-xs text-center mt-4">Plus R2000/year platform fee after your free trial. No lock-in — pause or cancel any time.</p>
+                <p className="text-gray-500 text-xs mt-5">Leads are pre-qualified buyers at exactly the right moment in their journey. No cold calls, no advertising spend, no wasted time.</p>
               </div>
 
               <Link href="/supplier/register" className="inline-block bg-green-600 hover:bg-green-500 text-white font-bold px-8 py-3 rounded-xl transition">
