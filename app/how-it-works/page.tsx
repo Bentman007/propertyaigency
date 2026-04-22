@@ -152,6 +152,81 @@ export default function HowItWorksPage() {
               Start Free 2-Month Trial →
             </Link>
           </div>
+
+          {/* For Suppliers */}
+          <div className="md:col-span-2">
+            <div className="border-t border-gray-700 pt-12 mt-4">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white font-bold">🏢</div>
+                <h2 className="text-2xl font-bold">For Service Providers</h2>
+              </div>
+              <p className="text-gray-400 mb-8 max-w-2xl">Bond originators, conveyancing attorneys, removal companies, solar installers, photographers and more — get leads from buyers and sellers at exactly the right moment in their property journey.</p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                {[
+                  { step: '01', icon: '📋', title: 'Register Your Business', desc: 'Select your services, upload your logo, add your areas covered. Our AI scrapes your website and writes your profile automatically.' },
+                  { step: '02', icon: '✅', title: 'We Verify You', desc: 'Our team reviews your application within 24 hours. Once approved, your profile goes live and your 2-month free trial begins.' },
+                  { step: '03', icon: '🔔', title: 'Get Notified of Leads', desc: 'When a buyer in your area needs your service, your AI dashboard notifies you instantly with their requirements and approximate location.' },
+                  { step: '04', icon: '💬', title: 'Chat With the Client', desc: 'Message the buyer through our platform — no contact details shared until they accept your quote. Ask questions, clarify requirements.' },
+                  { step: '05', icon: '📄', title: 'Send Your Quote', desc: 'Submit a quote amount with notes, or attach your own PDF quote. Buyer sees your profile, reviews and ratings alongside your quote.' },
+                  { step: '06', icon: '🤝', title: 'Get Introduced', desc: 'Buyer accepts your quote — we introduce you both by email with all the details. You take it from there and arrange payment directly.' },
+                ].map(item => (
+                  <div key={item.step} className="bg-gray-800 border border-gray-700 rounded-2xl p-5">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-10 h-10 bg-gray-700 rounded-xl flex items-center justify-center text-xl">{item.icon}</div>
+                      <span className="text-green-400 text-xs font-bold">STEP {item.step}</span>
+                    </div>
+                    <h3 className="font-bold mb-2">{item.title}</h3>
+                    <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="bg-green-950 border border-green-700 rounded-2xl p-6 mb-8">
+                <h3 className="font-bold text-green-300 mb-4">When do you get leads?</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {[
+                    { icon: '🏦', text: 'Bond Originators — when a buyer books their first viewing' },
+                    { icon: '🔍', text: 'Home Inspectors — 48 hours after a confirmed viewing' },
+                    { icon: '📊', text: 'Property Valuers — 48 hours after a confirmed viewing' },
+                    { icon: '⚖️', text: 'Conveyancing Attorneys — when a buyer submits an offer' },
+                    { icon: '🛡️', text: 'Insurance Brokers — when a buyer submits an offer' },
+                    { icon: '🚛', text: 'Removal Companies & all trade services — when an offer is accepted' },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-start gap-2 text-sm text-gray-300">
+                      <span className="text-lg flex-shrink-0">{item.icon}</span>
+                      <span>{item.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 mb-8">
+                <h3 className="font-bold mb-4">Simple, transparent pricing</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {[
+                    { tier: 'Finance & Legal', price: 'R250', desc: 'Bond originators, attorneys, valuers, insurance' },
+                    { tier: 'Property Services', price: 'R200', desc: 'Solar, architects, STR managers, inspectors' },
+                    { tier: 'Photography & Staging', price: 'R150', desc: 'Photographers, videographers, stagers, designers' },
+                    { tier: 'Home & Garden', price: 'R100', desc: 'Painters, plumbers, electricians, landscapers' },
+                  ].map(t => (
+                    <div key={t.tier} className="text-center p-4 bg-gray-700 rounded-xl">
+                      <p className="text-2xl font-black text-orange-400">{t.price}</p>
+                      <p className="text-xs text-gray-400 mt-1">per lead</p>
+                      <p className="text-xs font-semibold mt-2">{t.tier}</p>
+                      <p className="text-xs text-gray-500 mt-1">{t.desc}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-gray-500 text-xs text-center mt-4">Plus R2000/year platform fee after your free trial. No lock-in — pause or cancel any time.</p>
+              </div>
+
+              <Link href="/supplier/register" className="inline-block bg-green-600 hover:bg-green-500 text-white font-bold px-8 py-3 rounded-xl transition">
+                Start My Free Trial →
+              </Link>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -200,6 +275,18 @@ export default function HowItWorksPage() {
               q: 'What happens when my property is sold?',
               a: 'Simply mark it as sold in your dashboard. The listing is removed from search, and all buyers who saved it get notified automatically.'
             },
+            {
+              q: 'How much does it cost to be a service provider?',
+              a: 'You get a 2-month free trial with no credit card required. After that, it is R2000 per year plus a per-lead fee ranging from R100 to R250 depending on your service category. You only pay for leads you actually receive.'
+            },
+            {
+              q: 'Can I offer multiple services?',
+              a: 'Yes — you can register for as many service categories as you offer. A garden service that also does pool maintenance can select both, and will receive leads for either.'
+            },
+            {
+              q: 'What if I get a lead I cannot fulfil?',
+              a: 'You can set a weekly lead limit and pause your listing at any time. You are never charged for leads when paused.'
+            },
           ].map((faq, i) => (
             <div key={i} className="bg-gray-800 border border-gray-700 rounded-xl p-5">
               <h3 className="font-bold mb-2">❓ {faq.q}</h3>
@@ -212,13 +299,16 @@ export default function HowItWorksPage() {
       {/* CTA */}
       <section className="bg-gradient-to-r from-orange-900 to-gray-800 border-t border-orange-700 px-6 py-16 text-center">
         <h2 className="text-3xl font-bold mb-3">Ready to experience the future of property?</h2>
-        <p className="text-gray-300 mb-8 max-w-xl mx-auto">Join PropertyAIgency today — free for buyers, free trial for agents</p>
+        <p className="text-gray-300 mb-8 max-w-xl mx-auto">Join PropertyAIgency today — free for buyers, free trial for agents and service providers</p>
         <div className="flex gap-4 justify-center flex-wrap">
           <Link href="/auth/register" className="bg-orange-500 hover:bg-orange-400 text-black font-bold py-4 px-10 rounded-xl text-lg transition">
             Get Started Free →
           </Link>
           <Link href="/pricing" className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-4 px-10 rounded-xl text-lg transition">
             View Pricing
+          </Link>
+          <Link href="/supplier/register" className="bg-green-600 hover:bg-green-500 text-white font-bold py-4 px-10 rounded-xl text-lg transition">
+            Join as a Supplier →
           </Link>
         </div>
       </section>
