@@ -5,43 +5,84 @@ import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 
 const SERVICES = [
-  { value: 'removal', label: '🚛 Removal Company', desc: 'Get quotes from trusted movers' },
-  { value: 'cleaning', label: '🧹 Cleaning Service', desc: 'Exit clean or new home clean' },
-  { value: 'garden', label: '🌿 Garden Service', desc: 'Get your new garden sorted' },
-  { value: 'pool', label: '🏊 Pool Service', desc: 'Pool cleaning and maintenance' },
-  { value: 'legal', label: '⚖️ Conveyancing Attorney', desc: 'Property transfer and bond registration' },
-  { value: 'mortgage', label: '🏦 Bond Originator', desc: 'Find the best home loan rate' },
-  { value: 'surveyor', label: '📋 Property Surveyor', desc: 'Building and compliance inspection' },
-  { value: 'handyman', label: '🔧 Handyman / Contractor', desc: 'Repairs and small renovations' },
-  { value: 'photography', label: '📸 Property Photographer', desc: 'Professional photos and video tours' },
-  { value: 'virtual_tour', label: '🏠 3D Virtual Tour', desc: 'Matterport and 3D property walkthroughs' },
-  { value: 'staging', label: '🛋 Home Staging', desc: 'Stage your home to sell faster' },
+  { value: 'bond_originator',       label: '🏦 Bond Originator',             desc: 'Find the best home loan rate'                },
+  { value: 'conveyancing_attorney', label: '⚖️ Conveyancing Attorney',        desc: 'Property transfer and bond registration'     },
+  { value: 'property_valuer',       label: '📊 Property Valuer',             desc: 'Formal valuation for sale or finance'         },
+  { value: 'insurance_broker',      label: '🛡️ Insurance Broker',            desc: 'Home, contents and bond protection'           },
+  { value: 'solar_installer',       label: '☀️ Solar Installer',             desc: 'Solar panels and battery backup'              },
+  { value: 'architect',             label: '📐 Architect',                   desc: 'Plans, extensions and new builds'             },
+  { value: 'str_manager',           label: '🏖️ Short-Term Rental Manager',   desc: 'Airbnb and holiday rental management'         },
+  { value: 'property_management',   label: '🏢 Property Management',         desc: 'Full rental management services'              },
+  { value: 'home_inspector',        label: '🔍 Home Inspector',              desc: 'Pre-purchase building inspection'             },
+  { value: 'photographer',          label: '📸 Photographer',                desc: 'Professional listing photos'                  },
+  { value: 'videographer',          label: '🎬 Videographer',                desc: 'Property walk-through videos'                 },
+  { value: 'virtual_tour',          label: '🏠 3D Virtual Tour',             desc: 'Matterport and 3D walkthroughs'               },
+  { value: 'home_stager',           label: '🛋️ Home Stager',                desc: 'Stage your home to sell faster'               },
+  { value: 'interior_designer',     label: '🎨 Interior Designer',           desc: 'Interior design and decoration'               },
+  { value: 'removal',               label: '🚛 Removal Company',             desc: 'Furniture and household moves'                },
+  { value: 'storage',               label: '📦 Storage Facility',            desc: 'Short and long-term storage'                  },
+  { value: 'painter',               label: '🖌️ Painter',                    desc: 'Interior and exterior painting'               },
+  { value: 'builder',               label: '🏗️ Builder',                    desc: 'Renovations and construction'                 },
+  { value: 'plumber',               label: '🔧 Plumber',                     desc: 'Plumbing repairs and installations'           },
+  { value: 'electrician',           label: '⚡ Electrician',                 desc: 'Electrical work and compliance certs'         },
+  { value: 'handyman',              label: '🛠️ Handyman',                    desc: 'General repairs and odd jobs'                 },
+  { value: 'landscaper',            label: '🌿 Landscaper',                  desc: 'Garden design and maintenance'                },
+  { value: 'pool_service',          label: '🏊 Pool Service',                desc: 'Pool cleaning and maintenance'                },
+  { value: 'cleaning',              label: '🧹 Cleaning Company',            desc: 'Exit cleans and new-home cleans'              },
+  { value: 'security',              label: '🔒 Security Company',            desc: 'Alarms, CCTV and guarding'                    },
 ]
 
+// Extract suburb from full address
+// "14 Oak Ave, Bryanston, Sandton, 2191" → "Bryanston, Sandton"
+function toSuburb(address: string): string {
+  if (!address) return ''
+  const parts = address.split(',').map(p => p.trim()).filter(Boolean)
+  if (parts.length >= 3) return parts.slice(1, 3).join(', ')
+  if (parts.length === 2) return parts[1]
+  return parts[0]
+}
+
 export default function MovingServicesPage() {
-  const [user, setUser] = useState<any>(null)
-  const [hasAccess, setHasAccess] = useState(false)
+  const [user, setUser]                   = useState<any>(null)
+  const [profile, setProfile]             = useState<any>(null)
+  const [hasAccess, setHasAccess]         = useState(false)
   const [checkingAccess, setCheckingAccess] = useState(true)
   const [selectedServices, setSelectedServices] = useState<string[]>([])
-  const [step, setStep] = useState(1)
-  const [loading, setLoading] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
-  const [form, setForm] = useState({ from_address: '', to_address: '', move_date: '' })
+  const [step, setStep]                   = useState(1)
+  const [loading, setLoading]             = useState(false)
+  const [submitted, setSubmitted]         = useState(false)
+  const [form, setForm] = useState({
+    from_address: '', to_address: '', move_date: '',
+    first_name: '', last_name: '',
+  })
+
+  const [availableSuppliers, setAvailableSuppliers] = useState<any[]>([])
+  const [selectedSuppliers, setSelectedSuppliers]   = useState<string[]>([])
+  const [loadingSuppliers, setLoadingSuppliers]     = useState(false)
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
       if (!data.user) { setCheckingAccess(false); return }
       setUser(data.user)
 
-      const { data: profile } = await supabase
+      const { data: prof } = await supabase
         .from('profiles')
-        .select('has_moving_access')
+        .select('*')
         .eq('id', data.user.id)
         .single()
+      setProfile(prof)
+      setHasAccess(prof?.has_moving_access || false)
 
-      setHasAccess(profile?.has_moving_access || false)
+      // Auto-populate name
+      const fullName = prof?.full_name || data.user.user_metadata?.full_name || ''
+      const [first, ...rest] = fullName.split(' ')
+      setForm(p => ({
+        ...p,
+        first_name: first || '',
+        last_name:  rest.join(' ') || '',
+      }))
 
-      // Pre-populate to_address from latest confirmed booking
+      // Auto-populate to_address from latest confirmed booking
       const { data: booking } = await supabase
         .from('viewing_bookings')
         .select('property_address')
@@ -50,7 +91,6 @@ export default function MovingServicesPage() {
         .order('created_at', { ascending: false })
         .limit(1)
         .single()
-
       if (booking?.property_address) {
         setForm(p => ({ ...p, to_address: booking.property_address }))
       }
@@ -59,54 +99,31 @@ export default function MovingServicesPage() {
     })
   }, [])
 
-  useEffect(() => {
-    if (step === 2) {
-      setTimeout(() => {
-        const loadAutocomplete = () => {
-          const fromInput = document.getElementById('from-address') as HTMLInputElement
-          const toInput = document.getElementById('to-address') as HTMLInputElement
-          if (!fromInput || !toInput || !(window as any).google) return
+  const loadSuppliers = async (serviceType: string) => {
+    setLoadingSuppliers(true)
+    const { data } = await supabase
+      .from('suppliers')
+      .select('id, business_name, logo_url, rating, review_count, areas_served, ai_profile, total_leads_received')
+      .eq('service_type', serviceType)
+      .eq('status', 'active')
+      .eq('is_active', true)
+      .eq('is_paused', false)
+      .limit(5)
+    setAvailableSuppliers(data || [])
+    setLoadingSuppliers(false)
+  }
 
-          const fromAC = new (window as any).google.maps.places.Autocomplete(fromInput, {
-            componentRestrictions: { country: 'za' },
-            fields: ['formatted_address']
-          })
-          fromAC.addListener('place_changed', () => {
-            const place = fromAC.getPlace()
-            setForm(p => ({ ...p, from_address: place.formatted_address || fromInput.value }))
-          })
+  const goToSupplierStep = async () => {
+    setStep(3)
+    setSelectedSuppliers([])
+    await loadSuppliers(selectedServices[0])
+  }
 
-          const toAC = new (window as any).google.maps.places.Autocomplete(toInput, {
-            componentRestrictions: { country: 'za' },
-            fields: ['formatted_address']
-          })
-          toAC.addListener('place_changed', () => {
-            const place = toAC.getPlace()
-            setForm(p => ({ ...p, to_address: place.formatted_address || toInput.value }))
-          })
-        }
-
-        if ((window as any).google) {
-          loadAutocomplete()
-        } else {
-          const existing = document.querySelector('script[src*="maps.googleapis"]')
-          if (!existing) {
-            const script = document.createElement('script')
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_KEY}&libraries=places`
-            script.async = true
-            script.onload = loadAutocomplete
-            document.head.appendChild(script)
-          } else {
-            existing.addEventListener('load', loadAutocomplete)
-          }
-        }
-      }, 300)
-    }
-  }, [step])
-
-  const toggleService = (value: string) => {
-    setSelectedServices(prev =>
-      prev.includes(value) ? prev.filter(s => s !== value) : [...prev, value]
+  const toggleSupplier = (id: string) => {
+    setSelectedSuppliers(prev =>
+      prev.includes(id)
+        ? prev.filter(s => s !== id)
+        : prev.length >= 3 ? prev : [...prev, id]
     )
   }
 
@@ -119,32 +136,73 @@ export default function MovingServicesPage() {
   const handleSubmit = async () => {
     if (!user) { window.location.href = '/auth/login?next=/moving'; return }
     setLoading(true)
+
     for (const service of selectedServices) {
-      await supabase.from('move_quote_requests').insert({
-        user_id: user.id,
-        service_type: service,
-        from_address: form.from_address,
-        to_address: form.to_address,
-        move_date: form.move_date || null,
-        status: 'pending'
-      })
-    }
-    // Notify matching suppliers
-    for (const service of selectedServices) {
-      await fetch('/api/notify-suppliers', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          service_type: service,
-          from_address: form.from_address,
-          to_address: form.to_address
+      const { data: req } = await supabase.from('move_quote_requests').insert({
+        user_id:          user.id,
+        service_type:     service,
+        // Suburb only shown to suppliers
+        from_address:     toSuburb(form.from_address),
+        to_address:       toSuburb(form.to_address),
+        // Full address stored securely — shared only after quote accepted
+        from_address_full: form.from_address,
+        to_address_full:   form.to_address,
+        move_date:        form.move_date || null,
+        status:           'pending',
+        details: {
+          first_name: form.first_name,
+          last_name:  form.last_name,
+        },
+      }).select().single()
+
+      if (req) {
+        await fetch('/api/notify-suppliers', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            request_id:         req.id,
+            service_type:       service,
+            selected_suppliers: selectedSuppliers,
+            from_address:       toSuburb(form.from_address),
+            to_address:         toSuburb(form.to_address),
+            client_first_name:  form.first_name,
+          }),
         })
-      })
+      }
     }
 
     setSubmitted(true)
     setLoading(false)
   }
+
+  useEffect(() => {
+    if (step === 2) {
+      setTimeout(() => {
+        const load = () => {
+          const fromEl = document.getElementById('from-address') as HTMLInputElement
+          const toEl   = document.getElementById('to-address')   as HTMLInputElement
+          if (!fromEl || !toEl || !(window as any).google) return
+          const ac = (el: HTMLInputElement, field: string) => {
+            const instance = new (window as any).google.maps.places.Autocomplete(el, {
+              componentRestrictions: { country: 'za' }, fields: ['formatted_address'],
+            })
+            instance.addListener('place_changed', () => {
+              const p = instance.getPlace()
+              setForm(prev => ({ ...prev, [field]: p.formatted_address || el.value }))
+            })
+          }
+          ac(fromEl, 'from_address')
+          ac(toEl,   'to_address')
+        }
+        if ((window as any).google) { load() } else {
+          const s = document.createElement('script')
+          s.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_KEY}&libraries=places`
+          s.async = true; s.onload = load
+          document.head.appendChild(s)
+        }
+      }, 300)
+    }
+  }, [step])
 
   if (checkingAccess) return (
     <main className="min-h-screen bg-gray-900 flex items-center justify-center">
@@ -157,9 +215,7 @@ export default function MovingServicesPage() {
       <div className="text-center">
         <p className="text-4xl mb-4">🔐</p>
         <h2 className="text-xl font-bold mb-2">Sign in to access Moving Services</h2>
-        <Link href="/auth/login?next=/moving" className="inline-block bg-orange-500 text-black font-bold px-8 py-3 rounded-xl hover:bg-orange-400 mt-4">
-          Sign In
-        </Link>
+        <Link href="/auth/login?next=/moving" className="inline-block bg-orange-500 text-black font-bold px-8 py-3 rounded-xl hover:bg-orange-400 mt-4">Sign In</Link>
       </div>
     </main>
   )
@@ -174,9 +230,8 @@ export default function MovingServicesPage() {
         <div className="text-center mb-8">
           <p className="text-5xl mb-4">📦</p>
           <h1 className="text-2xl font-bold mb-2">Moving Services</h1>
-          <p className="text-gray-400">Upgrade your account to get quotes from verified suppliers — all within 24 hours</p>
+          <p className="text-gray-400">Get quotes from verified suppliers — all within 24 hours</p>
         </div>
-
         <div className="bg-gray-800 border border-orange-500 rounded-2xl p-8 mb-6">
           <div className="flex justify-between items-center mb-6">
             <div>
@@ -188,32 +243,18 @@ export default function MovingServicesPage() {
               <p className="text-gray-400 text-xs">once-off</p>
             </div>
           </div>
-
           <ul className="space-y-3 mb-6">
-            {[
-              '🚛 Up to 3 removal company quotes',
-              '🧹 Cleaning service quotes',
-              '🌿 Garden & pool service in new area',
-              '⚖️ Conveyancing attorney referral',
-              '🏦 Bond originator introduction',
-              '📋 Property surveyor referral',
-              '⭐ All suppliers verified and reviewed',
-              '✅ Quotes within 24 hours guaranteed',
-            ].map(item => (
+            {['Choose up to 3 suppliers per service','All suppliers verified and reviewed','Quotes within 24 hours guaranteed','Accept, decline or find alternatives','No obligation to accept any quote'].map(item => (
               <li key={item} className="flex items-center gap-3 text-sm">
                 <span className="text-green-400">✓</span>
                 <span className="text-gray-300">{item}</span>
               </li>
             ))}
           </ul>
-
-          <button onClick={handleUpgrade}
-            className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-4 rounded-xl text-lg transition">
-            🚀 Upgrade Now — R200
+          <button onClick={handleUpgrade} className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-4 rounded-xl text-lg transition">
+            Upgrade Now — R200
           </button>
-          <p className="text-xs text-gray-500 text-center mt-3">
-            During beta — access granted instantly. Payment coming soon.
-          </p>
+          <p className="text-xs text-gray-500 text-center mt-3">During beta — access granted instantly. Payment coming soon.</p>
         </div>
       </div>
     </main>
@@ -224,7 +265,7 @@ export default function MovingServicesPage() {
       <div className="text-center max-w-md">
         <p className="text-6xl mb-6">🎉</p>
         <h1 className="text-3xl font-bold mb-3">Requests Sent!</h1>
-        <p className="text-gray-400 mb-6">We have sent your quote requests to verified suppliers in your area. You will receive quotes within 24 hours.</p>
+        <p className="text-gray-400 mb-6">Your selected suppliers have been notified and will respond within 24 hours.</p>
         <div className="bg-gray-800 border border-gray-700 rounded-xl p-4 mb-6 text-left">
           <p className="text-sm font-semibold mb-2">Services requested:</p>
           {selectedServices.map(s => (
@@ -232,7 +273,7 @@ export default function MovingServicesPage() {
           ))}
         </div>
         <Link href="/my-properties" className="inline-block bg-orange-500 text-black font-bold px-8 py-3 rounded-xl hover:bg-orange-400">
-          Back to My Dashboard
+          View My Quotes →
         </Link>
       </div>
     </main>
@@ -247,16 +288,35 @@ export default function MovingServicesPage() {
 
       <div className="max-w-3xl mx-auto px-6 py-12">
         <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold mb-2">📦 Moving Services</h1>
+          <h1 className="text-3xl font-bold mb-2">Moving Services</h1>
           <p className="text-gray-400">Get quotes from verified suppliers — all in one place.</p>
         </div>
 
+        {/* Progress */}
+        <div className="flex items-center gap-2 mb-8 justify-center">
+          {['Services','Details','Choose Suppliers'].map((label, i) => (
+            <div key={i} className="flex items-center gap-2">
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+                step > i + 1 ? 'bg-green-500 text-white' :
+                step === i + 1 ? 'bg-orange-500 text-black' :
+                'bg-gray-700 text-gray-400'
+              }`}>{step > i + 1 ? '✓' : i + 1}</div>
+              <span className={`text-xs hidden sm:block ${step === i + 1 ? 'text-white' : 'text-gray-500'}`}>{label}</span>
+              {i < 2 && <div className="w-6 h-px bg-gray-700"/>}
+            </div>
+          ))}
+        </div>
+
+        {/* Step 1 — pick services */}
         {step === 1 && (
           <div>
             <h2 className="text-xl font-bold mb-4">What do you need help with?</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
               {SERVICES.map(service => (
-                <button key={service.value} onClick={() => toggleService(service.value)}
+                <button key={service.value}
+                  onClick={() => setSelectedServices(prev =>
+                    prev.includes(service.value) ? prev.filter(s => s !== service.value) : [...prev, service.value]
+                  )}
                   className={`text-left p-4 rounded-xl border transition ${
                     selectedServices.includes(service.value)
                       ? 'border-orange-500 bg-orange-950'
@@ -264,9 +324,7 @@ export default function MovingServicesPage() {
                   }`}>
                   <p className="font-semibold">{service.label}</p>
                   <p className="text-gray-400 text-sm">{service.desc}</p>
-                  {selectedServices.includes(service.value) && (
-                    <p className="text-orange-400 text-xs mt-1">✓ Selected</p>
-                  )}
+                  {selectedServices.includes(service.value) && <p className="text-orange-400 text-xs mt-1">✓ Selected</p>}
                 </button>
               ))}
             </div>
@@ -277,48 +335,143 @@ export default function MovingServicesPage() {
           </div>
         )}
 
+        {/* Step 2 — details (auto-populated) */}
         {step === 2 && (
           <div className="bg-gray-800 border border-gray-700 rounded-2xl p-8 space-y-4">
             <div className="flex items-center gap-3 mb-2">
               <button onClick={() => setStep(1)} className="text-gray-400 hover:text-white">←</button>
-              <h2 className="text-xl font-bold">Move Details</h2>
+              <h2 className="text-xl font-bold">Your Details</h2>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-gray-400 text-sm mb-1 block">First Name</label>
+                <input value={form.first_name} onChange={e => setForm(p => ({ ...p, first_name: e.target.value }))}
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
+                  placeholder="Amy"/>
+              </div>
+              <div>
+                <label className="text-gray-400 text-sm mb-1 block">Last Name</label>
+                <input value={form.last_name} onChange={e => setForm(p => ({ ...p, last_name: e.target.value }))}
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
+                  placeholder="Smith"/>
+              </div>
             </div>
 
             <div>
               <label className="text-gray-400 text-sm mb-1 block">Moving from</label>
-              <input value={form.from_address} onChange={e => setForm(p => ({ ...p, from_address: e.target.value }))}
+              <input id="from-address" value={form.from_address}
+                onChange={e => setForm(p => ({ ...p, from_address: e.target.value }))}
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
-                id="from-address"
-                placeholder="Start typing your current address..."/>
+                placeholder="Current address..."/>
             </div>
-
             <div>
               <label className="text-gray-400 text-sm mb-1 block">Moving to</label>
-              <input value={form.to_address} onChange={e => setForm(p => ({ ...p, to_address: e.target.value }))}
+              <input id="to-address" value={form.to_address}
+                onChange={e => setForm(p => ({ ...p, to_address: e.target.value }))}
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
-                id="to-address"
-                placeholder="Start typing your new address..."/>
+                placeholder="New address..."/>
             </div>
-
             <div>
-              <label className="text-gray-400 text-sm mb-1 block">Move date (optional)</label>
-              <input type="date" value={form.move_date} onChange={e => setForm(p => ({ ...p, move_date: e.target.value }))}
+              <label className="text-gray-400 text-sm mb-1 block">Date needed (optional)</label>
+              <input type="date" value={form.move_date}
+                onChange={e => setForm(p => ({ ...p, move_date: e.target.value }))}
                 min={new Date(Date.now() + 86400000).toISOString().split('T')[0]}
                 className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"/>
             </div>
 
-            <div className="bg-gray-700 rounded-lg p-3">
-              <p className="text-sm font-semibold mb-1">Requesting quotes for:</p>
-              {selectedServices.map(s => (
-                <p key={s} className="text-gray-300 text-sm">✓ {SERVICES.find(sv => sv.value === s)?.label}</p>
-              ))}
+            <div className="bg-gray-700 rounded-xl p-3 text-xs text-gray-400">
+              🔒 For your security, suppliers only see your suburb until you accept a quote. Your full address is shared only after you approve.
             </div>
 
-            <button onClick={handleSubmit} disabled={loading || !form.from_address}
+            <button onClick={goToSupplierStep} disabled={!form.from_address || !form.to_address}
               className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-4 rounded-xl disabled:opacity-50 transition">
-              {loading ? 'Sending requests...' : '📤 Send Quote Requests'}
+              See Available Suppliers →
             </button>
-            <p className="text-xs text-gray-500 text-center">Suppliers will respond within 24 hours. No obligation to accept any quote.</p>
+          </div>
+        )}
+
+        {/* Step 3 — pick suppliers */}
+        {step === 3 && (
+          <div>
+            <div className="flex items-center gap-3 mb-6">
+              <button onClick={() => setStep(2)} className="text-gray-400 hover:text-white">←</button>
+              <div>
+                <h2 className="text-xl font-bold">Choose Your Suppliers</h2>
+                <p className="text-gray-400 text-sm">Select up to 3 for: {SERVICES.find(s => s.value === selectedServices[0])?.label}</p>
+              </div>
+            </div>
+
+            {loadingSuppliers ? (
+              <div className="text-center py-12">
+                <p className="text-orange-500 animate-pulse">Finding suppliers in your area...</p>
+              </div>
+            ) : availableSuppliers.length === 0 ? (
+              <div className="bg-gray-800 border border-gray-700 rounded-2xl p-8 text-center mb-6">
+                <p className="text-3xl mb-3">📭</p>
+                <p className="font-semibold mb-1">No suppliers available yet in your area</p>
+                <p className="text-gray-400 text-sm">We are growing our supplier network. We will notify you when suppliers join.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4 mb-6">
+                {availableSuppliers.map(sup => {
+                  const isNew = sup.trial_expires_at && new Date(sup.trial_expires_at) > new Date()
+                  return (
+                    <button key={sup.id} onClick={() => toggleSupplier(sup.id)}
+                      className={`text-left p-5 rounded-2xl border transition ${
+                        selectedSuppliers.includes(sup.id)
+                          ? 'border-orange-500 bg-orange-950'
+                          : 'border-gray-700 hover:border-orange-400 bg-gray-800'
+                      }`}>
+                      <div className="flex items-start gap-4">
+                        {sup.logo_url
+                          ? <img src={sup.logo_url} alt="" className="w-12 h-12 rounded-xl object-contain bg-gray-700 flex-shrink-0"/>
+                          : <div className="w-12 h-12 rounded-xl bg-gray-700 flex items-center justify-center text-xl flex-shrink-0">🏢</div>
+                        }
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <p className="font-bold">{sup.business_name}</p>
+                            {isNew && (
+                              <span className="text-xs bg-orange-500 text-black font-bold px-2 py-0.5 rounded-full">New</span>
+                            )}
+                            {selectedSuppliers.includes(sup.id) && (
+                              <span className="text-orange-400 text-sm font-bold ml-auto">✓ Selected</span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-3 mt-0.5 flex-wrap">
+                            {sup.rating > 0 && (
+                              <span className="text-sm text-gray-300">★ {sup.rating}/5 ({sup.review_count} reviews)</span>
+                            )}
+                            <span className="text-xs text-gray-500">Trusted by {sup.total_leads_received || 0} PropertyAIgency clients</span>
+                          </div>
+                          {sup.areas_served?.length > 0 && (
+                            <p className="text-gray-500 text-xs mt-1">{sup.areas_served.slice(0,3).join(', ')}</p>
+                          )}
+                          {sup.ai_profile && (
+                            <p className="text-gray-400 text-sm mt-2 line-clamp-2">{sup.ai_profile}</p>
+                          )}
+                        </div>
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+
+            {selectedSuppliers.length > 0 && (
+              <div className="bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 mb-4 text-sm text-gray-300">
+                {selectedSuppliers.length} of 3 suppliers selected
+                {selectedSuppliers.length === 3 && <span className="text-orange-400 ml-2">Maximum reached</span>}
+              </div>
+            )}
+
+            <button
+              onClick={handleSubmit}
+              disabled={loading || (availableSuppliers.length > 0 && selectedSuppliers.length === 0)}
+              className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-4 rounded-xl disabled:opacity-50 transition">
+              {loading ? 'Sending requests...' : 'Send Quote Requests →'}
+            </button>
+            <p className="text-xs text-gray-500 text-center mt-3">Suppliers respond within 24 hours. No obligation to accept.</p>
           </div>
         )}
       </div>

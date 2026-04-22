@@ -118,25 +118,44 @@ export default function SupplierRegister() {
       }
     }
 
-    const tier = LEAD_TIERS[selectedService.tier]
+    const tier        = LEAD_TIERS[selectedService.tier]
+    const trialExpiry = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString()
 
-    await supabase.from('suppliers').insert({
-      user_id:           userId,
-      business_name:     form.business_name,
-      service_type:      selectedService.value,
-      description:       form.description,
-      phone:             form.phone,
-      website:           form.website,
-      areas_served:      form.areas_served.split(',').map(a => a.trim()).filter(Boolean),
-      email:             form.email,
-      logo_url:          logoUrl,
-      lead_price:        tier.price,
-      lead_tier:         selectedService.tier,
-      weekly_lead_limit: parseInt(form.weekly_lead_limit) || 5,
-      ai_profile:        aiProfile || form.description,
-      is_active:         true,
-      is_paused:         false,
+    const { error: insErr } = await supabase.from('suppliers').insert({
+      user_id:                userId,
+      business_name:          form.business_name,
+      service_type:           selectedService.value,
+      description:            form.description,
+      phone:                  form.phone,
+      website:                form.website,
+      areas_served:           form.areas_served.split(',').map(a => a.trim()).filter(Boolean),
+      email:                  form.email,
+      logo_url:               logoUrl,
+      lead_price:             tier.price,
+      lead_tier:              selectedService.tier,
+      weekly_lead_limit:      parseInt(form.weekly_lead_limit) || 5,
+      ai_profile:             aiProfile || form.description,
+      status:                 'pending_review',
+      subscription_status:    'trial',
+      trial_expires_at:       trialExpiry,
+      is_active:              false,
+      is_paused:              false,
     })
+
+    if (insErr) { setMessage(insErr.message); setLoading(false); return }
+
+    // Notify admin
+    await fetch('/api/notify-admin-new-supplier', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        business_name: form.business_name,
+        service_type:  selectedService.value,
+        website:       form.website,
+        email:         form.email,
+        areas_served:  form.areas_served,
+      }),
+    }).catch(() => {})
 
     setStep(5)
     setLoading(false)
@@ -199,7 +218,7 @@ export default function SupplierRegister() {
                 <h2 className="text-xl font-bold">{selectedService.label.replace(/^[^ ]+ /, '')}</h2>
                 <p className="text-gray-400 text-sm mt-1">{selectedService.desc}</p>
               </div>
-              <div className="bg-gray-700 border border-orange-500 rounded-2xl p-6 mb-6 text-center">
+              <div className="bg-gray-700 border border-orange-500 rounded-2xl p-6 mb-4 text-center">
                 <p className="text-gray-400 text-sm mb-1">Your lead price</p>
                 <p className={`text-5xl font-black mb-1 ${tier.colour}`}>R{tier.price}</p>
                 <p className="text-gray-400 text-sm">per qualified lead</p>
@@ -211,13 +230,17 @@ export default function SupplierRegister() {
                   ))}
                 </div>
               </div>
+              <div className="bg-orange-950 border border-orange-800 rounded-xl p-4 mb-6 text-sm">
+                <p className="font-bold text-orange-400 mb-1">2 Month Free Trial</p>
+                <p className="text-gray-300">Start receiving leads immediately at no cost. After your trial, continue for R2000/year (R167/month). Per-lead fees apply throughout.</p>
+              </div>
               <div className="bg-gray-700 rounded-xl p-4 mb-6 text-sm text-gray-300">
                 <p className="font-semibold text-white mb-1">How billing works</p>
-                <p>You only pay for leads you receive. We invoice you on the 1st of each month with 7-day payment terms. Pause or stop any time — no lock-in.</p>
+                <p>You only pay for leads you receive. Invoiced on the 1st of each month, 7-day payment terms. Pause or stop any time — no lock-in.</p>
               </div>
               <button onClick={() => setStep(3)}
                 className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-3 rounded-xl transition">
-                Continue — Register My Business →
+                Start My Free Trial →
               </button>
             </div>
           )
@@ -256,7 +279,7 @@ export default function SupplierRegister() {
                   placeholder="+27 82 123 4567"/>
               </div>
               <div>
-                <label className="text-gray-400 text-sm mb-1 block">Website (optional)</label>
+                <label className="text-gray-400 text-sm mb-1 block">Website <span className="text-orange-500">*</span></label>
                 <input value={form.website} onChange={e => update('website', e.target.value)}
                   className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
                   placeholder="www.yourbusiness.co.za"/>
@@ -291,11 +314,11 @@ export default function SupplierRegister() {
             </div>
             {message && <p className="text-red-400 text-sm">{message}</p>}
             <button onClick={generateAIProfile}
-              disabled={!form.business_name || !form.email || !form.password}
+              disabled={!form.business_name || !form.email || !form.password || !form.website}
               className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-3 rounded-xl disabled:opacity-50 transition">
               ✨ Generate My Profile with AI →
             </button>
-            <p className="text-xs text-gray-500 text-center">Our AI will write your business profile. You can edit it before going live.</p>
+            <p className="text-xs text-gray-500 text-center">Website required — we verify all businesses before approving listings.</p>
           </div>
         )}
 
@@ -305,11 +328,11 @@ export default function SupplierRegister() {
             {aiLoading ? (
               <div className="text-center py-12">
                 <p className="text-orange-500 animate-pulse text-lg">✨ Writing your profile...</p>
-                <p className="text-gray-500 text-sm mt-2">Analysing your business{form.website ? ' and website' : ''}...</p>
+                <p className="text-gray-500 text-sm mt-2">Analysing your business and website...</p>
               </div>
             ) : (
               <>
-                <p className="text-gray-400 text-sm">Edit your profile below then go live.</p>
+                <p className="text-gray-400 text-sm">Edit your profile below then submit for review.</p>
                 <textarea value={aiProfile} onChange={e => setAiProfile(e.target.value)} rows={8}
                   className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500 text-sm leading-relaxed"/>
                 <div className="bg-gray-700 rounded-xl p-4 text-sm">
@@ -326,7 +349,7 @@ export default function SupplierRegister() {
                 {message && <p className="text-red-400 text-sm">{message}</p>}
                 <button onClick={handleRegister} disabled={loading || !aiProfile}
                   className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-3 rounded-xl disabled:opacity-50 transition">
-                  {loading ? 'Going live...' : '🚀 Go Live'}
+                  {loading ? 'Submitting...' : '🚀 Submit for Review'}
                 </button>
                 <button onClick={generateAIProfile} className="w-full text-gray-400 hover:text-white text-sm py-2">
                   ↺ Regenerate profile
@@ -339,10 +362,11 @@ export default function SupplierRegister() {
         {step === 5 && (
           <div className="bg-green-900 border border-green-700 rounded-2xl p-8 text-center">
             <p className="text-5xl mb-4">🎉</p>
-            <h2 className="text-2xl font-bold text-green-300 mb-2">You are live!</h2>
-            <p className="text-green-400 text-sm mb-6">Leads will appear in your dashboard as buyers in your area request your service.</p>
-            <Link href="/supplier/login" className="inline-block bg-orange-500 text-black font-bold px-8 py-3 rounded-xl hover:bg-orange-400 transition">
-              Go to My Dashboard →
+            <h2 className="text-2xl font-bold text-green-300 mb-2">Application Submitted!</h2>
+            <p className="text-green-400 text-sm mb-2">Please check your email and confirm your address.</p>
+            <p className="text-green-400 text-sm mb-6">We will review your listing within 24 hours and notify you when you are live. Your 2-month free trial starts from approval.</p>
+            <Link href="/" className="inline-block bg-orange-500 text-black font-bold px-8 py-3 rounded-xl hover:bg-orange-400 transition">
+              Back to Home
             </Link>
           </div>
         )}

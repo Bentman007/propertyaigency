@@ -17,6 +17,9 @@ export default function SupplierDashboard() {
   const [aiInput, setAiInput]       = useState('')
   const [aiLoading, setAiLoading]   = useState(false)
   const [quoteAmounts, setQuoteAmounts] = useState<{ [k: string]: string }>({})
+  const [quoteNotes, setQuoteNotes]     = useState<{ [k: string]: string }>({})
+  const [quoteFiles, setQuoteFiles]     = useState<{ [k: string]: File }>({})
+  const [submitting, setSubmitting]     = useState<string | null>(null)
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
@@ -28,7 +31,6 @@ export default function SupplierDashboard() {
         .select('*')
         .eq('user_id', data.user.id)
         .single()
-
       if (!sup) { window.location.href = '/supplier/register'; return }
       setSupplier(sup)
 
@@ -50,13 +52,11 @@ export default function SupplierDashboard() {
       const startOfMonth = new Date()
       startOfMonth.setDate(1)
       startOfMonth.setHours(0, 0, 0, 0)
-
       const { data: monthlyLeads } = await supabase
         .from('supplier_quotes')
-        .select('id, created_at')
+        .select('id')
         .eq('supplier_id', sup.id)
         .gte('created_at', startOfMonth.toISOString())
-
       setMonthLeads(monthlyLeads?.length || 0)
       setInvoiceTotal((monthlyLeads?.length || 0) * (sup.lead_price || 0))
       setLoading(false)
@@ -77,37 +77,59 @@ export default function SupplierDashboard() {
 
   const submitQuote = async (requestId: string) => {
     if (!quoteAmounts[requestId]) return
+    setSubmitting(requestId)
+
+    let pdfUrl = ''
+    const file = quoteFiles[requestId]
+    if (file) {
+      const path = `${supplier.id}/${requestId}-quote.pdf`
+      const { error: upErr } = await supabase.storage
+        .from('supplier-quotes')
+        .upload(path, file, { upsert: true })
+      if (!upErr) {
+        const { data: urlData } = supabase.storage
+          .from('supplier-quotes')
+          .getPublicUrl(path)
+        pdfUrl = urlData.publicUrl
+      }
+    }
+
     await supabase.from('supplier_quotes').insert({
       request_id:  requestId,
       supplier_id: supplier.id,
       amount:      parseFloat(quoteAmounts[requestId]),
+      description: quoteNotes[requestId] || '',
+      pdf_url:     pdfUrl,
       valid_until: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     })
     await supabase.from('move_quote_requests').update({ status: 'quoted' }).eq('id', requestId)
 
     const { data: req } = await supabase
       .from('move_quote_requests')
-      .select('user_id, service_type')
+      .select('user_id, service_type, details')
       .eq('id', requestId)
       .single()
 
     if (req?.user_id) {
       await fetch('/api/push', {
-        method: 'POST',
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           user_id: req.user_id,
-          title: 'New Quote Received!',
-          body: `${supplier?.business_name} sent you a quote. View it now!`,
-          url: '/my-properties',
+          title:   'New Quote Received!',
+          body:    `${supplier?.business_name} sent you a quote for your ${req.service_type?.replace(/_/g, ' ')} request.`,
+          url:     '/my-properties',
         }),
-      })
+      }).catch(() => {})
     }
 
     setRequests(prev => prev.filter(r => r.id !== requestId))
     setQuoteAmounts(prev => { const p = { ...prev }; delete p[requestId]; return p })
+    setQuoteNotes(prev =>   { const p = { ...prev }; delete p[requestId]; return p })
+    setQuoteFiles(prev =>   { const p = { ...prev }; delete p[requestId]; return p })
     setMonthLeads(prev => prev + 1)
     setInvoiceTotal(prev => prev + (supplier?.lead_price || 0))
+    setSubmitting(null)
   }
 
   const askAI = async () => {
@@ -117,7 +139,7 @@ export default function SupplierDashboard() {
     setAiMessages(newHistory)
     setAiInput('')
     const res  = await fetch('/api/supplier-ai', {
-      method: 'POST',
+      method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ supplier_id: supplier?.id, message: aiInput, history: aiMessages }),
     })
@@ -132,7 +154,11 @@ export default function SupplierDashboard() {
     </main>
   )
 
-  const accepted = quotes.filter(q => q.status === 'accepted').length
+  // Trial banner
+  const trialDaysLeft = supplier?.trial_expires_at
+    ? Math.max(0, Math.ceil((new Date(supplier.trial_expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+    : null
+  const onTrial = supplier?.subscription_status === 'trial' && trialDaysLeft !== null && trialDaysLeft > 0
 
   return (
     <main className="min-h-screen bg-gray-900 text-white">
@@ -142,7 +168,7 @@ export default function SupplierDashboard() {
           {supplier?.logo_url && (
             <img src={supplier.logo_url} alt="logo" className="w-8 h-8 rounded-lg object-contain bg-gray-700"/>
           )}
-          <span className="text-gray-400 text-sm">{supplier?.business_name}</span>
+          <span className="text-gray-400 text-sm hidden sm:block">{supplier?.business_name}</span>
           <button onClick={() => supabase.auth.signOut().then(() => window.location.href = '/')}
             className="text-gray-400 hover:text-white text-sm">Sign Out</button>
         </div>
@@ -150,6 +176,24 @@ export default function SupplierDashboard() {
 
       <div className="max-w-6xl mx-auto px-6 py-8">
 
+        {/* Trial banner */}
+        {onTrial && (
+          <div className="bg-orange-950 border border-orange-700 rounded-xl px-5 py-3 mb-6 flex items-center justify-between">
+            <p className="text-orange-300 text-sm">
+              Free trial — <strong>{trialDaysLeft} days remaining</strong>. After your trial, continue for R2000/year or R199/month.
+            </p>
+            <button className="text-orange-400 hover:text-orange-300 text-xs font-bold">Upgrade Now</button>
+          </div>
+        )}
+
+        {/* Paused banner */}
+        {supplier?.is_paused && (
+          <div className="bg-yellow-900 border border-yellow-700 rounded-xl px-5 py-3 mb-6 text-yellow-300 text-sm">
+            Your listing is paused. You are not receiving new leads.
+          </div>
+        )}
+
+        {/* Header */}
         <div className="flex items-start justify-between mb-8">
           <div>
             <p className="text-gray-400 text-sm mb-1">Welcome back</p>
@@ -168,35 +212,34 @@ export default function SupplierDashboard() {
           </button>
         </div>
 
-        {supplier?.is_paused && (
-          <div className="bg-yellow-900 border border-yellow-700 rounded-xl px-5 py-3 mb-6 text-yellow-300 text-sm">
-            Your listing is paused. You are not receiving new leads. Resume to start receiving leads again.
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        {/* Ticker */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <div className="bg-gray-800 border border-gray-700 rounded-xl p-5">
             <p className="text-3xl font-bold text-orange-500">{monthLeads}</p>
-            <p className="text-gray-400 text-sm mt-1">Leads this month</p>
+            <p className="text-gray-400 text-sm mt-1">🎯 Leads this month</p>
           </div>
           <div className="bg-gray-800 border border-gray-700 rounded-xl p-5">
             <p className="text-3xl font-bold text-green-400">R{invoiceTotal.toLocaleString()}</p>
-            <p className="text-gray-400 text-sm mt-1">Invoice building this month</p>
+            <p className="text-gray-400 text-sm mt-1">💰 Invoice building</p>
             <p className="text-gray-500 text-xs mt-0.5">Due 1st of next month</p>
           </div>
           <div className="bg-gray-800 border border-gray-700 rounded-xl p-5">
-            <p className="text-3xl font-bold text-yellow-400">{supplier?.rating || '—'}{supplier?.rating ? '/5' : ''}</p>
-            <p className="text-gray-400 text-sm mt-1">Rating ({supplier?.review_count || 0} reviews)</p>
+            <p className="text-3xl font-bold text-yellow-400">
+              {supplier?.rating > 0 ? `${supplier.rating}/5` : '—'}
+            </p>
+            <p className="text-gray-400 text-sm mt-1">⭐ Rating ({supplier?.review_count || 0} reviews)</p>
           </div>
         </div>
 
-        <div className="bg-gray-800 border border-gray-700 rounded-xl px-5 py-3 mb-8 flex items-center justify-between text-sm">
-          <span className="text-gray-400">Lead price: <span className="text-white font-bold">R{supplier?.lead_price || 0} per lead</span></span>
+        <div className="bg-gray-800 border border-gray-700 rounded-xl px-5 py-3 mb-8 flex items-center justify-between text-sm flex-wrap gap-2">
+          <span className="text-gray-400">Lead price: <span className="text-white font-bold">R{supplier?.lead_price || 0}/lead</span></span>
           <span className="text-gray-400">Weekly limit: <span className="text-white font-bold">{supplier?.weekly_lead_limit || 5} leads/week</span></span>
+          <span className="text-gray-400">Status: <span className={`font-bold ${supplier?.is_paused ? 'text-yellow-400' : 'text-green-400'}`}>{supplier?.is_paused ? 'Paused' : 'Active'}</span></span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
+          {/* AI Assistant */}
           <div className="bg-gray-800 border border-gray-700 rounded-2xl overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-700 flex items-center gap-3">
               <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs">AI</div>
@@ -210,7 +253,7 @@ export default function SupplierDashboard() {
                 <div className="flex gap-3">
                   <div className="w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs flex-shrink-0">AI</div>
                   <div className="bg-gray-700 rounded-xl px-3 py-2 text-sm text-gray-200">
-                    Hi! I am your Lead AIsistant. You have {requests.length} new leads waiting and R{invoiceTotal.toLocaleString()} building on your invoice this month. How can I help?
+                    Hi! You have {requests.length} new lead{requests.length !== 1 ? 's' : ''} waiting and R{invoiceTotal.toLocaleString()} building on your invoice this month. How can I help?
                   </div>
                 </div>
               )}
@@ -243,70 +286,107 @@ export default function SupplierDashboard() {
             </div>
           </div>
 
+          {/* Lead Requests */}
           <div className="bg-gray-800 border border-gray-700 rounded-2xl overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-700 flex justify-between items-center">
-              <p className="font-bold">New Lead Requests</p>
+              <p className="font-bold">🔥 New Lead Requests</p>
               {requests.length > 0 && (
                 <span className="bg-orange-500 text-black text-xs font-bold px-2 py-0.5 rounded-full">{requests.length}</span>
               )}
             </div>
-            <div className="divide-y divide-gray-700 max-h-96 overflow-y-auto">
+            <div className="divide-y divide-gray-700 max-h-[500px] overflow-y-auto">
               {requests.length === 0 ? (
                 <div className="p-6 text-center text-gray-500 text-sm">
                   <p className="text-2xl mb-2">📭</p>
                   <p>No new leads yet</p>
                   <p className="text-xs mt-1">Leads appear here when buyers in your area request your service</p>
                 </div>
-              ) : requests.map(req => (
-                <div key={req.id} className="p-4">
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <p className="font-semibold text-sm capitalize">{req.service_type?.replace(/_/g, ' ')} Request</p>
-                      {req.from_address && <p className="text-gray-400 text-xs">From: {req.from_address}</p>}
-                      {req.to_address   && <p className="text-gray-400 text-xs">To: {req.to_address}</p>}
-                      {req.move_date    && (
-                        <p className="text-orange-400 text-xs font-semibold">
-                          {new Date(req.move_date).toLocaleDateString('en-ZA', { month: 'long', day: 'numeric' })}
+              ) : requests.map(req => {
+                const clientName = req.details?.first_name || 'A client'
+                return (
+                  <div key={req.id} className="p-4">
+                    {/* Lead summary */}
+                    <div className="bg-gray-700 rounded-xl p-3 mb-3">
+                      <p className="text-sm font-semibold text-orange-400 mb-1">
+                        {clientName} needs a {req.service_type?.replace(/_/g, ' ')}
+                      </p>
+                      {req.to_address && (
+                        <p className="text-gray-300 text-xs">📍 Near {req.to_address}</p>
+                      )}
+                      {req.move_date && (
+                        <p className="text-gray-300 text-xs mt-0.5">
+                          📅 {new Date(req.move_date).toLocaleDateString('en-ZA', { month: 'long', day: 'numeric', year: 'numeric' })}
                         </p>
                       )}
+                      <p className="text-gray-500 text-xs mt-2">
+                        🔒 Full address shared after quote accepted
+                      </p>
                     </div>
-                    <span className="text-xs text-gray-500">
-                      {new Date(req.created_at).toLocaleDateString('en-ZA', { month: 'short', day: 'numeric' })}
-                    </span>
+
+                    {/* Quote amount */}
+                    <div className="space-y-2">
+                      <input type="number" placeholder="Quote amount (R)"
+                        value={quoteAmounts[req.id] || ''}
+                        onChange={e => setQuoteAmounts(prev => ({ ...prev, [req.id]: e.target.value }))}
+                        className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
+
+                      <textarea placeholder="Notes for the client (optional)"
+                        value={quoteNotes[req.id] || ''}
+                        onChange={e => setQuoteNotes(prev => ({ ...prev, [req.id]: e.target.value }))}
+                        rows={2}
+                        className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500 resize-none"/>
+
+                      {/* PDF upload */}
+                      <div className="flex items-center gap-2">
+                        <label className="flex-1 cursor-pointer bg-gray-700 hover:bg-gray-600 border border-gray-600 border-dashed text-sm text-gray-400 px-3 py-2 rounded-lg transition text-center">
+                          {quoteFiles[req.id] ? `📄 ${quoteFiles[req.id].name}` : '📎 Attach PDF quote (optional)'}
+                          <input type="file" accept=".pdf" className="hidden"
+                            onChange={e => {
+                              const f = e.target.files?.[0]
+                              if (f) setQuoteFiles(prev => ({ ...prev, [req.id]: f }))
+                            }}/>
+                        </label>
+                      </div>
+
+                      <button onClick={() => submitQuote(req.id)}
+                        disabled={!quoteAmounts[req.id] || submitting === req.id}
+                        className="w-full bg-green-600 hover:bg-green-500 text-white font-bold px-3 py-2 rounded-lg text-sm disabled:opacity-50 transition">
+                        {submitting === req.id ? 'Sending...' : 'Send Quote →'}
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex gap-2 mt-2">
-                    <input type="number" placeholder="Quote amount (R)"
-                      value={quoteAmounts[req.id] || ''}
-                      onChange={e => setQuoteAmounts(prev => ({ ...prev, [req.id]: e.target.value }))}
-                      className="flex-1 bg-gray-700 text-white rounded-lg px-3 py-1.5 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
-                    <button onClick={() => submitQuote(req.id)} disabled={!quoteAmounts[req.id]}
-                      className="bg-green-600 hover:bg-green-500 text-white font-bold px-3 py-1.5 rounded-lg text-sm disabled:opacity-50">
-                      Quote
-                    </button>
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         </div>
 
+        {/* Past quotes */}
         {quotes.length > 0 && (
           <div className="mt-6 bg-gray-800 border border-gray-700 rounded-2xl overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-700">
-              <p className="font-bold">My Quotes</p>
+              <p className="font-bold">📋 My Quotes</p>
             </div>
             <div className="divide-y divide-gray-700">
               {quotes.slice(0, 10).map(q => (
-                <div key={q.id} className="px-5 py-3 flex justify-between items-center">
+                <div key={q.id} className="px-5 py-3 flex justify-between items-center gap-4">
                   <div>
                     <p className="text-sm font-semibold capitalize">{q.move_quote_requests?.service_type?.replace(/_/g, ' ')}</p>
                     <p className="text-xs text-gray-400">{new Date(q.created_at).toLocaleDateString('en-ZA')}</p>
+                    {/* Show full address only if accepted */}
+                    {q.status === 'accepted' && q.move_quote_requests?.to_address_full && (
+                      <p className="text-xs text-green-400 mt-0.5">📍 {q.move_quote_requests.to_address_full}</p>
+                    )}
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    {q.pdf_url && (
+                      <a href={q.pdf_url} target="_blank" rel="noopener noreferrer"
+                        className="text-orange-400 hover:text-orange-300 text-xs">📄 PDF</a>
+                    )}
                     <span className="font-bold text-orange-400">R{q.amount?.toLocaleString()}</span>
                     <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${
                       q.status === 'accepted' ? 'bg-green-800 text-green-300' :
-                      q.status === 'rejected' ? 'bg-red-900 text-red-400' :
+                      q.status === 'declined' ? 'bg-red-900 text-red-400' :
                       'bg-gray-700 text-gray-400'
                     }`}>{q.status}</span>
                   </div>
