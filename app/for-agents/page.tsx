@@ -70,7 +70,7 @@ export default function ForAgentsPage() {
               </div>
               <p className="text-gray-400 mb-4">Have existing listings? Export them to a simple spreadsheet and upload them all at once. Our AI automatically writes professional descriptions for every property. You just review and go live in minutes.</p>
               <div className="flex flex-wrap gap-2">
-                {['Export from any portal', 'Upload spreadsheet', 'AI writes descriptions', 'Review and publish'].map((step, i) => (
+                {['Export your listings', 'Upload spreadsheet', 'AI writes descriptions', 'Review and publish'].map((step, i) => (
                   <div key={i} className="flex items-center gap-2 bg-gray-700 px-3 py-1.5 rounded-lg text-sm">
                     <span className="text-orange-500 font-bold">{i + 1}</span>
                     <span className="text-gray-300">{step}</span>
@@ -134,9 +134,9 @@ export default function ForAgentsPage() {
           <h2 className="text-3xl font-bold text-center mb-10">Simple, Transparent Pricing</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             {[
-              { name: 'Starter', listings: '1-10', price: 'R800' },
-              { name: 'Growth', listings: '11-30', price: 'R1,500' },
-              { name: 'Pro', listings: '31-50', price: 'R2,500', popular: true },
+              { name: 'Starter', listings: '10 credits', price: 'R850' },
+              { name: 'Growth', listings: '30 credits', price: 'R2,100' },
+              { name: 'Pro', listings: '50 credits', price: 'R2,750', popular: true },
               { name: 'Agency', listings: '51-100', price: 'R4,000' },
             ].map(plan => (
               <div key={plan.name} className={`bg-gray-700 rounded-xl p-5 text-center border ${plan.popular ? 'border-orange-500' : 'border-gray-600'}`}>
@@ -185,8 +185,8 @@ export default function ForAgentsPage() {
         <div className="flex justify-center gap-6 flex-wrap">
           <Link href="/how-it-works" className="hover:text-white">How It Works</Link>
           <Link href="/pricing" className="hover:text-white">Pricing</Link>
-          <Link href="/terms" className="hover:text-white">Terms</Link>
-          <Link href="/privacy" className="hover:text-white">Privacy</Link>
+          <Link href="/terms" className="hover:text-white">Terms of Service</Link>
+          <Link href="/privacy" className="hover:text-white">Privacy Policy</Link>
           <Link href="/contact" className="hover:text-white">Contact</Link>
         </div>
         <p className="mt-3">© 2026 PropertyAIgency. All rights reserved.</p>
