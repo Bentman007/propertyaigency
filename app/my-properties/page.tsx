@@ -1,5 +1,6 @@
 'use client'
 import BuyerQuotes from '@/components/BuyerQuotes'
+import MarketplaceNudge from '@/components/MarketplaceNudge'
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -149,6 +150,9 @@ export default function MyPropertiesPage() {
             <p className="text-yellow-500 text-xs mt-1">View →</p>
           </div>
         </div>
+
+        {/* Marketplace nudge */}
+        {user && <MarketplaceNudge userId={user.id} />}
 
         {/* AI Search CTA */}
         <div className="bg-gradient-to-r from-orange-900 to-gray-800 rounded-2xl p-6 border border-orange-700 mb-8">

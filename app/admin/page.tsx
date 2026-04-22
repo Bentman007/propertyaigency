@@ -390,6 +390,7 @@ export default function AdminPage() {
                   </div>
                 ))}
               </div>
+              <a href="/admin/suppliers" className="block w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2.5 rounded-xl text-center text-sm transition mb-2">Supplier Management</a>
               <a href="/admin/feedback" className="block w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-2.5 rounded-xl text-center text-sm transition">
                 View All Feedback →
               </a>

@@ -178,9 +178,10 @@ export default function DashboardPage() {
     await supabase.from('properties').update({ status }).eq('id', propertyId)
     setProperties(prev => prev.map(p => p.id === propertyId ? { ...p, status } : p))
 
-    // Notify saved buyers if sold or rented
     if (status === 'sold') {
       const property = properties.find(p => p.id === propertyId)
+
+      // Notify all saved buyers
       const { data: saved } = await supabase
         .from('saved_properties')
         .select('user_id')
@@ -199,6 +200,48 @@ export default function DashboardPage() {
             })
           })
         }
+      }
+
+      // Find the buyer with a confirmed viewing — nudge them to the marketplace
+      const { data: bookings } = await supabase
+        .from('viewing_bookings')
+        .select('searcher_id')
+        .eq('property_id', propertyId)
+        .eq('status', 'confirmed')
+        .order('created_at', { ascending: false })
+        .limit(1)
+
+      if (bookings && bookings.length > 0) {
+        const buyerId = bookings[0].searcher_id
+
+        // Unlock moving services for this buyer
+        await supabase
+          .from('profiles')
+          .update({ has_moving_access: true })
+          .eq('id', buyerId)
+
+        // Congratulations push notification
+        await fetch('/api/push', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: buyerId,
+            title: '🎉 Congratulations on your new home!',
+            body: 'Your offer has been accepted! We have unlocked Moving Services for you — get quotes from trusted suppliers in your area.',
+            url: '/moving'
+          })
+        })
+
+        // Drop a message into their AI Concierge
+        await fetch('/api/marketplace-nudge', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: buyerId,
+            property_title: property?.title,
+            property_address: `${property?.suburb}, ${property?.city}`,
+          })
+        })
       }
     }
   }
