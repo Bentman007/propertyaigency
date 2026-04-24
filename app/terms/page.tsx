@@ -2,12 +2,12 @@ import Link from 'next/link'
 
 export default function TermsPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
-      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
+    <main className="min-h-screen bg-amber-50 text-stone-900">
+      <nav className="bg-stone-700 border-b border-stone-600 px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">
           Property<span className="text-orange-500">AI</span>gency
         </Link>
-        <Link href="/" className="text-stone-500 hover:text-stone-900 text-sm">← Back to Home</Link>
+        <Link href="/" className="text-stone-300 hover:text-white text-sm">← Back to Home</Link>
       </nav>
 
       <div className="max-w-3xl mx-auto px-6 py-12">
@@ -141,7 +141,7 @@ export default function TermsPage() {
         </div>
       </div>
 
-      <footer className="border-t border-stone-200 px-6 py-8 text-center text-stone-400 text-sm">
+      <footer className="border-t border-stone-300 px-6 py-8 text-center text-stone-500 bg-stone-100 text-sm">
         <div className="flex justify-center gap-6">
           <Link href="/how-it-works" className="hover:text-stone-900">How It Works</Link>
           <Link href="/terms" className="hover:text-stone-900">Terms of Service</Link>

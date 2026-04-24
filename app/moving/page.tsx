@@ -211,10 +211,10 @@ export default function MovingServicesPage() {
   )
 
   if (!user) return (
-    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
-      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
+    <main className="min-h-screen bg-amber-50 text-stone-900">
+      <nav className="bg-stone-700 border-b border-stone-600 px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
-        <Link href="/" className="text-stone-500 hover:text-stone-900 text-sm">← Back to Home</Link>
+        <Link href="/" className="text-stone-300 hover:text-white text-sm">← Back to Home</Link>
       </nav>
       <div className="flex items-center justify-center min-h-[80vh] px-6">
         <div className="text-center">
@@ -231,10 +231,10 @@ export default function MovingServicesPage() {
   )
 
   if (!hasAccess) return (
-    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
-      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
+    <main className="min-h-screen bg-amber-50 text-stone-900">
+      <nav className="bg-stone-700 border-b border-stone-600 px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
-        <Link href="/my-properties" className="text-stone-500 hover:text-stone-900 text-sm">← My Dashboard</Link>
+        <Link href="/my-properties" className="text-stone-300 hover:text-white text-sm">← My Dashboard</Link>
       </nav>
       <div className="max-w-xl mx-auto px-6 py-12">
         <div className="text-center mb-8">
@@ -290,10 +290,10 @@ export default function MovingServicesPage() {
   )
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
-      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
+    <main className="min-h-screen bg-amber-50 text-stone-900">
+      <nav className="bg-stone-700 border-b border-stone-600 px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
-        <Link href="/my-properties" className="text-stone-500 hover:text-stone-900 text-sm">← My Dashboard</Link>
+        <Link href="/my-properties" className="text-stone-300 hover:text-white text-sm">← My Dashboard</Link>
       </nav>
 
       <div className="max-w-3xl mx-auto px-6 py-12">
@@ -349,7 +349,7 @@ export default function MovingServicesPage() {
         {step === 2 && (
           <div className="bg-white border border-stone-300 rounded-2xl p-8 space-y-4">
             <div className="flex items-center gap-3 mb-2">
-              <button onClick={() => setStep(1)} className="text-stone-500 hover:text-stone-900">←</button>
+              <button onClick={() => setStep(1)} className="text-stone-300 hover:text-white">←</button>
               <h2 className="text-xl font-bold">Your Details</h2>
             </div>
 
@@ -357,13 +357,13 @@ export default function MovingServicesPage() {
               <div>
                 <label className="text-stone-500 text-sm mb-1 block">First Name</label>
                 <input value={form.first_name} onChange={e => setForm(p => ({ ...p, first_name: e.target.value }))}
-                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+                  className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                   placeholder="Amy"/>
               </div>
               <div>
                 <label className="text-stone-500 text-sm mb-1 block">Last Name</label>
                 <input value={form.last_name} onChange={e => setForm(p => ({ ...p, last_name: e.target.value }))}
-                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+                  className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                   placeholder="Smith"/>
               </div>
             </div>
@@ -372,14 +372,14 @@ export default function MovingServicesPage() {
               <label className="text-stone-500 text-sm mb-1 block">Moving from</label>
               <input id="from-address" value={form.from_address}
                 onChange={e => setForm(p => ({ ...p, from_address: e.target.value }))}
-                className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+                className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                 placeholder="Current address..."/>
             </div>
             <div>
               <label className="text-stone-500 text-sm mb-1 block">Moving to</label>
               <input id="to-address" value={form.to_address}
                 onChange={e => setForm(p => ({ ...p, to_address: e.target.value }))}
-                className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+                className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                 placeholder="New address..."/>
             </div>
             <div>
@@ -387,10 +387,10 @@ export default function MovingServicesPage() {
               <input type="date" value={form.move_date}
                 onChange={e => setForm(p => ({ ...p, move_date: e.target.value }))}
                 min={new Date(Date.now() + 86400000).toISOString().split('T')[0]}
-                className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"/>
+                className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"/>
             </div>
 
-            <div className="bg-stone-100 rounded-xl p-3 text-xs text-stone-500">
+            <div className="bg-amber-50 rounded-xl p-3 text-xs text-stone-500">
               🔒 For your security, suppliers only see your suburb until you accept a quote. Your full address is shared only after you approve.
             </div>
 
@@ -405,7 +405,7 @@ export default function MovingServicesPage() {
         {step === 3 && (
           <div>
             <div className="flex items-center gap-3 mb-6">
-              <button onClick={() => setStep(2)} className="text-stone-500 hover:text-stone-900">←</button>
+              <button onClick={() => setStep(2)} className="text-stone-300 hover:text-white">←</button>
               <div>
                 <h2 className="text-xl font-bold">Choose Your Suppliers</h2>
                 <p className="text-stone-500 text-sm">Select up to 3 for: {SERVICES.find(s => s.value === selectedServices[0])?.label}</p>

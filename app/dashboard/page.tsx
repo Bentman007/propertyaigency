@@ -307,7 +307,7 @@ export default function DashboardPage() {
   )
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
+    <main className="min-h-screen bg-amber-50 text-stone-900">
       {/* Header */}
       <nav className="bg-white border-b border-stone-300 px-4 md:px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">
@@ -320,12 +320,12 @@ export default function DashboardPage() {
           <Link href="/bulk-upload" className="bg-stone-100 text-stone-900 px-4 py-2 rounded-lg font-semibold hover:bg-stone-200 text-sm">
             📦 Bulk Upload
           </Link>
-          <Link href="/profile" className="text-stone-500 hover:text-stone-900 text-sm">
+          <Link href="/profile" className="text-stone-300 hover:text-white text-sm">
             👤 Profile
           </Link>
           <button 
             onClick={() => supabase.auth.signOut().then(() => window.location.href = '/')}
-            className="text-stone-500 hover:text-stone-900 text-sm"
+            className="text-stone-300 hover:text-white text-sm"
           >
             Sign Out
           </button>
@@ -463,7 +463,7 @@ export default function DashboardPage() {
                         </button>
                         <button onClick={() => initiateDelete(property.id)}
                           disabled={deletingId === property.id}
-                          className="text-sm bg-stone-100 hover:bg-red-700 text-stone-500 hover:text-stone-900 px-3 py-1.5 rounded-lg transition">
+                          className="text-sm bg-stone-100 hover:bg-red-700 text-stone-300 hover:text-white px-3 py-1.5 rounded-lg transition">
                           🗑️ Delete
                         </button>
                         {property.status !== 'active' && (
@@ -563,7 +563,7 @@ export default function DashboardPage() {
                 onChange={e => setCustomReason(e.target.value)}
                 placeholder="Please tell us more..."
                 rows={2}
-                className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500 mb-4"/>
+                className="w-full bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500 mb-4"/>
             )}
 
             <div className="flex gap-3">

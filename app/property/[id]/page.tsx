@@ -47,14 +47,14 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
   })).filter(group => group.items.length > 0)
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
+    <main className="min-h-screen bg-amber-50 text-stone-900">
       <ViewTracker propertyId={p.id} />
 
       {/* Nav */}
-      <nav className="bg-stone-100 border-b border-stone-200 px-4 md:px-6 py-4 flex justify-between items-center">
+      <nav className="bg-stone-700 border-b border-stone-600 px-4 md:px-6 py-4 flex justify-between items-center">
         <a href="/" className="text-xl md:text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</a>
         <div className="flex items-center gap-2 md:gap-3">
-          <a href="/dashboard" className="text-stone-500 hover:text-stone-900 text-sm hidden md:block">← Dashboard</a>
+          <a href="/dashboard" className="text-stone-300 hover:text-white text-sm hidden md:block">← Dashboard</a>
           <EditListingButton propertyId={p.id} agentId={p.user_id} />
         </div>
       </nav>

@@ -264,10 +264,10 @@ function ListPropertyInner() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
-      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
+    <main className="min-h-screen bg-amber-50 text-stone-900">
+      <nav className="bg-stone-700 border-b border-stone-600 px-6 py-4 flex justify-between items-center">
         <a href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</a>
-        <a href="/dashboard" className="text-stone-500 hover:text-stone-900 text-sm">← Back to Dashboard</a>
+        <a href="/dashboard" className="text-stone-300 hover:text-white text-sm">← Back to Dashboard</a>
       </nav>
 
       <div className="max-w-3xl mx-auto px-6 py-12">
@@ -320,7 +320,7 @@ function ListPropertyInner() {
               <div>
                 <label className="text-stone-700 text-sm mb-1 block">Listing Type</label>
                 <select value={form.price_type} onChange={e => update('price_type', e.target.value)}
-                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500">
+                  className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500">
                   <option value="sale">For Sale</option>
                   <option value="rent">To Rent</option>
                 </select>
@@ -328,7 +328,7 @@ function ListPropertyInner() {
               <div>
                 <label className="text-stone-700 text-sm mb-1 block">Property Type</label>
                 <select value={form.property_type} onChange={e => update('property_type', e.target.value)}
-                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500">
+                  className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500">
                   <option value="house">House</option>
                   <option value="apartment">Apartment</option>
                   <option value="townhouse">Townhouse</option>
@@ -341,14 +341,14 @@ function ListPropertyInner() {
                 <div key={field}>
                   <label className="text-stone-700 text-sm mb-1 block">{label}</label>
                   <input value={(form as any)[field]} onChange={e => update(field, e.target.value)}
-                    type="number" className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+                    type="number" className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                     placeholder={ph} required />
                 </div>
               ))}
               <div>
                 <label className="text-stone-700 text-sm mb-1 block">Size (m²) <span className="text-stone-400 text-xs">(optional)</span></label>
                 <input value={(form as any)['size_sqm']} onChange={e => update('size_sqm', e.target.value)}
-                  type="number" className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+                  type="number" className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                   placeholder="250" />
               </div>
             </div>
@@ -365,7 +365,7 @@ function ListPropertyInner() {
             <div className="mt-5 border-t border-stone-300 pt-4">
               <label className="text-stone-700 text-sm mb-1 block">Additional Features <span className="text-stone-400 text-xs">(e.g. Inverter, Borehole pump, Staff bathroom)</span></label>
               <input value={(form as any)['custom_features'] || ''} onChange={e => update('custom_features', e.target.value)}
-                className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+                className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                 placeholder="Type any features not listed above, separated by commas" />
             </div>
           </div>
@@ -383,13 +383,13 @@ function ListPropertyInner() {
               <div>
                 <label className="text-stone-700 text-sm mb-1 block">Property Title</label>
                 <input value={form.title} onChange={e => update('title', e.target.value)}
-                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+                  className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                   placeholder="AI will generate this — or type your own" required />
               </div>
               <div>
                 <label className="text-stone-700 text-sm mb-1 block">Description</label>
                 <textarea value={form.description} onChange={e => update('description', e.target.value)}
-                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500 h-32"
+                  className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500 h-32"
                   placeholder="AI will generate this — or write your own" />
               </div>
             </div>
@@ -400,7 +400,7 @@ function ListPropertyInner() {
             <p className="text-stone-500 text-sm mb-4">Enter your price or use AI to get a market estimate first</p>
             <div className="flex gap-2 mb-3">
               <input value={form.price} onChange={e => update('price', e.target.value)}
-                type="number" className="flex-1 bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+                type="number" className="flex-1 bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                 placeholder={form.price_type === 'rent' ? 'Monthly rent e.g. 15000' : 'Asking price e.g. 2500000'} required />
               <button type="button" onClick={getValuation}
                 disabled={valuationLoading || !form.suburb || !form.bedrooms}
@@ -478,13 +478,13 @@ function ListPropertyInner() {
                 <input type="date" value={(form as any)['available_from'] || ''}
                   onChange={e => update('available_from', e.target.value)}
                   min={new Date().toISOString().split('T')[0]}
-                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500" />
+                  className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500" />
               </div>
               <div>
                 <label className="text-stone-700 text-sm mb-1 block">Minimum Lease</label>
                 <select value={(form as any)['lease_term'] || ''}
                   onChange={e => update('lease_term', e.target.value)}
-                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500">
+                  className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500">
                   <option value="">Not specified</option>
                   <option value="month_to_month">Month to month</option>
                   <option value="6_months">6 months</option>
@@ -496,7 +496,7 @@ function ListPropertyInner() {
                 <label className="text-stone-700 text-sm mb-1 block">Deposit Required</label>
                 <select value={(form as any)['deposit_months'] || ''}
                   onChange={e => update('deposit_months', e.target.value)}
-                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500">
+                  className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500">
                   <option value="">Not specified</option>
                   <option value="1">1 month deposit</option>
                   <option value="2">2 months deposit</option>
@@ -507,7 +507,7 @@ function ListPropertyInner() {
                 <label className="text-stone-700 text-sm mb-1 block">Pets Allowed</label>
                 <select value={(form as any)['pets_allowed'] || ''}
                   onChange={e => update('pets_allowed', e.target.value)}
-                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500">
+                  className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500">
                   <option value="">Not specified</option>
                   <option value="yes">Yes — pets welcome</option>
                   <option value="negotiable">Negotiable</option>

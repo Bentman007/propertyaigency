@@ -86,10 +86,10 @@ export default function BookingsCalendar({ agentId }: { agentId: string }) {
       {/* Calendar navigation */}
       <div className="flex items-center justify-between mb-4">
         <button onClick={() => setCurrentMonth(new Date(year, month - 1))}
-          className="text-stone-500 hover:text-stone-900 px-2 py-1 rounded">‹</button>
+          className="text-stone-300 hover:text-white px-2 py-1 rounded">‹</button>
         <p className="font-semibold">{monthName}</p>
         <button onClick={() => setCurrentMonth(new Date(year, month + 1))}
-          className="text-stone-500 hover:text-stone-900 px-2 py-1 rounded">›</button>
+          className="text-stone-300 hover:text-white px-2 py-1 rounded">›</button>
       </div>
 
       {/* Day headers */}
@@ -156,7 +156,7 @@ export default function BookingsCalendar({ agentId }: { agentId: string }) {
           ) : (
             <div className="space-y-3">
               {selectedBookings.map(booking => (
-                <div key={booking.id} className="bg-stone-100 rounded-xl p-4">
+                <div key={booking.id} className="bg-amber-50 rounded-xl p-4">
                   <div className="flex justify-between items-start mb-2">
                     <div>
                       <p className="font-semibold text-sm">{booking.properties?.title}</p>

@@ -132,10 +132,10 @@ export default function EditListing() {
   )
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
+    <main className="min-h-screen bg-amber-50 text-stone-900">
       <nav className="bg-white border-b border-stone-300 px-6 py-4 flex justify-between items-center">
         <a href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</a>
-        <a href="/dashboard" className="text-stone-500 hover:text-stone-900 text-sm">← Back to Dashboard</a>
+        <a href="/dashboard" className="text-stone-300 hover:text-white text-sm">← Back to Dashboard</a>
       </nav>
 
       <div className="max-w-2xl mx-auto px-6 py-10 space-y-6">
@@ -151,7 +151,7 @@ export default function EditListing() {
         <div className="bg-white rounded-xl p-6 border border-stone-300 space-y-4">
           <h2 className="text-lg font-bold text-orange-500">Property Title</h2>
           <input value={form.title} onChange={e => update('title', e.target.value)}
-            className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+            className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
             placeholder="Property title"/>
         </div>
 
@@ -165,22 +165,22 @@ export default function EditListing() {
                 <div>
                   <label className="text-stone-500 text-xs mb-1 block">Street Address</label>
                   <input value={form.address} onChange={e => update('address', e.target.value)}
-                    className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
+                    className="w-full bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
                 </div>
                 <div>
                   <label className="text-stone-500 text-xs mb-1 block">Suburb</label>
                   <input value={form.suburb} onChange={e => update('suburb', e.target.value)}
-                    className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
+                    className="w-full bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
                 </div>
                 <div>
                   <label className="text-stone-500 text-xs mb-1 block">City</label>
                   <input value={form.city} onChange={e => update('city', e.target.value)}
-                    className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
+                    className="w-full bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
                 </div>
                 <div>
                   <label className="text-stone-500 text-xs mb-1 block">Province</label>
                   <input value={form.province} onChange={e => update('province', e.target.value)}
-                    className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
+                    className="w-full bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
                 </div>
               </div>
             )}
@@ -189,25 +189,25 @@ export default function EditListing() {
                 <div>
                   <label className="text-stone-500 text-xs mb-1 block">Street Address</label>
                   <input value={form.address} onChange={e => update('address', e.target.value)}
-                    className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"
+                    className="w-full bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"
                     placeholder="Street address"/>
                 </div>
                 <div>
                   <label className="text-stone-500 text-xs mb-1 block">Suburb</label>
                   <input value={form.suburb} onChange={e => update('suburb', e.target.value)}
-                    className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"
+                    className="w-full bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"
                     placeholder="Suburb"/>
                 </div>
                 <div>
                   <label className="text-stone-500 text-xs mb-1 block">City</label>
                   <input value={form.city} onChange={e => update('city', e.target.value)}
-                    className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"
+                    className="w-full bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"
                     placeholder="City"/>
                 </div>
                 <div>
                   <label className="text-stone-500 text-xs mb-1 block">Province</label>
                   <input value={form.province} onChange={e => update('province', e.target.value)}
-                    className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"
+                    className="w-full bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"
                     placeholder="Province"/>
                 </div>
               </div>
@@ -220,10 +220,10 @@ export default function EditListing() {
           <h2 className="text-lg font-bold text-orange-500">Price</h2>
           <div className="flex gap-3">
             <input value={form.price} onChange={e => update('price', e.target.value)}
-              className="flex-1 bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+              className="flex-1 bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
               placeholder="Price" type="number"/>
             <select value={form.price_type} onChange={e => update('price_type', e.target.value)}
-              className="bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500">
+              className="bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500">
               <option value="sale">For Sale</option>
               <option value="rent">To Rent</option>
             </select>
@@ -237,25 +237,25 @@ export default function EditListing() {
             <div>
               <label className="text-stone-500 text-sm mb-1 block">Bedrooms</label>
               <input value={form.bedrooms} onChange={e => update('bedrooms', e.target.value)}
-                className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+                className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                 type="number" placeholder="Bedrooms"/>
             </div>
             <div>
               <label className="text-stone-500 text-sm mb-1 block">Bathrooms</label>
               <input value={form.bathrooms} onChange={e => update('bathrooms', e.target.value)}
-                className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+                className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                 type="number" placeholder="Bathrooms"/>
             </div>
             <div>
               <label className="text-stone-500 text-sm mb-1 block">Garages</label>
               <input value={form.garages} onChange={e => update('garages', e.target.value)}
-                className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+                className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                 type="number" placeholder="Garages"/>
             </div>
             <div>
               <label className="text-stone-500 text-sm mb-1 block">Size (m²)</label>
               <input value={form.size_sqm} onChange={e => update('size_sqm', e.target.value)}
-                className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+                className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                 type="number" placeholder="Size in m²"/>
             </div>
           </div>
@@ -266,7 +266,7 @@ export default function EditListing() {
           <h2 className="text-lg font-bold text-orange-500">Description</h2>
           <textarea value={form.description} onChange={e => update('description', e.target.value)}
             rows={6}
-            className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+            className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
             placeholder="Property description"/>
         </div>
 

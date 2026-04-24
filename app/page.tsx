@@ -99,8 +99,8 @@ export default function Home() {
     `R ${price?.toLocaleString()}${type === 'rent' ? '/mo' : ''}`
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
-      <nav className="bg-white border-b border-stone-300 px-4 md:px-6 py-4 flex justify-between items-center">
+    <main className="min-h-screen bg-amber-50 text-stone-900">
+      <nav className="bg-stone-700 border-b border-stone-600 px-4 md:px-6 py-4 flex justify-between items-center">
         <div className="text-xl md:text-2xl font-bold flex-shrink-0">
           Property<span className="text-orange-500">AI</span>gency
         </div>
@@ -121,7 +121,7 @@ export default function Home() {
               <span className="hidden md:inline">My Dashboard</span>
               <span className="md:hidden">🏠</span>
             </Link>
-            <button onClick={() => supabase.auth.signOut().then(() => setUser(null))} className="text-stone-500 hover:text-stone-900 text-sm">
+            <button onClick={() => supabase.auth.signOut().then(() => setUser(null))} className="text-stone-300 hover:text-white text-sm">
               Sign Out
             </button>
           </div>
@@ -134,7 +134,7 @@ export default function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="text-center py-24 px-6 bg-gradient-to-b from-stone-200 to-stone-50">
+      <section className="text-center py-24 px-6 bg-gradient-to-b from-stone-300 to-amber-50">
         <h1 className="text-6xl font-bold mb-4">Find Your Perfect <span className="text-orange-500">Property</span></h1>
         <p className="text-stone-500 text-xl mb-8">South Africa's smartest AI-powered property platform</p>
         <div className="flex flex-col items-center gap-4">
@@ -246,7 +246,7 @@ export default function Home() {
 
       
       <MobileBanner />
-      <footer className="border-t border-stone-200 px-6 py-8 mt-12 text-center text-stone-400 text-sm">
+      <footer className="border-t border-stone-300 px-6 py-8 bg-stone-100 mt-12 text-center text-stone-400 text-sm">
         <div className="flex justify-center gap-6">
           <a href="/terms" className="hover:text-stone-900">Terms of Service</a>
           <a href="/privacy" className="hover:text-stone-900">Privacy Policy</a>

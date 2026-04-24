@@ -104,7 +104,7 @@ export default function SearchPage() {
   return (
     <main className="h-screen flex flex-col bg-stone-50 text-stone-900 overflow-hidden">
       {/* Nav */}
-      <nav className="bg-stone-100 border-b border-stone-200 px-4 py-3 flex justify-between items-center flex-shrink-0">
+      <nav className="bg-stone-700 border-b border-stone-600 px-4 py-3 flex justify-between items-center flex-shrink-0">
         <Link href="/" className="text-xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
         <div className="flex gap-3 items-center">
           {user && <Link href="/dashboard" className="text-stone-700 hover:text-orange-500 text-sm">My Dashboard</Link>}

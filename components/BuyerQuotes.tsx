@@ -207,7 +207,7 @@ export default function BuyerQuotes({ userId }: { userId: string }) {
                       <p className="font-semibold text-sm mb-3">Alternative suppliers in your area:</p>
                       <div className="space-y-3">
                         {alternatives[req.id].map((sup: any) => (
-                          <div key={sup.id} className="flex items-center justify-between gap-3 bg-stone-100 rounded-xl p-3">
+                          <div key={sup.id} className="flex items-center justify-between gap-3 bg-amber-50 rounded-xl p-3">
                             <div className="flex items-center gap-3">
                               {sup.logo_url
                                 ? <img src={sup.logo_url} alt="" className="w-9 h-9 rounded-lg object-contain bg-stone-200"/>

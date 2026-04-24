@@ -163,7 +163,7 @@ export default function MyListingsPage() {
   const confirmedBookings = bookings.filter(b => b.status === 'confirmed')
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
+    <main className="min-h-screen bg-amber-50 text-stone-900">
       <nav className="bg-white border-b border-stone-300 px-4 md:px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-xl md:text-2xl font-bold">
           Property<span className="text-orange-500">AI</span>gency
@@ -173,7 +173,7 @@ export default function MyListingsPage() {
             + Add Listing
           </Link>
           <button onClick={() => supabase.auth.signOut().then(() => window.location.href = '/')}
-            className="text-stone-500 hover:text-stone-900 text-sm">Sign Out</button>
+            className="text-stone-300 hover:text-white text-sm">Sign Out</button>
         </div>
       </nav>
 
@@ -223,7 +223,7 @@ export default function MyListingsPage() {
                       ✅ Confirm
                     </button>
                     <button onClick={() => confirmBooking(booking.id, 'declined')}
-                      className="flex-1 bg-stone-100 hover:bg-red-700 text-stone-700 hover:text-stone-900 py-2 rounded-lg text-sm transition">
+                      className="flex-1 bg-stone-100 hover:bg-red-700 text-stone-300 hover:text-white py-2 rounded-lg text-sm transition">
                       Decline
                     </button>
                   </div>
@@ -249,7 +249,7 @@ export default function MyListingsPage() {
               {properties.map(property => (
                 <div key={property.id} className="bg-white border border-stone-300 rounded-2xl overflow-hidden">
                   <div className="flex gap-4 p-4">
-                    <div className="w-24 h-24 bg-stone-100 rounded-xl flex-shrink-0 overflow-hidden">
+                    <div className="w-24 h-24 bg-amber-50 rounded-xl flex-shrink-0 overflow-hidden">
                       {property.photos?.[0] ? (
                         <img src={property.photos[0]} alt={property.title} className="w-full h-full object-cover"/>
                       ) : (
@@ -296,7 +296,7 @@ export default function MyListingsPage() {
                     )}
                     <button onClick={() => initiateDelete(property.id)}
                       disabled={deletingId === property.id}
-                      className="text-sm bg-stone-100 hover:bg-red-700 text-stone-500 hover:text-stone-900 px-3 py-1.5 rounded-lg transition">
+                      className="text-sm bg-stone-100 hover:bg-red-700 text-stone-300 hover:text-white px-3 py-1.5 rounded-lg transition">
                       🗑️ Delete
                     </button>
                   </div>
@@ -343,11 +343,11 @@ export default function MyListingsPage() {
                     <div className="flex items-center gap-2 flex-1">
                       <input type="time" value={availability[day].start}
                         onChange={e => updateTime(day, 'start', e.target.value)}
-                        className="bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
+                        className="bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
                       <span className="text-stone-500 text-sm">to</span>
                       <input type="time" value={availability[day].end}
                         onChange={e => updateTime(day, 'end', e.target.value)}
-                        className="bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
+                        className="bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
                     </div>
                   ) : (
                     <span className="text-stone-400 text-sm">Unavailable</span>
@@ -395,7 +395,7 @@ export default function MyListingsPage() {
               <textarea value={customReason} onChange={e => setCustomReason(e.target.value)}
                 placeholder="Please tell us more..."
                 rows={2}
-                className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500 mb-4"/>
+                className="w-full bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500 mb-4"/>
             )}
             <div className="flex gap-3">
               <button onClick={() => { setShowDeleteModal(false); setPendingDeleteId(null) }}

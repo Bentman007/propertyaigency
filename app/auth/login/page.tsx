@@ -38,8 +38,8 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-stone-200 to-stone-50 flex items-center justify-center px-4 relative">
-      <Link href="/" className="absolute top-4 left-6 text-stone-500 hover:text-stone-900 text-sm">← Back to Home</Link>
+    <main className="min-h-screen bg-gradient-to-b from-amber-100 to-amber-50 flex items-center justify-center px-4 relative">
+      <Link href="/" className="absolute top-4 left-6 text-stone-300 hover:text-white text-sm">← Back to Home</Link>
       <div className="bg-white rounded-2xl p-8 w-full max-w-md border border-stone-300">
         <div className="text-center mb-8">
           <Link href="/" className="text-3xl font-bold text-stone-900">
@@ -63,7 +63,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+              className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
             />
           </div>
           <div>
@@ -74,7 +74,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+              className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
             />
             <div className="text-right mt-1">
               <Link href="/auth/forgot-password" className="text-orange-500 hover:underline text-sm">

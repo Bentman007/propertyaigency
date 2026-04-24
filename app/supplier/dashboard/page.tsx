@@ -163,7 +163,7 @@ export default function SupplierDashboard() {
   const onTrial = supplier?.subscription_status === 'trial' && trialDaysLeft !== null && trialDaysLeft > 0
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
+    <main className="min-h-screen bg-amber-50 text-stone-900">
       <nav className="bg-white border-b border-stone-300 px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
         <div className="flex items-center gap-4">
@@ -172,7 +172,7 @@ export default function SupplierDashboard() {
           )}
           <span className="text-stone-500 text-sm hidden sm:block">{supplier?.business_name}</span>
           <button onClick={() => supabase.auth.signOut().then(() => window.location.href = '/')}
-            className="text-stone-500 hover:text-stone-900 text-sm">Sign Out</button>
+            className="text-stone-300 hover:text-white text-sm">Sign Out</button>
         </div>
       </nav>
 
@@ -254,7 +254,7 @@ export default function SupplierDashboard() {
               {aiMessages.length === 0 && (
                 <div className="flex gap-3">
                   <div className="w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs flex-shrink-0">AI</div>
-                  <div className="bg-stone-100 rounded-xl px-3 py-2 text-sm text-stone-800">
+                  <div className="bg-amber-50 rounded-xl px-3 py-2 text-sm text-stone-800">
                     Hi! You have {requests.length} new lead{requests.length !== 1 ? 's' : ''} waiting and R{invoiceTotal.toLocaleString()} building on your invoice this month. How can I help?
                   </div>
                 </div>
@@ -264,7 +264,7 @@ export default function SupplierDashboard() {
                   {msg.role === 'assistant' && (
                     <div className="w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs flex-shrink-0">AI</div>
                   )}
-                  <div className={`rounded-xl px-3 py-2 text-sm max-w-xs ${msg.role === 'user' ? 'bg-orange-500 text-black' : 'bg-stone-100 text-stone-800'}`}>
+                  <div className={`rounded-xl px-3 py-2 text-sm max-w-xs ${msg.role === 'user' ? 'bg-orange-500 text-black' : 'bg-amber-50 text-stone-800'}`}>
                     {msg.content}
                   </div>
                 </div>
@@ -272,7 +272,7 @@ export default function SupplierDashboard() {
               {aiLoading && (
                 <div className="flex gap-2">
                   <div className="w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs flex-shrink-0">AI</div>
-                  <div className="bg-stone-100 rounded-xl px-3 py-2 text-sm text-stone-500 animate-pulse">Thinking...</div>
+                  <div className="bg-amber-50 rounded-xl px-3 py-2 text-sm text-stone-500 animate-pulse">Thinking...</div>
                 </div>
               )}
             </div>
@@ -280,7 +280,7 @@ export default function SupplierDashboard() {
               <input value={aiInput} onChange={e => setAiInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && askAI()}
                 placeholder="Ask your Lead AIsistant..."
-                className="flex-1 bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
+                className="flex-1 bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
               <button onClick={askAI} disabled={aiLoading || !aiInput.trim()}
                 className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-4 py-2 rounded-lg text-sm disabled:opacity-50">
                 Send
@@ -308,7 +308,7 @@ export default function SupplierDashboard() {
                 return (
                   <div key={req.id} className="p-4">
                     {/* Lead summary */}
-                    <div className="bg-stone-100 rounded-xl p-3 mb-3">
+                    <div className="bg-amber-50 rounded-xl p-3 mb-3">
                       <p className="text-sm font-semibold text-orange-400 mb-1">
                         {clientName} needs a {req.service_type?.replace(/_/g, ' ')}
                       </p>
@@ -330,13 +330,13 @@ export default function SupplierDashboard() {
                       <input type="number" placeholder="Quote amount (R)"
                         value={quoteAmounts[req.id] || ''}
                         onChange={e => setQuoteAmounts(prev => ({ ...prev, [req.id]: e.target.value }))}
-                        className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
+                        className="w-full bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
 
                       <textarea placeholder="Notes for the client (optional)"
                         value={quoteNotes[req.id] || ''}
                         onChange={e => setQuoteNotes(prev => ({ ...prev, [req.id]: e.target.value }))}
                         rows={2}
-                        className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500 resize-none"/>
+                        className="w-full bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500 resize-none"/>
 
                       {/* PDF upload */}
                       <div className="flex items-center gap-2">

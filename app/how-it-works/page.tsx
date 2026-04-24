@@ -2,13 +2,13 @@ import Link from 'next/link'
 
 export default function HowItWorksPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
-      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
+    <main className="min-h-screen bg-amber-50 text-stone-900">
+      <nav className="bg-stone-700 border-b border-stone-600 px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">
           Property<span className="text-orange-500">AI</span>gency
         </Link>
         <div className="flex gap-4 items-center">
-          <Link href="/pricing" className="text-stone-500 hover:text-stone-900 text-sm">Pricing</Link>
+          <Link href="/pricing" className="text-stone-300 hover:text-white text-sm">Pricing</Link>
           <Link href="/auth/register" className="bg-orange-500 text-black px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-400">
             Get Started Free
           </Link>
@@ -173,7 +173,7 @@ export default function HowItWorksPage() {
                 ].map(item => (
                   <div key={item.step} className="bg-white border border-stone-300 rounded-2xl p-5">
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="w-10 h-10 bg-stone-100 rounded-xl flex items-center justify-center text-xl">{item.icon}</div>
+                      <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center text-xl">{item.icon}</div>
                       <span className="text-green-400 text-xs font-bold">STEP {item.step}</span>
                     </div>
                     <h3 className="font-bold mb-2">{item.title}</h3>
@@ -245,7 +245,7 @@ export default function HowItWorksPage() {
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">See It In Action</h2>
           <p className="text-stone-500 mb-8">Watch how PropertyAIgency transforms the property search experience</p>
-          <div className="bg-stone-100 rounded-2xl aspect-video flex items-center justify-center border border-stone-300">
+          <div className="bg-amber-50 rounded-2xl aspect-video flex items-center justify-center border border-stone-300">
             <div className="text-center">
               <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-black text-2xl">▶</span>
@@ -323,7 +323,7 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      <footer className="border-t border-stone-200 px-6 py-8 text-center text-stone-400 text-sm">
+      <footer className="border-t border-stone-300 px-6 py-8 text-center text-stone-500 bg-stone-100 text-sm">
         <div className="flex justify-center gap-6">
           <Link href="/how-it-works" className="hover:text-stone-900">How It Works</Link>
           <Link href="/terms" className="hover:text-stone-900">Terms of Service</Link>

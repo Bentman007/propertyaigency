@@ -2,13 +2,13 @@ import Link from 'next/link'
 
 export default function ForAgentsPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
-      <nav className="bg-stone-100 border-b border-stone-200 px-4 md:px-6 py-4 flex justify-between items-center">
+    <main className="min-h-screen bg-amber-50 text-stone-900">
+      <nav className="bg-stone-700 border-b border-stone-600 px-4 md:px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-xl md:text-2xl font-bold">
           Property<span className="text-orange-500">AI</span>gency
         </Link>
         <div className="flex gap-3 items-center">
-          <Link href="/pricing" className="text-stone-500 hover:text-stone-900 text-sm hidden md:block">Pricing</Link>
+          <Link href="/pricing" className="text-stone-300 hover:text-white text-sm hidden md:block">Pricing</Link>
           <Link href="/auth/register" className="bg-orange-500 text-black px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-400">
             Start Free Trial
           </Link>
@@ -46,7 +46,7 @@ export default function ForAgentsPage() {
               { icon: '📞', text: 'Playing phone tag to schedule viewings that never happen' },
               { icon: '💸', text: 'Paying huge portal fees with no guarantee of quality leads' },
             ].map((item, i) => (
-              <div key={i} className="bg-stone-100 rounded-xl p-6">
+              <div key={i} className="bg-amber-50 rounded-xl p-6">
                 <p className="text-4xl mb-3">{item.icon}</p>
                 <p className="text-stone-700">{item.text}</p>
               </div>
@@ -81,11 +81,11 @@ export default function ForAgentsPage() {
           </div>
 
           <div className="bg-white border border-stone-300 rounded-2xl p-8 flex flex-col md:flex-row gap-6 items-start">
-            <div className="w-16 h-16 bg-stone-100 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0">🤖</div>
+            <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0">🤖</div>
             <div>
               <h3 className="text-xl font-bold mb-2">AI Qualifies Every Buyer Automatically</h3>
               <p className="text-stone-500 mb-3">Our AI Concierge chats with every buyer and builds their complete profile before they reach you — budget, timeline, must-haves, family situation. You only deal with serious, pre-qualified leads.</p>
-              <div className="bg-stone-100 rounded-xl p-4 text-sm">
+              <div className="bg-amber-50 rounded-xl p-4 text-sm">
                 <p className="text-orange-500 font-semibold mb-2">Example lead brief you receive:</p>
                 <p className="text-stone-700 italic">"Sarah is a warm lead looking to rent before May. Budget R45,000/mo, needs 3+ beds for herself and daughter. Must have garden and security. Viewed your listing 3 times this week."</p>
               </div>
@@ -93,7 +93,7 @@ export default function ForAgentsPage() {
           </div>
 
           <div className="bg-white border border-stone-300 rounded-2xl p-8 flex flex-col md:flex-row gap-6 items-start">
-            <div className="w-16 h-16 bg-stone-100 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0">📅</div>
+            <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0">📅</div>
             <div>
               <h3 className="text-xl font-bold mb-2">Viewings Booked Directly Into Your Diary</h3>
               <p className="text-stone-500 mb-3">Set your availability once. Buyers pick a slot and book instantly. You get a notification, confirm in one tap, and both parties get automatic reminders. Zero phone calls needed.</p>
@@ -113,7 +113,7 @@ export default function ForAgentsPage() {
           </div>
 
           <div className="bg-white border border-stone-300 rounded-2xl p-8 flex flex-col md:flex-row gap-6 items-start">
-            <div className="w-16 h-16 bg-stone-100 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0">🏆</div>
+            <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0">🏆</div>
             <div>
               <h3 className="text-xl font-bold mb-2">Your Personal Property AIsistant</h3>
               <p className="text-stone-500 mb-3">Every agent gets a smart AI inbox that briefs you on every lead, flags hot prospects, alerts you when listings underperform and suggests improvements.</p>
@@ -139,7 +139,7 @@ export default function ForAgentsPage() {
               { name: 'Pro', listings: '50 credits', price: 'R2,750', popular: true },
               { name: 'Agency', listings: '100 credits', price: 'R4,500' },
             ].map(plan => (
-              <div key={plan.name} className={`bg-stone-100 rounded-xl p-5 text-center border ${plan.popular ? 'border-orange-500' : 'border-stone-300'}`}>
+              <div key={plan.name} className={`bg-amber-50 rounded-xl p-5 text-center border ${plan.popular ? 'border-orange-500' : 'border-stone-300'}`}>
                 {plan.popular && <p className="text-orange-500 text-xs font-bold mb-2">BEST VALUE</p>}
                 <p className="font-bold">{plan.name}</p>
                 <p className="text-stone-500 text-xs mb-2">{plan.listings}</p>
@@ -148,7 +148,7 @@ export default function ForAgentsPage() {
               </div>
             ))}
           </div>
-          <div className="bg-stone-100 rounded-xl p-6 text-center">
+          <div className="bg-amber-50 rounded-xl p-6 text-center">
             <p className="font-bold text-lg mb-1">🎉 Start with 2 months completely free</p>
             <p className="text-stone-500 text-sm">No credit card required · Cancel anytime · Full access to all features</p>
           </div>
@@ -181,7 +181,7 @@ export default function ForAgentsPage() {
         <p className="text-stone-400 text-sm mt-4">Questions? <Link href="/contact" className="text-orange-500 hover:underline">Chat with us</Link></p>
       </section>
 
-      <footer className="border-t border-stone-200 px-6 py-8 text-center text-stone-400 text-sm">
+      <footer className="border-t border-stone-300 px-6 py-8 text-center text-stone-500 bg-stone-100 text-sm">
         <div className="flex justify-center gap-6 flex-wrap">
           <Link href="/how-it-works" className="hover:text-stone-900">How It Works</Link>
           <Link href="/pricing" className="hover:text-stone-900">Pricing</Link>

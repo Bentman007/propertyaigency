@@ -141,7 +141,7 @@ export default function PropertyChat({ property }: PropertyChatProps) {
         {loading && (
           <div className="flex justify-start">
             <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs mr-2">AI</div>
-            <div className="bg-stone-100 rounded-2xl rounded-bl-sm px-3 py-2">
+            <div className="bg-amber-50 rounded-2xl rounded-bl-sm px-3 py-2">
               <div className="flex gap-1">
                 <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{animationDelay: '0ms'}}/>
                 <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{animationDelay: '150ms'}}/>
@@ -185,7 +185,7 @@ export default function PropertyChat({ property }: PropertyChatProps) {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
             placeholder="Ask anything about this property..."
-            className="flex-1 bg-stone-100 text-stone-800 rounded-lg px-3 py-2 outline-none border border-stone-300 focus:border-orange-500 text-sm"
+            className="flex-1 bg-amber-50 text-stone-800 rounded-lg px-3 py-2 outline-none border border-stone-300 focus:border-orange-500 text-sm"
           />
           <button onClick={sendMessage} disabled={loading || !input.trim()}
             className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-4 py-2 rounded-lg disabled:opacity-50 text-sm">
