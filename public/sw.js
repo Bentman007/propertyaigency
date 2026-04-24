@@ -1,66 +1,30 @@
-const CACHE_NAME = 'propertyaigency-v2'
-const urlsToCache = [
-  '/',
-  '/search',
-  '/dashboard',
-  '/auth/login'
-]
+const CACHE = 'propertyaigency-v1'
+const OFFLINE_URLS = ['/', '/search', '/auth/login', '/auth/register']
 
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE).then(cache => cache.addAll(OFFLINE_URLS))
   )
   self.skipWaiting()
 })
 
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-    )
-  )
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys().then(keys =>
+    Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+  ))
   self.clients.claim()
 })
 
-self.addEventListener('fetch', event => {
-  // Never cache API calls or POST requests
-  if (event.request.url.includes('/api/') || event.request.method === 'POST') {
-    event.respondWith(fetch(event.request))
-    return
-  }
-  
-  // Only cache GET requests for static assets
-  if (event.request.method === 'GET') {
-    event.respondWith(
-      caches.match(event.request).then(response => response || fetch(event.request))
-    )
-  }
-})
-
-// Push notifications
-self.addEventListener('push', event => {
-  const data = event.data?.json() || {}
-  const options = {
-    body: data.body || 'You have a new notification',
-    icon: '/icon-192.png',
-    badge: '/icon-192.png',
-    vibrate: [100, 50, 100],
-    data: { url: data.url || '/' },
-    actions: [
-      { action: 'open', title: 'View' },
-      { action: 'close', title: 'Dismiss' }
-    ]
-  }
-  event.waitUntil(
-    self.registration.showNotification(data.title || 'PropertyAIgency', options)
+self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET') return
+  if (e.request.url.includes('/api/')) return
+  e.respondWith(
+    fetch(e.request)
+      .then(res => {
+        const clone = res.clone()
+        caches.open(CACHE).then(cache => cache.put(e.request, clone))
+        return res
+      })
+      .catch(() => caches.match(e.request).then(cached => cached || caches.match('/')))
   )
-})
-
-self.addEventListener('notificationclick', event => {
-  event.notification.close()
-  if (event.action === 'open' || !event.action) {
-    event.waitUntil(
-      clients.openWindow(event.notification.data.url || '/')
-    )
-  }
 })

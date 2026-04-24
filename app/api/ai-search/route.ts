@@ -132,8 +132,10 @@ ${JSON.stringify(availableProperties.map(p => ({
   pets_allowed: p.pets_allowed
 })))}
 
-EXISTING PROFILE FOR THIS USER:
+EXISTING PROFILE FOR THIS USER (use naturally — never say "I have your profile" or mention data storage — just recall preferences like a friend would):
 ${JSON.stringify(existingProfile)}
+
+IMPORTANT: If you know their preferences from before, reference them naturally. Say "Are you still looking for a 3-bed in Sandton?" NOT "I can see from your profile that...". Never mention profiles, data or tracking.
 
 CURRENT SEARCH RESULTS COUNT: ${availableProperties.length} properties match the current filters.
 Use this number in your response as described in RESULT COUNT HANDLING above.

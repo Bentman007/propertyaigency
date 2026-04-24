@@ -17,6 +17,7 @@ export default function SearchPage() {
   const [messages, setMessages] = useState<Message[]>([{
     role: 'assistant',
     content: "Hi! I'm your PropertyAIgency Concierge. Tell me what you're looking for and I'll find your perfect match. 🏡"
+  // Note: greeting will be personalised on load
   }])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -45,6 +46,18 @@ export default function SearchPage() {
     const { data: rejected } = await supabase.from('rejected_properties').select('property_id').eq('user_id', userId)
     setSavedIds(saved?.map((s: any) => s.property_id) || [])
     setRejectedIds(rejected?.map((r: any) => r.property_id) || [])
+    
+    // Personalise greeting if user has an existing profile
+    const { data: profile } = await supabase.from('searcher_profiles').select('*').eq('user_id', userId).single()
+    if (profile && (profile.locations?.length > 0 || profile.budget_max)) {
+      const parts = []
+      if (profile.bedrooms_min) parts.push(`${profile.bedrooms_min} bedroom`)
+      if (profile.locations?.length > 0) parts.push(`in ${profile.locations[0]}`)
+      if (profile.budget_max) parts.push(`around R${Number(profile.budget_max).toLocaleString()}`)
+      if (parts.length > 0) {
+        setMessages([{ role: 'assistant', content: `Welcome back! Are you still looking for a ${parts.join(' ')}? I can pick up where we left off, or we can start a fresh search. 🏡` }])
+      }
+    }
   }
 
   const sendMessage = async () => {
