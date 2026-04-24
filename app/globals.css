@@ -1,72 +1,103 @@
 @import "tailwindcss";
 
-@theme {
-  --color-taupe-50: #f5f0eb;
-  --color-taupe-100: #ede8e3;
-  --color-taupe-200: #e8e0d8;
-  --color-taupe-300: #d4c8be;
-  --color-taupe-400: #a89880;
-  --color-taupe-500: #8a7a6e;
-  --color-taupe-600: #6b5d50;
-  --color-taupe-700: #5c5449;
-  --color-taupe-800: #4a4238;
-  --color-taupe-900: #2d2520;
-}
-
 :root {
-  --background: #f5f0eb;
-  --foreground: #2d2520;
+  --t-bg:       #f5f0eb;
+  --t-bg2:      #ede8e3;
+  --t-card:     #ffffff;
+  --t-nav:      #4a4238;
+  --t-navbdr:   #5c5449;
+  --t-navlink:  #c9bfb5;
+  --t-text:     #2d2520;
+  --t-mid:      #5c5449;
+  --t-muted:    #8a7a6e;
+  --t-border:   #e8e0d8;
+  --t-orange:   #f97316;
 }
 
+/* ── Body ── */
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background-color: var(--t-bg) !important;
+  color: var(--t-text) !important;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* ── Global colour overrides — Warm Taupe theme ── */
-
-/* Page backgrounds */
-.bg-gray-900, .bg-gray-950 { background-color: #f5f0eb !important; }
-.bg-gray-800 { background-color: #ede8e3 !important; }
-.bg-gray-700 { background-color: #e8e0d8 !important; }
-
-/* Nav — dark taupe */
-nav { background-color: #4a4238 !important; border-color: #5c5449 !important; }
-
-/* Text */
-.text-white { color: #2d2520 !important; }
-.text-gray-300 { color: #5c5449 !important; }
-.text-gray-400 { color: #8a7a6e !important; }
-.text-gray-500 { color: #a89880 !important; }
-
-/* Borders */
-.border-gray-700, .border-gray-800 { border-color: #e8e0d8 !important; }
-
-/* Cards */
-.rounded-2xl.border, .rounded-xl.border { background-color: #ffffff; border-color: #e8e0d8 !important; }
-
-/* Inputs */
-input, textarea, select {
-  background-color: #f5f0eb !important;
-  color: #2d2520 !important;
-  border-color: #e8e0d8 !important;
+/* ── Page backgrounds ── */
+main.min-h-screen,
+div.min-h-screen {
+  background-color: var(--t-bg) !important;
+  color: var(--t-text) !important;
 }
 
-/* Keep orange buttons with white text */
-.bg-orange-500, .bg-orange-400 { 
-  background-color: #f97316 !important; 
+/* ── Nav ── */
+nav {
+  background-color: var(--t-nav) !important;
+  border-color: var(--t-navbdr) !important;
 }
-.bg-orange-500 *, .bg-orange-400 * { color: white !important; }
+nav a, nav span, nav button:not([class*="bg-orange"]):not([class*="bg-red"]) {
+  color: var(--t-navlink) !important;
+}
+nav a:hover { color: var(--t-bg) !important; }
+nav [class*="font-bold"], nav [class*="font-black"] { color: var(--t-bg) !important; }
 
-/* Nav links — light text on dark taupe nav */
-nav a, nav button:not(.bg-orange-500) { color: #c9bfb5 !important; }
-nav a:hover { color: #f5f0eb !important; }
+/* ── Section/Card backgrounds ── */
+[class*="bg-gray-950"],
+[class*="bg-gray-900"] { background-color: var(--t-bg) !important; }
+[class*="bg-gray-800"] { background-color: var(--t-bg2) !important; }
+[class*="bg-gray-700"] { background-color: #e0d9d2 !important; }
+[class*="bg-gray-600"] { background-color: #d4ccc4 !important; }
 
-/* Logo */
-nav .text-2xl, nav .text-3xl { color: #f5f0eb !important; }
+/* ── Text colours ── */
+[class*="text-white"]:not([class*="bg-orange"]):not([class*="bg-green"]):not([class*="bg-blue"]):not([class*="bg-red"]):not([class*="bg-purple"]) {
+  color: var(--t-text) !important;
+}
+[class*="text-gray-100"], [class*="text-gray-200"] { color: var(--t-text) !important; }
+[class*="text-gray-300"] { color: var(--t-mid) !important; }
+[class*="text-gray-400"] { color: var(--t-muted) !important; }
+[class*="text-gray-500"] { color: var(--t-muted) !important; }
 
-/* Scrollbar */
+/* ── Borders ── */
+[class*="border-gray-700"],
+[class*="border-gray-800"],
+[class*="border-gray-600"] { border-color: var(--t-border) !important; }
+
+/* ── Inputs ── */
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+  background-color: #f0ebe5 !important;
+  color: var(--t-text) !important;
+  border-color: var(--t-border) !important;
+}
+input::placeholder, textarea::placeholder { color: var(--t-muted) !important; }
+
+/* ── Cards & panels ── */
+[class*="rounded-2xl"][class*="border"],
+[class*="rounded-xl"][class*="border"] {
+  background-color: var(--t-card) !important;
+  border-color: var(--t-border) !important;
+}
+
+/* ── Orange buttons always white text ── */
+[class*="bg-orange-500"] { background-color: var(--t-orange) !important; }
+[class*="bg-orange-500"] * { color: white !important; }
+[class*="bg-orange-400"] { background-color: #fb923c !important; }
+
+/* ── Footer ── */
+footer {
+  background-color: var(--t-bg2) !important;
+  border-color: var(--t-border) !important;
+  color: var(--t-muted) !important;
+}
+
+/* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #ede8e3; }
-::-webkit-scrollbar-thumb { background: #d4c8be; border-radius: 3px; }
+::-webkit-scrollbar-track { background: var(--t-bg2); }
+::-webkit-scrollbar-thumb { background: var(--t-border); border-radius: 3px; }
+
+/* ── Keep coloured elements as-is ── */
+[class*="bg-orange"],
+[class*="bg-green"],
+[class*="bg-blue"],
+[class*="bg-red"],
+[class*="bg-purple"],
+[class*="bg-yellow"] { /* no override */ }
