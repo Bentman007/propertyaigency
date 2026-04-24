@@ -257,6 +257,12 @@ Lead score guide:
     let profileUpdate = {}
     let leadData = { score: 0, temperature: 'cold', reason: '' }
     let cleanContent = content
+      .replace(/<profile>[\s\S]*?<\/profile>/g, '')
+      .replace(/<lead>[\s\S]*?<\/lead>/g, '')
+      .replace(/<properties>[\s\S]*?<\/properties>/g, '')
+      .replace(/<prompts>[\s\S]*?<\/prompts>/g, '')
+      .replace(/<feedback>[\s\S]*?<\/feedback>/g, '')
+      .trim()
 
     // Extract properties
     const propertiesMatch = content.match(/<properties>([\s\S]*?)<\/properties>/)
