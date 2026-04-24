@@ -177,7 +177,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
             {activeFeatures.length > 0 && (
               <div className="bg-white border border-stone-300 rounded-xl p-5">
                 <h2 className="text-lg font-bold mb-4 text-orange-500">Property Features</h2>
-                <div className="space-y-4">
+                <div className="space-y-4 lg:sticky lg:top-4 lg:self-start lg:max-h-screen lg:overflow-y-auto">
                   {activeFeatures.map(group => (
                     <div key={group.label}>
                       <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-2">{group.label}</h3>

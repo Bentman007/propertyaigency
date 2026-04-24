@@ -113,7 +113,19 @@ export default function ProfilePage() {
       <div className="max-w-2xl mx-auto px-6 py-10 space-y-6">
         <h1 className="text-2xl font-bold">👤 My Profile</h1>
 
-        {message && (
+        {buyerProfile && (buyerProfile.locations?.length > 0 || buyerProfile.budget_max) && (
+            <CollapsibleSection title="My Search Profile" icon="🔍" defaultOpen={false}>
+              <p className="text-stone-500 text-sm mb-4">Your search preferences — edit anytime.</p>
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                {buyerProfile.locations?.length > 0 && <div><p className="text-xs text-stone-400 mb-1">Preferred Areas</p><p className="font-semibold">{buyerProfile.locations.join(', ')}</p></div>}
+                {buyerProfile.budget_max && <div><p className="text-xs text-stone-400 mb-1">Max Budget</p><p className="font-semibold">R{Number(buyerProfile.budget_max).toLocaleString()}</p></div>}
+                {buyerProfile.bedrooms_min && <div><p className="text-xs text-stone-400 mb-1">Min Bedrooms</p><p className="font-semibold">{buyerProfile.bedrooms_min}</p></div>}
+                {buyerProfile.must_haves?.length > 0 && <div><p className="text-xs text-stone-400 mb-1">Must Haves</p><p className="font-semibold">{buyerProfile.must_haves.join(', ')}</p></div>}
+              </div>
+              <button onClick={async () => { const {data} = await supabase.auth.getUser(); if (data.user) { await supabase.from('searcher_profiles').delete().eq('user_id', data.user.id); setBuyerProfile(null) }}} className="mt-4 text-red-400 hover:text-red-300 text-xs">Reset search profile</button>
+            </CollapsibleSection>
+          )}
+          {message && (
           <div className={`p-4 rounded-xl ${message.includes('Error') ? 'bg-red-900 text-red-300' : 'bg-green-900 text-green-300'}`}>
             {message}
           </div>
