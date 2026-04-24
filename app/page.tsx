@@ -33,6 +33,14 @@ export default function Home() {
           {[['AI Search','/search'],['List a Property','/list'],['How It Works','/how-it-works'],['Pricing','/pricing'],['Contact','/contact']].map(([label,href])=>(
             <Link key={href} href={href} style={{color:T.navLink, fontSize:'14px', textDecoration:'none'}}>{label}</Link>
           ))}
+          {user ? (
+            <Link href="/dashboard" style={{backgroundColor:T.orange, color:'white', padding:'8px 16px', borderRadius:'8px', fontWeight:600, fontSize:'14px', textDecoration:'none'}}>My Dashboard</Link>
+          ) : (
+            <>
+              <Link href="/auth/login" style={{color:T.navLink, fontSize:'14px', textDecoration:'none'}}>Sign In</Link>
+              <Link href="/auth/register" style={{backgroundColor:T.orange, color:'white', padding:'8px 16px', borderRadius:'8px', fontWeight:600, fontSize:'14px', textDecoration:'none'}}>Register Free</Link>
+            </>
+          )}
         </div>
         {/* Mobile menu button */}
         <button onClick={() => setMenuOpen(!menuOpen)} style={{display:'block', background:'none', border:'none', color:T.navLink, fontSize:'22px', cursor:'pointer', padding:'4px'}} className="md:hidden">
