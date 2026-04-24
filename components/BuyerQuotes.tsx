@@ -28,6 +28,27 @@ export default function BuyerQuotes({ userId }: { userId: string }) {
   const acceptQuote = async (quoteId: string, requestId: string) => {
     await supabase.from('supplier_quotes').update({ status: 'accepted' }).eq('id', quoteId)
     await supabase.from('move_quote_requests').update({ status: 'accepted' }).eq('id', requestId)
+    // Send introduction email to both parties
+    try {
+      const { data: quote } = await supabase.from('supplier_quotes').select('*, suppliers(business_name, email, contact_name)').eq('id', quoteId).single()
+      const { data: req } = await supabase.from('move_quote_requests').select('*, from_address_full, to_address_full').eq('id', requestId).single()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (quote && req && user) {
+        await fetch('/api/introduction-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            buyer_email: user.email,
+            buyer_name: user.user_metadata?.full_name || 'Client',
+            supplier_email: quote.suppliers?.email,
+            supplier_name: quote.suppliers?.contact_name,
+            business_name: quote.suppliers?.business_name,
+            service_type: req.service_type,
+            address: req.to_address_full || req.from_address_full,
+          })
+        })
+      }
+    } catch (e) { console.error('Introduction email failed:', e) }
     fetchRequests()
   }
 
