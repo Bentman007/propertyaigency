@@ -134,7 +134,7 @@ export default function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="text-center py-24 px-6 bg-gradient-to-b from-stone-200 to-stone-50">
+      <section className="text-center py-24 px-6 bg-gradient-to-b from-gray-950 to-gray-900">
         <h1 className="text-6xl font-bold mb-4">Find Your Perfect <span className="text-orange-500">Property</span></h1>
         <p className="text-stone-500 text-xl mb-8">South Africa's smartest AI-powered property platform</p>
         <div className="flex flex-col items-center gap-4">
