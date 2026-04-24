@@ -102,7 +102,8 @@ PERSONALITY RULES — CRITICAL:
 - Ask ONE question at a time. Never ask two things at once.
 - When you have results, lead with the number: "I found 4 matches." Then show them.
 - When you need more info, ask the single most important missing piece.
-- Plain conversational text. No essays. No bullet points unless listing properties.
+- CRITICAL: Plain conversational text ONLY. NO markdown. No **bold**, no *italic*, no bullet points with -, no numbered lists with 1. 2. 3. Just plain sentences.
+- Never list properties in text — they appear as cards automatically via the properties tag.
 ${nameGreeting}
 
 AVAILABLE PROPERTIES:
@@ -363,7 +364,7 @@ ${feedbackData.text}`,
       property_count: matchedProperties.length
     }
     
-    // Strip any remaining XML tags that leaked into content
+    // Strip any remaining XML tags and markdown
     cleanContent = cleanContent
       .replace(/<profile>[\s\S]*?<\/profile>/g, '')
       .replace(/<lead>[\s\S]*?<\/lead>/g, '')
@@ -372,6 +373,10 @@ ${feedbackData.text}`,
       .replace(/<feedback>[\s\S]*?<\/feedback>/g, '')
       .replace(/<profile>/g, '').replace(/<\/profile>/g, '')
       .replace(/<lead>/g, '').replace(/<\/lead>/g, '')
+      .replace(/\*\*(.*?)\*\*/g, '$1')
+      .replace(/\*(.*?)\*/g, '$1')
+      .replace(/^[\s]*[-*]\s/gm, '')
+      .replace(/^\d+\.\s/gm, '')
       .trim()
 
     // Cache this result
