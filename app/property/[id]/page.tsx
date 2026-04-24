@@ -202,7 +202,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
           </div>
 
           {/* Right sidebar - price, booking, chat */}
-          <div className="space-y-4">
+          <div className="space-y-4 lg:sticky lg:top-4 lg:self-start">
 
             {/* Price card - sticky on desktop */}
             <div className="bg-white border border-orange-500 rounded-xl p-5">

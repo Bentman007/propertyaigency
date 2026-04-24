@@ -33,7 +33,17 @@ export default function SearchPage() {
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       setUser(data.user)
-      if (data.user) fetchUserPreferences(data.user.id)
+      if (data.user) {
+        fetchUserPreferences(data.user.id)
+        // Restore chat history from localStorage
+        const saved = localStorage.getItem(`chat_${data.user.id}`)
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved)
+            if (parsed.length > 1) setMessages(parsed) // keep if more than just greeting
+          } catch(e) {}
+        }
+      }
     })
   }, [])
 

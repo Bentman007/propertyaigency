@@ -28,8 +28,14 @@ export default function Home() {
         <div style={{fontSize:'20px', fontWeight:700, color:T.heroText}}>
           Property<span style={{color:T.orange}}>AI</span>gency
         </div>
+        {/* Desktop nav links */}
+        <div style={{display:'flex', gap:'20px', alignItems:'center'}} className="hidden md:flex">
+          {[['AI Search','/search'],['List a Property','/list'],['How It Works','/how-it-works'],['Pricing','/pricing'],['Contact','/contact']].map(([label,href])=>(
+            <Link key={href} href={href} style={{color:T.navLink, fontSize:'14px', textDecoration:'none'}}>{label}</Link>
+          ))}
+        </div>
         {/* Mobile menu button */}
-        <button onClick={() => setMenuOpen(!menuOpen)} style={{display:'block', background:'none', border:'none', color:T.navLink, fontSize:'22px', cursor:'pointer', padding:'4px'}}>
+        <button onClick={() => setMenuOpen(!menuOpen)} style={{display:'block', background:'none', border:'none', color:T.navLink, fontSize:'22px', cursor:'pointer', padding:'4px'}} className="md:hidden">
           {menuOpen ? '✕' : '☰'}
         </button>
       </nav>

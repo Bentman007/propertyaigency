@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import CollapsibleSection from '@/components/CollapsibleSection'
 import Link from 'next/link'
 
 export default function ProfilePage() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [buyerProfile, setBuyerProfile] = useState<any>(null)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
   const [accountType, setAccountType] = useState('buyer')
