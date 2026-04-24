@@ -51,6 +51,23 @@ export default function SearchPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
+  // Auto-switch back to chat when all properties have been actioned
+  useEffect(() => {
+    if (properties.length === 0) return
+    const actioned = properties.filter(p => savedIds.includes(p.id) || rejectedIds.includes(p.id))
+    if (actioned.length === properties.length && mobileTab === 'results') {
+      // All properties actioned - switch back to chat after short delay
+      setTimeout(() => {
+        setMobileTab('chat')
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: "You've been through all the matches! Want me to find more options? I can widen the search area, adjust the budget, or remove a requirement to show you more properties."
+        }])
+        setSuggestedPrompts(['Show me more options', 'Widen the search area', 'Adjust my budget', 'Remove a requirement'])
+      }, 1000)
+    }
+  }, [savedIds, rejectedIds, properties, mobileTab])
+
   const fetchUserPreferences = async (userId: string) => {
     const { data: saved } = await supabase.from('saved_properties').select('property_id').eq('user_id', userId)
     const { data: rejected } = await supabase.from('rejected_properties').select('property_id').eq('user_id', userId)
@@ -70,9 +87,10 @@ export default function SearchPage() {
     }
   }
 
-  const sendMessage = async () => {
-    if (!input.trim() || loading) return
-    const newMessages: Message[] = [...messages, { role: 'user', content: input }]
+  const sendMessage = async (directMessage?: string) => {
+    const messageText = directMessage || input
+    if (!messageText.trim() || loading) return
+    const newMessages: Message[] = [...messages, { role: 'user', content: messageText }]
     setMessages(newMessages)
     setInput('')
     setLoading(true)
@@ -188,7 +206,7 @@ export default function SearchPage() {
           <div className="flex-shrink-0 border-t border-stone-300 p-3">
             <div className="flex gap-2 mb-2" style={{overflowX:'auto'}}>
               {suggestedPrompts.map((p, i) => (
-                <button key={i} onClick={() => setInput(p)}
+                <button key={i} onClick={() => sendMessage(p)}
                   className="whitespace-nowrap text-xs bg-stone-100 hover:bg-stone-200 text-stone-800 border border-stone-300 rounded-full px-3 py-1.5 transition flex-shrink-0">
                   {p}
                 </button>
@@ -199,7 +217,7 @@ export default function SearchPage() {
                 onKeyDown={e => e.key === 'Enter' && sendMessage()}
                 placeholder="Tell me what you're looking for..."
                 className="flex-1 bg-white text-stone-900 rounded-xl px-4 py-2.5 outline-none border border-stone-300 focus:border-orange-500 text-sm"/>
-              <button onClick={sendMessage} disabled={loading || !input.trim()}
+              <button onClick={() => sendMessage()} disabled={loading || !input.trim()}
                 className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-4 py-2.5 rounded-xl disabled:opacity-50 transition text-sm">
                 Send
               </button>
