@@ -16,7 +16,7 @@ export default function PropertyChat({ property }: PropertyChatProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: `Hi! I'm your AI Concierge for **${property.title}** 👋\n\nI know everything about this property and the area. Ask me anything — bond calculations, nearby schools, transfer costs, the neighbourhood, or anything else!\n\nWhat would you like to know? 🏡`
+      content: `Hi! I know this property well — ask me anything about ${property.title}, the area, bond calculations or transfer costs. What would you like to know? 🏡`
     }
   ])
   const [input, setInput] = useState('')
@@ -38,7 +38,35 @@ export default function PropertyChat({ property }: PropertyChatProps) {
   const sessionId = useRef(Math.random().toString(36).substring(2))
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data.user))
+    supabase.auth.getUser().then(async ({ data }) => {
+      setUser(data.user)
+      if (!data.user) return
+      
+      // Check buyer's history with this property
+      const [saved, bookings, offers] = await Promise.all([
+        supabase.from('saved_properties').select('id').eq('user_id', data.user.id).eq('property_id', property.id).single(),
+        supabase.from('viewing_bookings').select('*').eq('searcher_id', data.user.id).eq('property_id', property.id).order('created_at', { ascending: false }).limit(1),
+        supabase.from('offers').select('*').eq('buyer_id', data.user.id).eq('property_id', property.id).order('created_at', { ascending: false }).limit(1)
+      ])
+
+      const name = data.user.user_metadata?.full_name?.split(' ')[0] || ''
+      const greeting = name ? `Hi ${name}! ` : 'Welcome back! '
+
+      if (offers.data?.length) {
+        const offer = offers.data[0]
+        setMessages([{ role: 'assistant', content: `${greeting}Your offer of R${Number(offer.amount).toLocaleString()} on ${property.title} is ${offer.status}. Would you like an update or want to discuss next steps?` }])
+      } else if (bookings.data?.length) {
+        const booking = bookings.data[0]
+        const dateStr = new Date(booking.booking_date).toLocaleDateString('en-ZA', { weekday: 'long', day: 'numeric', month: 'long' })
+        if (booking.status === 'confirmed') {
+          setMessages([{ role: 'assistant', content: `${greeting}You have a viewing booked for ${property.title} on ${dateStr}. How can I help you prepare? Want bond or transfer cost info?` }])
+        } else {
+          setMessages([{ role: 'assistant', content: `${greeting}How did the viewing go on ${dateStr} for ${property.title}? Ready to make an offer, or shall I find similar properties?` }])
+        }
+      } else if (saved.data) {
+        setMessages([{ role: 'assistant', content: `${greeting}You saved ${property.title} — still interested? I can book a viewing, calculate your bond, or tell you more about the area.` }])
+      }
+    })
   }, [])
 
   useEffect(() => {
