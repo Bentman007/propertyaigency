@@ -179,8 +179,8 @@ export default function ProfilePage() {
           {saving ? 'Saving...' : '💾 Save Profile'}
         </button>
 
-        {/* Security Settings */}
-        <div className="bg-white rounded-2xl border border-stone-300 p-6 space-y-4">
+        <CollapsibleSection title="Security Settings" icon="🔐" defaultOpen={false}>
+          <div className="bg-white rounded-2xl border border-stone-300 p-6 space-y-4">
           <h2 className="text-lg font-bold text-orange-500">🔐 Security Settings</h2>
           
           {securityMessage && (
@@ -238,6 +238,7 @@ export default function ProfilePage() {
             </div>
           )}
         </div>
+        </CollapsibleSection>
       </div>
     </main>
   )
