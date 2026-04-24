@@ -102,12 +102,12 @@ export default function SearchPage() {
   }
 
   return (
-    <main className="h-screen flex flex-col bg-gray-900 text-white overflow-hidden">
+    <main className="h-screen flex flex-col bg-stone-50 text-stone-900 overflow-hidden">
       {/* Nav */}
-      <nav className="bg-gray-950 border-b border-gray-800 px-4 py-3 flex justify-between items-center flex-shrink-0">
+      <nav className="bg-stone-100 border-b border-stone-200 px-4 py-3 flex justify-between items-center flex-shrink-0">
         <Link href="/" className="text-xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
         <div className="flex gap-3 items-center">
-          {user && <Link href="/dashboard" className="text-gray-300 hover:text-orange-500 text-sm">My Dashboard</Link>}
+          {user && <Link href="/dashboard" className="text-stone-700 hover:text-orange-500 text-sm">My Dashboard</Link>}
           <Link href="/saved" className="bg-orange-500 text-black px-3 py-1.5 rounded-lg font-semibold hover:bg-orange-400 text-sm">
             Saved ({savedIds.length})
           </Link>
@@ -115,13 +115,13 @@ export default function SearchPage() {
       </nav>
 
       {/* Mobile tabs */}
-      <div className="md:hidden flex border-b border-gray-700 flex-shrink-0">
+      <div className="md:hidden flex border-b border-stone-300 flex-shrink-0">
         <button onClick={() => setMobileTab('chat')}
-          className={`flex-1 py-3 text-sm font-semibold transition ${mobileTab === 'chat' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-400'}`}>
+          className={`flex-1 py-3 text-sm font-semibold transition ${mobileTab === 'chat' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-stone-500'}`}>
           💬 AI Chat
         </button>
         <button onClick={() => setMobileTab('results')}
-          className={`flex-1 py-3 text-sm font-semibold transition ${mobileTab === 'results' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-400'}`}>
+          className={`flex-1 py-3 text-sm font-semibold transition ${mobileTab === 'results' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-stone-500'}`}>
           🏠 Properties
         </button>
       </div>
@@ -130,7 +130,7 @@ export default function SearchPage() {
       <div className="flex flex-1 overflow-hidden">
 
         {/* Chat Panel */}
-        <div className={`flex flex-col w-full md:w-96 md:max-w-sm border-r border-gray-700 ${mobileTab === 'chat' ? 'flex' : 'hidden md:flex'}`}>
+        <div className={`flex flex-col w-full md:w-96 md:max-w-sm border-r border-stone-300 ${mobileTab === 'chat' ? 'flex' : 'hidden md:flex'}`}>
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {messages.map((message, i) => (
@@ -138,7 +138,7 @@ export default function SearchPage() {
                 {message.role === 'assistant' && (
                   <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-sm mr-2 flex-shrink-0 mt-1">AI</div>
                 )}
-                <div className={`max-w-xs rounded-2xl px-4 py-3 text-sm leading-relaxed ${message.role === 'user' ? 'bg-orange-500 text-black rounded-br-sm' : 'bg-gray-800 text-gray-100 rounded-bl-sm'}`}>
+                <div className={`max-w-xs rounded-2xl px-4 py-3 text-sm leading-relaxed ${message.role === 'user' ? 'bg-orange-500 text-black rounded-br-sm' : 'bg-white text-stone-900 rounded-bl-sm'}`}>
                   {message.content.split('\n').map((line, j) => (
                     <span key={j}>{line}{j < message.content.split('\n').length - 1 && <br/>}</span>
                   ))}
@@ -148,7 +148,7 @@ export default function SearchPage() {
             {loading && (
               <div className="flex justify-start">
                 <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-sm mr-2 flex-shrink-0">AI</div>
-                <div className="bg-gray-800 rounded-2xl rounded-bl-sm px-4 py-3">
+                <div className="bg-white rounded-2xl rounded-bl-sm px-4 py-3">
                   <div className="flex gap-1">
                     <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{animationDelay:'0ms'}}/>
                     <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{animationDelay:'150ms'}}/>
@@ -161,11 +161,11 @@ export default function SearchPage() {
           </div>
 
           {/* Prompts + Input */}
-          <div className="flex-shrink-0 border-t border-gray-700 p-3">
+          <div className="flex-shrink-0 border-t border-stone-300 p-3">
             <div className="flex gap-2 mb-2" style={{overflowX:'auto'}}>
               {suggestedPrompts.map((p, i) => (
                 <button key={i} onClick={() => setInput(p)}
-                  className="whitespace-nowrap text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 border border-gray-600 rounded-full px-3 py-1.5 transition flex-shrink-0">
+                  className="whitespace-nowrap text-xs bg-stone-100 hover:bg-stone-200 text-stone-800 border border-stone-300 rounded-full px-3 py-1.5 transition flex-shrink-0">
                   {p}
                 </button>
               ))}
@@ -174,13 +174,13 @@ export default function SearchPage() {
               <input type="text" value={input} onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && sendMessage()}
                 placeholder="Tell me what you're looking for..."
-                className="flex-1 bg-gray-800 text-white rounded-xl px-4 py-2.5 outline-none border border-gray-600 focus:border-orange-500 text-sm"/>
+                className="flex-1 bg-white text-stone-900 rounded-xl px-4 py-2.5 outline-none border border-stone-300 focus:border-orange-500 text-sm"/>
               <button onClick={sendMessage} disabled={loading || !input.trim()}
                 className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-4 py-2.5 rounded-xl disabled:opacity-50 transition text-sm">
                 Send
               </button>
             </div>
-            <p className="text-gray-500 text-xs mt-1.5 text-center">Your AI Concierge is here to help 24/7</p>
+            <p className="text-stone-400 text-xs mt-1.5 text-center">Your AI Concierge is here to help 24/7</p>
           </div>
         </div>
 
@@ -189,21 +189,21 @@ export default function SearchPage() {
           {properties.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <div className="text-6xl mb-4">🏡</div>
-              <h3 className="text-xl font-bold text-gray-300 mb-2">Your matches will appear here</h3>
-              <p className="text-gray-500 text-sm max-w-xs">Chat with your AI Concierge and tell it what you're looking for. It will find the perfect properties for you.</p>
+              <h3 className="text-xl font-bold text-stone-700 mb-2">Your matches will appear here</h3>
+              <p className="text-stone-400 text-sm max-w-xs">Chat with your AI Concierge and tell it what you're looking for. It will find the perfect properties for you.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <h3 className="text-lg font-bold text-gray-300 col-span-full">
+              <h3 className="text-lg font-bold text-stone-700 col-span-full">
                 🏡 Properties Found ({properties.filter(p => !rejectedIds.includes(p.id)).length})
               </h3>
               {properties.filter(p => !rejectedIds.includes(p.id)).map(property => (
-                <div key={property.id} className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
-                  <div className="h-1 bg-gray-700">
+                <div key={property.id} className="bg-white rounded-2xl border border-stone-300 overflow-hidden">
+                  <div className="h-1 bg-stone-100">
                     <div className={`h-full ${property.match_score >= 90 ? 'bg-green-500' : property.match_score >= 75 ? 'bg-yellow-500' : 'bg-orange-500'}`}
                       style={{width:`${property.match_score}%`}}/>
                   </div>
-                  <div className="h-40 bg-gray-700 relative">
+                  <div className="h-40 bg-stone-100 relative">
                     {property.photos?.[0]
                       ? <img src={property.photos[0]} alt={property.title} className="w-full h-full object-cover"/>
                       : <div className="w-full h-full flex items-center justify-center text-4xl">🏠</div>
@@ -213,26 +213,26 @@ export default function SearchPage() {
                     </div>
                   </div>
                   <div className="p-4">
-                    <h4 className="font-bold text-white">{property.title}</h4>
-                    <p className="text-gray-400 text-sm">📍 {property.suburb}, {property.city}</p>
+                    <h4 className="font-bold text-stone-900">{property.title}</h4>
+                    <p className="text-stone-500 text-sm">📍 {property.suburb}, {property.city}</p>
                     <p className="text-orange-500 font-bold text-lg mt-1">{formatPrice(property.price, property.price_type)}</p>
-                    <div className="flex gap-3 text-gray-400 text-xs mt-2">
+                    <div className="flex gap-3 text-stone-500 text-xs mt-2">
                       <span>🛏 {property.bedrooms} beds</span>
                       <span>🚿 {property.bathrooms} baths</span>
                       {property.has_pool && <span>🏊 Pool</span>}
                       {property.has_solar && <span>☀️ Solar</span>}
                       {property.has_gated_community && <span>🔒 Gated</span>}
                     </div>
-                    <div className="mt-3 p-2 bg-gray-700 rounded-lg">
-                      <p className="text-xs text-gray-300">🤖 {property.match_reason}</p>
+                    <div className="mt-3 p-2 bg-stone-100 rounded-lg">
+                      <p className="text-xs text-stone-700">🤖 {property.match_reason}</p>
                     </div>
                     <div className="flex gap-2 mt-3">
                       <button onClick={() => handleReject(property.id)}
-                        className="flex-1 py-2 rounded-lg border border-gray-600 text-gray-400 hover:border-red-500 hover:text-red-400 text-sm transition">
+                        className="flex-1 py-2 rounded-lg border border-stone-300 text-stone-500 hover:border-red-500 hover:text-red-400 text-sm transition">
                         ✕ Not for me
                       </button>
                       <Link href={`/property/${property.id}`}
-                        className="flex-1 py-2 rounded-lg border border-gray-600 text-gray-300 hover:border-gray-400 text-sm transition text-center">
+                        className="flex-1 py-2 rounded-lg border border-stone-300 text-stone-700 hover:border-gray-400 text-sm transition text-center">
                         👁 View
                       </Link>
                       <button onClick={() => handleSave(property.id)} disabled={savedIds.includes(property.id)}

@@ -24,8 +24,8 @@ export default function ConversationsList({ agentId }: { agentId: string }) {
   }
 
   return (
-    <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
-      <div className="px-4 py-3 border-b border-gray-700 flex items-center justify-between">
+    <div className="bg-white rounded-2xl border border-stone-300 overflow-hidden">
+      <div className="px-4 py-3 border-b border-stone-300 flex items-center justify-between">
         <h3 className="font-bold">💬 Messages</h3>
         {conversations.reduce((a, c) => a + (c.agent_unread || 0), 0) > 0 && (
           <span className="bg-orange-500 text-black text-xs font-bold px-2 py-0.5 rounded-full">
@@ -36,7 +36,7 @@ export default function ConversationsList({ agentId }: { agentId: string }) {
 
       {selected ? (
         <div className="h-96">
-          <div className="px-3 py-2 border-b border-gray-700">
+          <div className="px-3 py-2 border-b border-stone-300">
             <button onClick={() => setSelected(null)} className="text-orange-500 text-sm hover:underline">
               ← Back to conversations
             </button>
@@ -55,29 +55,29 @@ export default function ConversationsList({ agentId }: { agentId: string }) {
       ) : (
         <div className="divide-y divide-gray-700">
           {loading ? (
-            <p className="text-gray-500 text-sm p-4">Loading...</p>
+            <p className="text-stone-400 text-sm p-4">Loading...</p>
           ) : conversations.length === 0 ? (
             <div className="p-6 text-center">
               <p className="text-3xl mb-2">💬</p>
-              <p className="text-gray-400 text-sm">No conversations yet</p>
-              <p className="text-gray-500 text-xs mt-1">Messages from buyers will appear here</p>
+              <p className="text-stone-500 text-sm">No conversations yet</p>
+              <p className="text-stone-400 text-xs mt-1">Messages from buyers will appear here</p>
             </div>
           ) : (
             conversations.map(conv => (
               <div
                 key={conv.id}
                 onClick={() => setSelected(conv)}
-                className="flex items-center gap-3 p-4 hover:bg-gray-700 cursor-pointer transition"
+                className="flex items-center gap-3 p-4 hover:bg-stone-100 cursor-pointer transition"
               >
-                <div className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center text-xl flex-shrink-0">
+                <div className="w-10 h-10 bg-stone-200 rounded-full flex items-center justify-center text-xl flex-shrink-0">
                   {conv.properties?.photos?.[0] ? (
                     <img src={conv.properties.photos[0]} className="w-full h-full object-cover rounded-full" alt=""/>
                   ) : '🏠'}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-sm truncate">{conv.properties?.title}</p>
-                  <p className="text-gray-400 text-xs truncate">{conv.last_message}</p>
-                  <p className="text-gray-500 text-xs">
+                  <p className="text-stone-500 text-xs truncate">{conv.last_message}</p>
+                  <p className="text-stone-400 text-xs">
                     {new Date(conv.last_message_at).toLocaleDateString('en-ZA')}
                   </p>
                 </div>

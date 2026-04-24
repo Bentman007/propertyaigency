@@ -151,7 +151,7 @@ export default function SupplierDashboard() {
   }
 
   if (loading) return (
-    <main className="min-h-screen bg-gray-900 flex items-center justify-center">
+    <main className="min-h-screen bg-stone-50 flex items-center justify-center">
       <p className="text-orange-500 animate-pulse">Loading your dashboard...</p>
     </main>
   )
@@ -163,16 +163,16 @@ export default function SupplierDashboard() {
   const onTrial = supplier?.subscription_status === 'trial' && trialDaysLeft !== null && trialDaysLeft > 0
 
   return (
-    <main className="min-h-screen bg-gray-900 text-white">
-      <nav className="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center">
+    <main className="min-h-screen bg-stone-50 text-stone-900">
+      <nav className="bg-white border-b border-stone-300 px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
         <div className="flex items-center gap-4">
           {supplier?.logo_url && (
-            <img src={supplier.logo_url} alt="logo" className="w-8 h-8 rounded-lg object-contain bg-gray-700"/>
+            <img src={supplier.logo_url} alt="logo" className="w-8 h-8 rounded-lg object-contain bg-stone-100"/>
           )}
-          <span className="text-gray-400 text-sm hidden sm:block">{supplier?.business_name}</span>
+          <span className="text-stone-500 text-sm hidden sm:block">{supplier?.business_name}</span>
           <button onClick={() => supabase.auth.signOut().then(() => window.location.href = '/')}
-            className="text-gray-400 hover:text-white text-sm">Sign Out</button>
+            className="text-stone-500 hover:text-stone-900 text-sm">Sign Out</button>
         </div>
       </nav>
 
@@ -198,9 +198,9 @@ export default function SupplierDashboard() {
         {/* Header */}
         <div className="flex items-start justify-between mb-8">
           <div>
-            <p className="text-gray-400 text-sm mb-1">Welcome back</p>
+            <p className="text-stone-500 text-sm mb-1">Welcome back</p>
             <h1 className="text-3xl font-bold">{supplier?.business_name}</h1>
-            <p className="text-gray-400 text-sm capitalize mt-1">
+            <p className="text-stone-500 text-sm capitalize mt-1">
               {supplier?.service_type?.replace(/_/g, ' ')} · {supplier?.areas_served?.join(', ')}
             </p>
           </div>
@@ -208,7 +208,7 @@ export default function SupplierDashboard() {
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition ${
               supplier?.is_paused
                 ? 'bg-green-600 hover:bg-green-500 text-white'
-                : 'bg-gray-700 hover:bg-yellow-600 text-gray-200'
+                : 'bg-stone-100 hover:bg-yellow-600 text-stone-800'
             }`}>
             {pausing ? '...' : supplier?.is_paused ? '▶ Resume Leads' : '⏸ Pause Leads'}
           </button>
@@ -216,34 +216,34 @@ export default function SupplierDashboard() {
 
         {/* Ticker */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-          <div className="bg-gray-800 border border-gray-700 rounded-xl p-5">
+          <div className="bg-white border border-stone-300 rounded-xl p-5">
             <p className="text-3xl font-bold text-orange-500">{monthLeads}</p>
-            <p className="text-gray-400 text-sm mt-1">🎯 Leads this month</p>
+            <p className="text-stone-500 text-sm mt-1">🎯 Leads this month</p>
           </div>
-          <div className="bg-gray-800 border border-gray-700 rounded-xl p-5">
+          <div className="bg-white border border-stone-300 rounded-xl p-5">
             <p className="text-3xl font-bold text-green-400">R{invoiceTotal.toLocaleString()}</p>
-            <p className="text-gray-400 text-sm mt-1">💰 Invoice building</p>
-            <p className="text-gray-500 text-xs mt-0.5">Due 1st of next month</p>
+            <p className="text-stone-500 text-sm mt-1">💰 Invoice building</p>
+            <p className="text-stone-400 text-xs mt-0.5">Due 1st of next month</p>
           </div>
-          <div className="bg-gray-800 border border-gray-700 rounded-xl p-5">
+          <div className="bg-white border border-stone-300 rounded-xl p-5">
             <p className="text-3xl font-bold text-yellow-400">
               {supplier?.rating > 0 ? `${supplier.rating}/5` : '—'}
             </p>
-            <p className="text-gray-400 text-sm mt-1">⭐ Rating ({supplier?.review_count || 0} reviews)</p>
+            <p className="text-stone-500 text-sm mt-1">⭐ Rating ({supplier?.review_count || 0} reviews)</p>
           </div>
         </div>
 
-        <div className="bg-gray-800 border border-gray-700 rounded-xl px-5 py-3 mb-8 flex items-center justify-between text-sm flex-wrap gap-2">
-          <span className="text-gray-400">Lead price: <span className="text-white font-bold">R{supplier?.lead_price || 0}/lead</span></span>
-          <span className="text-gray-400">Weekly limit: <span className="text-white font-bold">{supplier?.weekly_lead_limit || 5} leads/week</span></span>
-          <span className="text-gray-400">Status: <span className={`font-bold ${supplier?.is_paused ? 'text-yellow-400' : 'text-green-400'}`}>{supplier?.is_paused ? 'Paused' : 'Active'}</span></span>
+        <div className="bg-white border border-stone-300 rounded-xl px-5 py-3 mb-8 flex items-center justify-between text-sm flex-wrap gap-2">
+          <span className="text-stone-500">Lead price: <span className="text-stone-900 font-bold">R{supplier?.lead_price || 0}/lead</span></span>
+          <span className="text-stone-500">Weekly limit: <span className="text-stone-900 font-bold">{supplier?.weekly_lead_limit || 5} leads/week</span></span>
+          <span className="text-stone-500">Status: <span className={`font-bold ${supplier?.is_paused ? 'text-yellow-400' : 'text-green-400'}`}>{supplier?.is_paused ? 'Paused' : 'Active'}</span></span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
           {/* AI Assistant */}
-          <div className="bg-gray-800 border border-gray-700 rounded-2xl overflow-hidden">
-            <div className="px-5 py-4 border-b border-gray-700 flex items-center gap-3">
+          <div className="bg-white border border-stone-300 rounded-2xl overflow-hidden">
+            <div className="px-5 py-4 border-b border-stone-300 flex items-center gap-3">
               <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs">AI</div>
               <div>
                 <p className="font-bold text-sm">Lead <span className="text-orange-500">AI</span>sistant</p>
@@ -254,7 +254,7 @@ export default function SupplierDashboard() {
               {aiMessages.length === 0 && (
                 <div className="flex gap-3">
                   <div className="w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs flex-shrink-0">AI</div>
-                  <div className="bg-gray-700 rounded-xl px-3 py-2 text-sm text-gray-200">
+                  <div className="bg-stone-100 rounded-xl px-3 py-2 text-sm text-stone-800">
                     Hi! You have {requests.length} new lead{requests.length !== 1 ? 's' : ''} waiting and R{invoiceTotal.toLocaleString()} building on your invoice this month. How can I help?
                   </div>
                 </div>
@@ -264,7 +264,7 @@ export default function SupplierDashboard() {
                   {msg.role === 'assistant' && (
                     <div className="w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs flex-shrink-0">AI</div>
                   )}
-                  <div className={`rounded-xl px-3 py-2 text-sm max-w-xs ${msg.role === 'user' ? 'bg-orange-500 text-black' : 'bg-gray-700 text-gray-200'}`}>
+                  <div className={`rounded-xl px-3 py-2 text-sm max-w-xs ${msg.role === 'user' ? 'bg-orange-500 text-black' : 'bg-stone-100 text-stone-800'}`}>
                     {msg.content}
                   </div>
                 </div>
@@ -272,15 +272,15 @@ export default function SupplierDashboard() {
               {aiLoading && (
                 <div className="flex gap-2">
                   <div className="w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs flex-shrink-0">AI</div>
-                  <div className="bg-gray-700 rounded-xl px-3 py-2 text-sm text-gray-400 animate-pulse">Thinking...</div>
+                  <div className="bg-stone-100 rounded-xl px-3 py-2 text-sm text-stone-500 animate-pulse">Thinking...</div>
                 </div>
               )}
             </div>
-            <div className="p-3 border-t border-gray-700 flex gap-2">
+            <div className="p-3 border-t border-stone-300 flex gap-2">
               <input value={aiInput} onChange={e => setAiInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && askAI()}
                 placeholder="Ask your Lead AIsistant..."
-                className="flex-1 bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
+                className="flex-1 bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
               <button onClick={askAI} disabled={aiLoading || !aiInput.trim()}
                 className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-4 py-2 rounded-lg text-sm disabled:opacity-50">
                 Send
@@ -289,8 +289,8 @@ export default function SupplierDashboard() {
           </div>
 
           {/* Lead Requests */}
-          <div className="bg-gray-800 border border-gray-700 rounded-2xl overflow-hidden">
-            <div className="px-5 py-4 border-b border-gray-700 flex justify-between items-center">
+          <div className="bg-white border border-stone-300 rounded-2xl overflow-hidden">
+            <div className="px-5 py-4 border-b border-stone-300 flex justify-between items-center">
               <p className="font-bold">🔥 New Lead Requests</p>
               {requests.length > 0 && (
                 <span className="bg-orange-500 text-black text-xs font-bold px-2 py-0.5 rounded-full">{requests.length}</span>
@@ -298,7 +298,7 @@ export default function SupplierDashboard() {
             </div>
             <div className="divide-y divide-gray-700 max-h-[500px] overflow-y-auto">
               {requests.length === 0 ? (
-                <div className="p-6 text-center text-gray-500 text-sm">
+                <div className="p-6 text-center text-stone-400 text-sm">
                   <p className="text-2xl mb-2">📭</p>
                   <p>No new leads yet</p>
                   <p className="text-xs mt-1">Leads appear here when buyers in your area request your service</p>
@@ -308,19 +308,19 @@ export default function SupplierDashboard() {
                 return (
                   <div key={req.id} className="p-4">
                     {/* Lead summary */}
-                    <div className="bg-gray-700 rounded-xl p-3 mb-3">
+                    <div className="bg-stone-100 rounded-xl p-3 mb-3">
                       <p className="text-sm font-semibold text-orange-400 mb-1">
                         {clientName} needs a {req.service_type?.replace(/_/g, ' ')}
                       </p>
                       {req.to_address && (
-                        <p className="text-gray-300 text-xs">📍 Near {req.to_address}</p>
+                        <p className="text-stone-700 text-xs">📍 Near {req.to_address}</p>
                       )}
                       {req.move_date && (
-                        <p className="text-gray-300 text-xs mt-0.5">
+                        <p className="text-stone-700 text-xs mt-0.5">
                           📅 {new Date(req.move_date).toLocaleDateString('en-ZA', { month: 'long', day: 'numeric', year: 'numeric' })}
                         </p>
                       )}
-                      <p className="text-gray-500 text-xs mt-2">
+                      <p className="text-stone-400 text-xs mt-2">
                         🔒 Full address shared after quote accepted
                       </p>
                     </div>
@@ -330,17 +330,17 @@ export default function SupplierDashboard() {
                       <input type="number" placeholder="Quote amount (R)"
                         value={quoteAmounts[req.id] || ''}
                         onChange={e => setQuoteAmounts(prev => ({ ...prev, [req.id]: e.target.value }))}
-                        className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
+                        className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
 
                       <textarea placeholder="Notes for the client (optional)"
                         value={quoteNotes[req.id] || ''}
                         onChange={e => setQuoteNotes(prev => ({ ...prev, [req.id]: e.target.value }))}
                         rows={2}
-                        className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500 resize-none"/>
+                        className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500 resize-none"/>
 
                       {/* PDF upload */}
                       <div className="flex items-center gap-2">
-                        <label className="flex-1 cursor-pointer bg-gray-700 hover:bg-gray-600 border border-gray-600 border-dashed text-sm text-gray-400 px-3 py-2 rounded-lg transition text-center">
+                        <label className="flex-1 cursor-pointer bg-stone-100 hover:bg-stone-200 border border-stone-300 border-dashed text-sm text-stone-500 px-3 py-2 rounded-lg transition text-center">
                           {quoteFiles[req.id] ? `📄 ${quoteFiles[req.id].name}` : '📎 Attach PDF quote (optional)'}
                           <input type="file" accept=".pdf" className="hidden"
                             onChange={e => {
@@ -379,8 +379,8 @@ export default function SupplierDashboard() {
 
         {/* Past quotes */}
         {quotes.length > 0 && (
-          <div className="mt-6 bg-gray-800 border border-gray-700 rounded-2xl overflow-hidden">
-            <div className="px-5 py-4 border-b border-gray-700">
+          <div className="mt-6 bg-white border border-stone-300 rounded-2xl overflow-hidden">
+            <div className="px-5 py-4 border-b border-stone-300">
               <p className="font-bold">📋 My Quotes</p>
             </div>
             <div className="divide-y divide-gray-700">
@@ -388,7 +388,7 @@ export default function SupplierDashboard() {
                 <div key={q.id} className="px-5 py-3 flex justify-between items-center gap-4">
                   <div>
                     <p className="text-sm font-semibold capitalize">{q.move_quote_requests?.service_type?.replace(/_/g, ' ')}</p>
-                    <p className="text-xs text-gray-400">{new Date(q.created_at).toLocaleDateString('en-ZA')}</p>
+                    <p className="text-xs text-stone-500">{new Date(q.created_at).toLocaleDateString('en-ZA')}</p>
                     {/* Show full address only if accepted */}
                     {q.status === 'accepted' && q.move_quote_requests?.to_address_full && (
                       <p className="text-xs text-green-400 mt-0.5">📍 {q.move_quote_requests.to_address_full}</p>
@@ -403,7 +403,7 @@ export default function SupplierDashboard() {
                     <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${
                       q.status === 'accepted' ? 'bg-green-800 text-green-300' :
                       q.status === 'declined' ? 'bg-red-900 text-red-400' :
-                      'bg-gray-700 text-gray-400'
+                      'bg-stone-100 text-stone-500'
                     }`}>{q.status}</span>
                   </div>
                 </div>

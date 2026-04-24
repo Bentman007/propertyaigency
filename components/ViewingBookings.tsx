@@ -50,7 +50,7 @@ export default function ViewingBookings({ agentId }: { agentId: string }) {
   const past = bookings.filter(b => b.status === 'cancelled')
 
   return (
-    <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6">
+    <div className="bg-white rounded-2xl border border-stone-300 p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-bold">🏠 Viewing Bookings</h3>
         <div className="flex gap-2">
@@ -59,12 +59,12 @@ export default function ViewingBookings({ agentId }: { agentId: string }) {
               {pending.length} pending
             </span>
           )}
-          <span className="text-sm text-gray-400">Live</span>
+          <span className="text-sm text-stone-500">Live</span>
         </div>
       </div>
 
       {bookings.length === 0 ? (
-        <p className="text-gray-500 text-sm">No viewings yet. Make sure your availability is set!</p>
+        <p className="text-stone-400 text-sm">No viewings yet. Make sure your availability is set!</p>
       ) : (
         <div className="space-y-4">
           {/* Pending bookings first */}
@@ -106,7 +106,7 @@ export default function ViewingBookings({ agentId }: { agentId: string }) {
           {/* Cancelled */}
           {past.length > 0 && (
             <div>
-              <p className="text-xs text-gray-500 font-semibold mb-2 uppercase tracking-wide">❌ Cancelled</p>
+              <p className="text-xs text-stone-400 font-semibold mb-2 uppercase tracking-wide">❌ Cancelled</p>
               {past.map(booking => (
                 <BookingCard 
                   key={booking.id} 
@@ -128,12 +128,12 @@ export default function ViewingBookings({ agentId }: { agentId: string }) {
 
 function BookingCard({ booking, onAction, processing, getTempColor, getStatusColor, showActions }: any) {
   return (
-    <div className="bg-gray-700 rounded-xl p-4 mb-2">
+    <div className="bg-stone-100 rounded-xl p-4 mb-2">
       <div className="flex justify-between items-start mb-2">
         <div>
           <p className="font-semibold text-sm">{booking.properties?.title}</p>
-          <p className="text-gray-400 text-xs">{booking.property_address || `${booking.properties?.address}, ${booking.properties?.suburb}`}</p>
-          <p className="text-white font-bold mt-1">
+          <p className="text-stone-500 text-xs">{booking.property_address || `${booking.properties?.address}, ${booking.properties?.suburb}`}</p>
+          <p className="text-stone-900 font-bold mt-1">
             {new Date(booking.date).toLocaleDateString('en-ZA', { weekday: 'long', month: 'long', day: 'numeric' })} at {booking.start_time}
           </p>
         </div>
@@ -150,16 +150,16 @@ function BookingCard({ booking, onAction, processing, getTempColor, getStatusCol
       </div>
 
       {booking.searcher_profile && Object.keys(booking.searcher_profile).length > 0 && (
-        <div className="mt-2 p-2 bg-gray-600 rounded-lg mb-3">
-          <p className="text-xs text-gray-300 font-semibold mb-1">🤖 AI Buyer Profile:</p>
+        <div className="mt-2 p-2 bg-stone-200 rounded-lg mb-3">
+          <p className="text-xs text-stone-700 font-semibold mb-1">🤖 AI Buyer Profile:</p>
           {booking.searcher_profile.budget_max && (
-            <p className="text-xs text-gray-300">💰 Budget: R{booking.searcher_profile.budget_max?.toLocaleString()}</p>
+            <p className="text-xs text-stone-700">💰 Budget: R{booking.searcher_profile.budget_max?.toLocaleString()}</p>
           )}
           {booking.searcher_profile.move_timeline && (
-            <p className="text-xs text-gray-300">📅 Timeline: {booking.searcher_profile.move_timeline}</p>
+            <p className="text-xs text-stone-700">📅 Timeline: {booking.searcher_profile.move_timeline}</p>
           )}
-          {booking.searcher_profile.has_kids && <p className="text-xs text-gray-300">👨‍👩‍👧 Has children</p>}
-          {booking.searcher_profile.has_pets && <p className="text-xs text-gray-300">🐾 Has pets</p>}
+          {booking.searcher_profile.has_kids && <p className="text-xs text-stone-700">👨‍👩‍👧 Has children</p>}
+          {booking.searcher_profile.has_pets && <p className="text-xs text-stone-700">🐾 Has pets</p>}
         </div>
       )}
 
@@ -175,7 +175,7 @@ function BookingCard({ booking, onAction, processing, getTempColor, getStatusCol
           <button
             onClick={() => onAction(booking.id, 'decline')}
             disabled={processing === booking.id}
-            className="flex-1 bg-red-800 hover:bg-red-700 text-white font-bold py-2 rounded-lg text-sm disabled:opacity-50 transition"
+            className="flex-1 bg-red-800 hover:bg-red-700 text-stone-900 font-bold py-2 rounded-lg text-sm disabled:opacity-50 transition"
           >
             ❌ Decline
           </button>

@@ -36,14 +36,14 @@ export default function MarketplaceNudge({ userId }: { userId: string }) {
   return (
     <div className="bg-gradient-to-r from-green-900 to-gray-800 border border-green-600 rounded-2xl p-6 mb-8 relative">
       <button onClick={dismiss}
-        className="absolute top-3 right-3 text-gray-500 hover:text-white text-xs">
+        className="absolute top-3 right-3 text-stone-400 hover:text-stone-900 text-xs">
         ✕ Dismiss
       </button>
       <div className="flex items-start gap-4">
         <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-sm flex-shrink-0">AI</div>
         <div className="flex-1">
           <p className="text-sm font-semibold text-green-400 mb-2">PropertyAIgency Concierge</p>
-          <p className="text-gray-200 text-sm leading-relaxed mb-4">{nudge.content}</p>
+          <p className="text-stone-800 text-sm leading-relaxed mb-4">{nudge.content}</p>
           <Link href="/moving"
             className="inline-block bg-orange-500 hover:bg-orange-400 text-black font-bold px-6 py-2.5 rounded-xl text-sm transition">
             Explore Moving Services →

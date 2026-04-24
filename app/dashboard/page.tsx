@@ -301,15 +301,15 @@ export default function DashboardPage() {
   }
 
   if (loading) return (
-    <main className="min-h-screen bg-gray-900 flex items-center justify-center">
+    <main className="min-h-screen bg-stone-50 flex items-center justify-center">
       <div className="text-orange-500 text-xl">Loading your dashboard...</div>
     </main>
   )
 
   return (
-    <main className="min-h-screen bg-gray-900 text-white">
+    <main className="min-h-screen bg-stone-50 text-stone-900">
       {/* Header */}
-      <nav className="bg-gray-800 border-b border-gray-700 px-4 md:px-6 py-4 flex justify-between items-center">
+      <nav className="bg-white border-b border-stone-300 px-4 md:px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">
           Property<span className="text-orange-500">AI</span>gency
         </Link>
@@ -317,15 +317,15 @@ export default function DashboardPage() {
           <Link href="/list" className="bg-orange-500 text-black px-4 py-2 rounded-lg font-semibold hover:bg-orange-400 text-sm">
             + New Listing
           </Link>
-          <Link href="/bulk-upload" className="bg-gray-700 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-600 text-sm">
+          <Link href="/bulk-upload" className="bg-stone-100 text-stone-900 px-4 py-2 rounded-lg font-semibold hover:bg-stone-200 text-sm">
             📦 Bulk Upload
           </Link>
-          <Link href="/profile" className="text-gray-400 hover:text-white text-sm">
+          <Link href="/profile" className="text-stone-500 hover:text-stone-900 text-sm">
             👤 Profile
           </Link>
           <button 
             onClick={() => supabase.auth.signOut().then(() => window.location.href = '/')}
-            className="text-gray-400 hover:text-white text-sm"
+            className="text-stone-500 hover:text-stone-900 text-sm"
           >
             Sign Out
           </button>
@@ -338,7 +338,7 @@ export default function DashboardPage() {
         </div>
         <div className="mb-8 flex justify-between items-start">
           <div>
-            <p className="text-gray-400 text-sm mb-1">Welcome back 👋</p>
+            <p className="text-stone-500 text-sm mb-1">Welcome back 👋</p>
             <h1 className="text-3xl font-bold">
               {profile?.full_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'My Dashboard'}
             </h1>
@@ -346,13 +346,13 @@ export default function DashboardPage() {
               {profile?.agency_name && (
                 <span className="text-orange-500 text-sm font-semibold">{profile.agency_name}</span>
               )}
-              {profile?.agency_name && <span className="text-gray-600">·</span>}
-              <span className="text-gray-400 text-sm">{user?.email}</span>
+              {profile?.agency_name && <span className="text-stone-400">·</span>}
+              <span className="text-stone-500 text-sm">{user?.email}</span>
             </div>
           </div>
           <div className="text-right">
-            <p className="text-gray-500 text-xs">Last updated</p>
-            <p className="text-gray-300 text-sm">{new Date().toLocaleDateString('en-ZA', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+            <p className="text-stone-400 text-xs">Last updated</p>
+            <p className="text-stone-700 text-sm">{new Date().toLocaleDateString('en-ZA', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
           </div>
         </div>
 
@@ -368,20 +368,20 @@ export default function DashboardPage() {
 
         {properties.length > 0 && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
-            <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
-              <p className="text-gray-400 text-sm">Total Listings</p>
-              <p className="text-3xl font-bold text-white mt-1">{properties.length}</p>
+            <div className="bg-white rounded-xl p-4 border border-stone-300">
+              <p className="text-stone-500 text-sm">Total Listings</p>
+              <p className="text-3xl font-bold text-stone-900 mt-1">{properties.length}</p>
             </div>
-            <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
-              <p className="text-gray-400 text-sm">Total Views</p>
+            <div className="bg-white rounded-xl p-4 border border-stone-300">
+              <p className="text-stone-500 text-sm">Total Views</p>
               <p className="text-3xl font-bold text-orange-500 mt-1">{properties.reduce((a, p) => a + p.views, 0)}</p>
             </div>
-            <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
-              <p className="text-gray-400 text-sm">Total Enquiries</p>
+            <div className="bg-white rounded-xl p-4 border border-stone-300">
+              <p className="text-stone-500 text-sm">Total Enquiries</p>
               <p className="text-3xl font-bold text-green-400 mt-1">{properties.reduce((a, p) => a + p.enquiries, 0)}</p>
             </div>
-            <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
-              <p className="text-gray-400 text-sm">Hot Listings</p>
+            <div className="bg-white rounded-xl p-4 border border-stone-300">
+              <p className="text-stone-500 text-sm">Hot Listings</p>
               <p className="text-3xl font-bold text-yellow-400 mt-1">{properties.filter(p => p.heat_score >= 70).length}</p>
             </div>
           </div>
@@ -392,7 +392,7 @@ export default function DashboardPage() {
           <div className="text-center py-24">
             <p className="text-6xl mb-4">🏠</p>
             <h2 className="text-2xl font-bold mb-2">No listings yet</h2>
-            <p className="text-gray-400 mb-6">Create your first property listing to get started</p>
+            <p className="text-stone-500 mb-6">Create your first property listing to get started</p>
             <Link href="/list" className="bg-orange-500 text-black px-8 py-3 rounded-lg font-bold hover:bg-orange-400">
               List My Property
             </Link>
@@ -400,10 +400,10 @@ export default function DashboardPage() {
         ) : (
           <div className="space-y-6">
             {properties.map(property => (
-              <div key={property.id} className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
+              <div key={property.id} className="bg-white rounded-2xl border border-stone-300 overflow-hidden">
                 <div className="flex">
                   {/* Photo */}
-                  <div className="w-48 h-48 bg-gray-700 flex-shrink-0">
+                  <div className="w-48 h-48 bg-stone-100 flex-shrink-0">
                     {property.photos?.[0] ? (
                       <img src={property.photos[0]} alt={property.title} className="w-full h-full object-cover"/>
                     ) : (
@@ -421,14 +421,14 @@ export default function DashboardPage() {
                             {getHeatLabel(property.heat_score)} {property.heat_score}
                           </span>
                         </div>
-                        <p className="text-gray-400 text-sm">📍 {property.address}, {property.suburb}, {property.city}</p>
+                        <p className="text-stone-500 text-sm">📍 {property.address}, {property.suburb}, {property.city}</p>
                         <p className="text-orange-500 font-bold mt-1">
                           R {property.price?.toLocaleString()} {property.price_type === 'rent' ? '/mo' : ''}
                         </p>
                       </div>
                       <div className="flex gap-2">
                         <Link href={`/property/${property.id}`} 
-                          className="text-sm bg-gray-700 hover:bg-gray-600 px-3 py-1.5 rounded-lg">
+                          className="text-sm bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-lg">
                           View Listing
                         </Link>
                         <Link href={`/list/edit/${property.id}`}
@@ -443,7 +443,7 @@ export default function DashboardPage() {
                         )}
                         {property.status === 'active' && (
                           <button onClick={() => updateStatus(property.id, 'under_offer')}
-                            className="text-sm bg-yellow-600 hover:bg-yellow-500 text-white px-3 py-1.5 rounded-lg">
+                            className="text-sm bg-yellow-600 hover:bg-yellow-500 text-stone-900 px-3 py-1.5 rounded-lg">
                             🟡 Under Offer
                           </button>
                         )}
@@ -457,13 +457,13 @@ export default function DashboardPage() {
                           className={`text-sm px-3 py-1.5 rounded-lg transition ${
                             property.featured 
                               ? 'bg-yellow-500 text-black hover:bg-yellow-400' 
-                              : 'bg-gray-700 hover:bg-yellow-500 hover:text-black text-gray-300'
+                              : 'bg-stone-100 hover:bg-yellow-500 hover:text-black text-stone-700'
                           }`}>
                           {property.featured ? '⭐ Featured' : '☆ Mark Featured'}
                         </button>
                         <button onClick={() => initiateDelete(property.id)}
                           disabled={deletingId === property.id}
-                          className="text-sm bg-gray-700 hover:bg-red-700 text-gray-400 hover:text-white px-3 py-1.5 rounded-lg transition">
+                          className="text-sm bg-stone-100 hover:bg-red-700 text-stone-500 hover:text-stone-900 px-3 py-1.5 rounded-lg transition">
                           🗑️ Delete
                         </button>
                         {property.status !== 'active' && (
@@ -477,36 +477,36 @@ export default function DashboardPage() {
 
                     {/* Stats Grid */}
                     <div className="grid grid-cols-3 md:grid-cols-5 gap-2 md:gap-3">
-                      <div className="bg-gray-700 rounded-lg p-3 text-center">
-                        <p className="text-2xl font-bold text-white">{property.views}</p>
-                        <p className="text-gray-400 text-xs mt-1">Total Views</p>
+                      <div className="bg-stone-100 rounded-lg p-3 text-center">
+                        <p className="text-2xl font-bold text-stone-900">{property.views}</p>
+                        <p className="text-stone-500 text-xs mt-1">Total Views</p>
                       </div>
-                      <div className="bg-gray-700 rounded-lg p-3 text-center">
+                      <div className="bg-stone-100 rounded-lg p-3 text-center">
                         <p className="text-2xl font-bold text-blue-400">{property.unique_viewers}</p>
-                        <p className="text-gray-400 text-xs mt-1">Unique Visitors</p>
+                        <p className="text-stone-500 text-xs mt-1">Unique Visitors</p>
                       </div>
-                      <div className="bg-gray-700 rounded-lg p-3 text-center">
+                      <div className="bg-stone-100 rounded-lg p-3 text-center">
                         <p className="text-2xl font-bold text-purple-400">{property.return_viewers}</p>
-                        <p className="text-gray-400 text-xs mt-1">Return Visitors</p>
+                        <p className="text-stone-500 text-xs mt-1">Return Visitors</p>
                       </div>
-                      <div className="bg-gray-700 rounded-lg p-3 text-center">
+                      <div className="bg-stone-100 rounded-lg p-3 text-center">
                         <p className="text-2xl font-bold text-yellow-400">{formatTime(property.avg_time_seconds)}</p>
-                        <p className="text-gray-400 text-xs mt-1">Avg Time</p>
+                        <p className="text-stone-500 text-xs mt-1">Avg Time</p>
                       </div>
-                      <div className="bg-gray-700 rounded-lg p-3 text-center">
+                      <div className="bg-stone-100 rounded-lg p-3 text-center">
                         <p className="text-2xl font-bold text-green-400">{property.enquiries}</p>
-                        <p className="text-gray-400 text-xs mt-1">Enquiries</p>
+                        <p className="text-stone-500 text-xs mt-1">Enquiries</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* AI Insight Panel */}
-                <div className="border-t border-gray-700 px-6 py-4">
+                <div className="border-t border-stone-300 px-6 py-4">
                   {aiInsights[property.id] ? (
                     <div className="flex gap-3">
                       <span className="text-2xl">🤖</span>
-                      <p className="text-gray-300 text-sm leading-relaxed">{aiInsights[property.id]}</p>
+                      <p className="text-stone-700 text-sm leading-relaxed">{aiInsights[property.id]}</p>
                     </div>
                   ) : (
                     <button
@@ -536,9 +536,9 @@ export default function DashboardPage() {
       {/* Delete confirmation modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4">
-          <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 max-w-md w-full" onClick={e => e.stopPropagation()}>
+          <div className="bg-white border border-stone-300 rounded-2xl p-6 max-w-md w-full" onClick={e => e.stopPropagation()}>
             <h3 className="text-lg font-bold mb-2">🗑️ Delete Listing</h3>
-            <p className="text-gray-400 text-sm mb-4">This will permanently remove the listing. Please let us know why you are deleting it.</p>
+            <p className="text-stone-500 text-sm mb-4">This will permanently remove the listing. Please let us know why you are deleting it.</p>
             
             <div className="space-y-2 mb-4">
               {[
@@ -550,7 +550,7 @@ export default function DashboardPage() {
               ].map(reason => (
                 <button key={reason} onClick={() => setDeleteReason(reason)}
                   className={`w-full text-left px-4 py-2.5 rounded-lg text-sm transition ${
-                    deleteReason === reason ? 'bg-orange-500 text-black font-semibold' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    deleteReason === reason ? 'bg-orange-500 text-black font-semibold' : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
                   }`}>
                   {reason}
                 </button>
@@ -563,12 +563,12 @@ export default function DashboardPage() {
                 onChange={e => setCustomReason(e.target.value)}
                 placeholder="Please tell us more..."
                 rows={2}
-                className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500 mb-4"/>
+                className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500 mb-4"/>
             )}
 
             <div className="flex gap-3">
               <button onClick={() => { setShowDeleteModal(false); setPendingDeleteId(null) }}
-                className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2.5 rounded-lg transition">
+                className="flex-1 bg-stone-100 hover:bg-stone-200 text-stone-900 font-bold py-2.5 rounded-lg transition">
                 Cancel
               </button>
               <button onClick={confirmDelete} disabled={!deleteReason}

@@ -67,7 +67,7 @@ export default function AddressAutocomplete({ onSelect }: { onSelect: (result: A
     <input
       ref={inputRef}
       type="text"
-      className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
+      className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
       placeholder="Start typing your property address..."
     />
   )

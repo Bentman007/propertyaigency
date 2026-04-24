@@ -14,7 +14,7 @@ export default function PropertyMessaging({ property }: { property: any }) {
 
   if (!user) return (
     <a href={`/auth/login?next=/property/${property.id}`}
-      className="w-full bg-gray-700 text-white font-bold py-3 rounded-lg hover:bg-gray-600 transition-colors mb-3 block text-center">
+      className="w-full bg-stone-100 text-stone-900 font-bold py-3 rounded-lg hover:bg-stone-200 transition-colors mb-3 block text-center">
       💬 Message Agent
     </a>
   )
@@ -27,7 +27,7 @@ export default function PropertyMessaging({ property }: { property: any }) {
       {!showMessages ? (
         <button
           onClick={() => setShowMessages(true)}
-          className="w-full bg-gray-700 text-white font-bold py-3 rounded-lg hover:bg-gray-600 transition-colors">
+          className="w-full bg-stone-100 text-stone-900 font-bold py-3 rounded-lg hover:bg-stone-200 transition-colors">
           💬 Message Agent
         </button>
       ) : (

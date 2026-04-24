@@ -7,7 +7,7 @@ export default function PhotoGallery({ photos, title }: { photos: string[], titl
   const [showAll, setShowAll] = useState(false)
 
   if (!photos || photos.length === 0) return (
-    <div className="bg-gray-800 rounded-2xl h-80 flex items-center justify-center text-8xl mb-8 border border-gray-700">
+    <div className="bg-white rounded-2xl h-80 flex items-center justify-center text-8xl mb-8 border border-stone-300">
       🏡
     </div>
   )
@@ -15,7 +15,7 @@ export default function PhotoGallery({ photos, title }: { photos: string[], titl
   return (
     <div className="mb-8">
       {/* Main photo with arrows */}
-      <div className="relative rounded-2xl h-96 overflow-hidden bg-gray-800 border border-gray-700">
+      <div className="relative rounded-2xl h-96 overflow-hidden bg-white border border-stone-300">
         <img 
           src={photos[current]} 
           alt={`${title} ${current + 1}`} 
@@ -23,7 +23,7 @@ export default function PhotoGallery({ photos, title }: { photos: string[], titl
         />
         
         {/* Photo counter */}
-        <div className="absolute top-4 right-4 bg-black bg-opacity-60 text-white text-sm px-3 py-1 rounded-full">
+        <div className="absolute top-4 right-4 bg-black bg-opacity-60 text-stone-900 text-sm px-3 py-1 rounded-full">
           {current + 1} / {photos.length}
         </div>
 
@@ -31,7 +31,7 @@ export default function PhotoGallery({ photos, title }: { photos: string[], titl
         {current > 0 && (
           <button
             onClick={() => setCurrent(current - 1)}
-            className="absolute left-3 top-1/2 -translate-y-1/2 bg-black bg-opacity-60 hover:bg-opacity-80 text-white w-10 h-10 rounded-full flex items-center justify-center text-xl transition"
+            className="absolute left-3 top-1/2 -translate-y-1/2 bg-black bg-opacity-60 hover:bg-opacity-80 text-stone-900 w-10 h-10 rounded-full flex items-center justify-center text-xl transition"
           >
             ‹
           </button>
@@ -41,7 +41,7 @@ export default function PhotoGallery({ photos, title }: { photos: string[], titl
         {current < photos.length - 1 && (
           <button
             onClick={() => setCurrent(current + 1)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 bg-black bg-opacity-60 hover:bg-opacity-80 text-white w-10 h-10 rounded-full flex items-center justify-center text-xl transition"
+            className="absolute right-3 top-1/2 -translate-y-1/2 bg-black bg-opacity-60 hover:bg-opacity-80 text-stone-900 w-10 h-10 rounded-full flex items-center justify-center text-xl transition"
           >
             ›
           </button>
@@ -66,7 +66,7 @@ export default function PhotoGallery({ photos, title }: { photos: string[], titl
               key={i}
               onClick={() => setCurrent(i)}
               className={`flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden border-2 transition ${
-                current === i ? 'border-orange-500' : 'border-gray-700 hover:border-gray-500'
+                current === i ? 'border-orange-500' : 'border-stone-300 hover:border-gray-500'
               }`}
             >
               <img src={photo} alt={`${title} ${i + 1}`} className="w-full h-full object-cover"/>
@@ -79,8 +79,8 @@ export default function PhotoGallery({ photos, title }: { photos: string[], titl
       {showAll && (
         <div className="fixed inset-0 bg-black bg-opacity-95 z-50 flex flex-col">
           <div className="flex justify-between items-center px-6 py-4">
-            <span className="text-white font-semibold">{title} — {current + 1} of {photos.length}</span>
-            <button onClick={() => setShowAll(false)} className="text-white hover:text-orange-500 text-2xl">✕</button>
+            <span className="text-stone-900 font-semibold">{title} — {current + 1} of {photos.length}</span>
+            <button onClick={() => setShowAll(false)} className="text-stone-900 hover:text-orange-500 text-2xl">✕</button>
           </div>
           
           <div className="flex-1 flex items-center justify-center relative px-16">
@@ -88,13 +88,13 @@ export default function PhotoGallery({ photos, title }: { photos: string[], titl
             
             {current > 0 && (
               <button onClick={() => setCurrent(current - 1)}
-                className="absolute left-4 bg-white bg-opacity-20 hover:bg-opacity-40 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl">
+                className="absolute left-4 bg-white bg-opacity-20 hover:bg-opacity-40 text-stone-900 w-12 h-12 rounded-full flex items-center justify-center text-2xl">
                 ‹
               </button>
             )}
             {current < photos.length - 1 && (
               <button onClick={() => setCurrent(current + 1)}
-                className="absolute right-4 bg-white bg-opacity-20 hover:bg-opacity-40 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl">
+                className="absolute right-4 bg-white bg-opacity-20 hover:bg-opacity-40 text-stone-900 w-12 h-12 rounded-full flex items-center justify-center text-2xl">
                 ›
               </button>
             )}

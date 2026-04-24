@@ -99,9 +99,9 @@ export default function SupplierMessageThread({
     new Date(ts).toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' })
 
   return (
-    <div className="flex flex-col bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
+    <div className="flex flex-col bg-white rounded-2xl border border-stone-300 overflow-hidden">
       {/* Header */}
-      <div className="px-4 py-3 border-b border-gray-700 flex items-center gap-3">
+      <div className="px-4 py-3 border-b border-stone-300 flex items-center gap-3">
         <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs">AI</div>
         <div>
           <p className="font-semibold text-sm">
@@ -109,13 +109,13 @@ export default function SupplierMessageThread({
               ? `Message ${supplierName || 'Supplier'}`
               : 'Client Message'}
           </p>
-          <p className="text-xs text-gray-400 capitalize">{serviceType?.replace(/_/g, ' ')} · Via PropertyAIgency</p>
+          <p className="text-xs text-stone-500 capitalize">{serviceType?.replace(/_/g, ' ')} · Via PropertyAIgency</p>
         </div>
       </div>
 
       {/* Privacy notice */}
-      <div className="px-4 py-2 bg-gray-750 border-b border-gray-700">
-        <p className="text-xs text-gray-500">
+      <div className="px-4 py-2 bg-stone-50 border-b border-stone-300">
+        <p className="text-xs text-stone-400">
           🔒 All messages are routed through PropertyAIgency. Contact details are not shared until you accept a quote.
         </p>
       </div>
@@ -123,11 +123,11 @@ export default function SupplierMessageThread({
       {/* Messages */}
       <div className="h-64 overflow-y-auto p-4 space-y-3">
         {loading ? (
-          <p className="text-gray-500 text-sm text-center">Loading...</p>
+          <p className="text-stone-400 text-sm text-center">Loading...</p>
         ) : messages.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-gray-500 text-sm">No messages yet.</p>
-            <p className="text-gray-600 text-xs mt-1">
+            <p className="text-stone-400 text-sm">No messages yet.</p>
+            <p className="text-stone-400 text-xs mt-1">
               {currentUserType === 'buyer'
                 ? `Ask ${supplierName || 'the supplier'} a question about their quote.`
                 : 'The client will message you here if they have questions.'}
@@ -138,15 +138,15 @@ export default function SupplierMessageThread({
           return (
             <div key={i} className={`flex gap-2 ${isMe ? 'justify-end' : 'justify-start'}`}>
               {!isMe && (
-                <div className="w-7 h-7 bg-gray-600 rounded-full flex items-center justify-center text-xs flex-shrink-0">
+                <div className="w-7 h-7 bg-stone-200 rounded-full flex items-center justify-center text-xs flex-shrink-0">
                   {currentUserType === 'buyer' ? '🏢' : '👤'}
                 </div>
               )}
               <div className={`rounded-xl px-3 py-2 text-sm max-w-xs ${
-                isMe ? 'bg-orange-500 text-black' : 'bg-gray-700 text-gray-200'
+                isMe ? 'bg-orange-500 text-black' : 'bg-stone-100 text-stone-800'
               }`}>
                 <p>{msg.content}</p>
-                <p className={`text-xs mt-1 ${isMe ? 'text-orange-900' : 'text-gray-500'}`}>
+                <p className={`text-xs mt-1 ${isMe ? 'text-orange-900' : 'text-stone-400'}`}>
                   {formatTime(msg.created_at)}
                 </p>
               </div>
@@ -158,8 +158,8 @@ export default function SupplierMessageThread({
 
       {/* AI suggested reply */}
       {suggestedReply && (
-        <div className="px-4 py-2 border-t border-gray-700 bg-gray-750">
-          <p className="text-xs text-gray-500 mb-1">✨ Suggested reply:</p>
+        <div className="px-4 py-2 border-t border-stone-300 bg-stone-50">
+          <p className="text-xs text-stone-400 mb-1">✨ Suggested reply:</p>
           <button onClick={() => { setInput(suggestedReply); setSuggestedReply('') }}
             className="text-sm text-orange-400 hover:text-orange-300 text-left">
             {suggestedReply}
@@ -168,11 +168,11 @@ export default function SupplierMessageThread({
       )}
 
       {/* Input */}
-      <div className="p-3 border-t border-gray-700 flex gap-2">
+      <div className="p-3 border-t border-stone-300 flex gap-2">
         <input value={input} onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage(input)}
           placeholder={currentUserType === 'buyer' ? 'Ask a question...' : 'Reply to client...'}
-          className="flex-1 bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
+          className="flex-1 bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
         <button onClick={() => sendMessage(input)} disabled={sending || !input.trim()}
           className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-4 py-2 rounded-lg text-sm disabled:opacity-50">
           {sending ? '...' : 'Send'}

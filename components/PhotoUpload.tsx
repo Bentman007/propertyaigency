@@ -47,10 +47,10 @@ export default function PhotoUpload({ propertyId, onUpload }: { propertyId: stri
 
   return (
     <div>
-      <div className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${uploading ? 'border-orange-500 bg-orange-500/5' : 'border-gray-600 hover:border-orange-500'}`}>
+      <div className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${uploading ? 'border-orange-500 bg-orange-500/5' : 'border-stone-300 hover:border-orange-500'}`}>
         <div className="text-4xl mb-3">📸</div>
-        <p className="text-gray-300 font-medium mb-1">{uploading ? 'Uploading...' : 'Upload Property Photos'}</p>
-        <p className="text-gray-500 text-sm mb-4">Max 5MB per photo · JPG, PNG, WebP · Multiple allowed</p>
+        <p className="text-stone-700 font-medium mb-1">{uploading ? 'Uploading...' : 'Upload Property Photos'}</p>
+        <p className="text-stone-400 text-sm mb-4">Max 5MB per photo · JPG, PNG, WebP · Multiple allowed</p>
         <label className="bg-orange-500 text-black font-bold px-6 py-2 rounded-lg cursor-pointer hover:bg-orange-400 transition-colors">
           {uploading ? 'Uploading...' : 'Choose Photos'}
           <input type="file" accept="image/jpeg,image/png,image/webp" multiple
@@ -63,7 +63,7 @@ export default function PhotoUpload({ propertyId, onUpload }: { propertyId: stri
           <p className="text-green-400 text-sm font-medium mb-2">✓ {uploaded.length} photo{uploaded.length > 1 ? 's' : ''} uploaded</p>
           <div className="grid grid-cols-4 gap-2">
             {uploaded.map((url, i) => (
-              <div key={i} className="aspect-square rounded-lg overflow-hidden bg-gray-700">
+              <div key={i} className="aspect-square rounded-lg overflow-hidden bg-stone-100">
                 <img src={url} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" />
               </div>
             ))}

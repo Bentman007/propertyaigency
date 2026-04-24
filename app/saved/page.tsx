@@ -123,27 +123,27 @@ export default function SavedPage() {
     if (views >= 20) return { label: `🔥 ${views} people viewing`, color: 'text-red-400' }
     if (views >= 10) return { label: `⚡ ${views} people viewing`, color: 'text-yellow-400' }
     if (views >= 3) return { label: `👀 ${views} people viewing`, color: 'text-blue-400' }
-    return { label: `${views} views so far`, color: 'text-gray-400' }
+    return { label: `${views} views so far`, color: 'text-stone-500' }
   }
 
   if (loading) return (
-    <main className="min-h-screen bg-gray-900 flex items-center justify-center">
+    <main className="min-h-screen bg-stone-50 flex items-center justify-center">
       <div className="text-orange-500 text-xl">Loading your saved properties...</div>
     </main>
   )
 
   return (
-    <main className="min-h-screen bg-gray-900 text-white">
-      <nav className="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center">
+    <main className="min-h-screen bg-stone-50 text-stone-900">
+      <nav className="bg-white border-b border-stone-300 px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">
           Property<span className="text-orange-500">AI</span>gency
         </Link>
         <div className="flex gap-4 items-center">
-          <Link href="/search" className="text-gray-300 hover:text-orange-500 text-sm">🔍 AI Search</Link>
-          <Link href="/dashboard" className="text-gray-300 hover:text-orange-500 text-sm">My Dashboard</Link>
+          <Link href="/search" className="text-stone-700 hover:text-orange-500 text-sm">🔍 AI Search</Link>
+          <Link href="/dashboard" className="text-stone-700 hover:text-orange-500 text-sm">My Dashboard</Link>
           <button
             onClick={() => supabase.auth.signOut().then(() => window.location.href = '/')}
-            className="text-gray-400 hover:text-white text-sm"
+            className="text-stone-500 hover:text-stone-900 text-sm"
           >
             Sign Out
           </button>
@@ -154,7 +154,7 @@ export default function SavedPage() {
         <div className="mb-8 flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold">Saved Properties</h1>
-            <p className="text-gray-400 mt-1">Properties you love — with live market insights</p>
+            <p className="text-stone-500 mt-1">Properties you love — with live market insights</p>
           </div>
           <Link href="/search" className="bg-orange-500 text-black px-4 py-2 rounded-lg font-semibold hover:bg-orange-400 text-sm">
             + Find More
@@ -165,7 +165,7 @@ export default function SavedPage() {
           <div className="text-center py-24">
             <p className="text-6xl mb-4">💾</p>
             <h2 className="text-2xl font-bold mb-2">No saved properties yet</h2>
-            <p className="text-gray-400 mb-6">Use AI Search to find properties and save the ones you love</p>
+            <p className="text-stone-500 mb-6">Use AI Search to find properties and save the ones you love</p>
             <Link href="/search" className="bg-orange-500 text-black px-8 py-3 rounded-lg font-bold hover:bg-orange-400">
               Start AI Search
             </Link>
@@ -175,10 +175,10 @@ export default function SavedPage() {
             {properties.map(property => {
               const viewsInfo = getViewsLabel(property.total_views)
               return (
-                <div key={property.id} className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
+                <div key={property.id} className="bg-white rounded-2xl border border-stone-300 overflow-hidden">
                   <div className="flex">
                     {/* Photo */}
-                    <div className="w-48 h-48 bg-gray-700 flex-shrink-0">
+                    <div className="w-48 h-48 bg-stone-100 flex-shrink-0">
                       {property.photos?.[0] ? (
                         <img src={property.photos[0]} alt={property.title} className="w-full h-full object-cover"/>
                       ) : (
@@ -190,18 +190,18 @@ export default function SavedPage() {
                       <div className="flex justify-between items-start">
                         <div>
                           <h2 className="text-xl font-bold">{property.title}</h2>
-                          <p className="text-gray-400 text-sm">📍 {property.suburb}, {property.city}</p>
+                          <p className="text-stone-500 text-sm">📍 {property.suburb}, {property.city}</p>
                           <p className="text-orange-500 font-bold text-xl mt-1">{formatPrice(property.price, property.price_type)}</p>
                         </div>
                         <div className="text-right">
                           <p className={`text-sm font-semibold ${viewsInfo.color}`}>{viewsInfo.label}</p>
-                          <p className="text-gray-500 text-xs mt-1">
+                          <p className="text-stone-400 text-xs mt-1">
                             Saved {new Date(property.saved_at).toLocaleDateString('en-ZA')}
                           </p>
                         </div>
                       </div>
 
-                      <div className="flex gap-3 text-gray-400 text-xs mt-3">
+                      <div className="flex gap-3 text-stone-500 text-xs mt-3">
                         <span>🛏 {property.bedrooms} beds</span>
                         <span>🚿 {property.bathrooms} baths</span>
                         {property.has_pool && <span>🏊 Pool</span>}
@@ -218,13 +218,13 @@ export default function SavedPage() {
                         <button
                           onClick={() => getAiSummary(property, 'buyer')}
                           disabled={loadingSummary === property.id}
-                          className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg text-sm disabled:opacity-50"
+                          className="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-lg text-sm disabled:opacity-50"
                         >
                           {loadingSummary === property.id ? '⟳ Analysing...' : '🤖 AI Insight'}
                         </button>
                         <button
                           onClick={() => handleUnsave(property.id)}
-                          className="px-4 py-2 border border-gray-600 hover:border-red-500 hover:text-red-400 text-gray-400 rounded-lg text-sm"
+                          className="px-4 py-2 border border-stone-300 hover:border-red-500 hover:text-red-400 text-stone-500 rounded-lg text-sm"
                         >
                           Remove
                         </button>
@@ -233,9 +233,9 @@ export default function SavedPage() {
                   </div>
 
                   {aiSummaries[property.id] && (
-                    <div className="border-t border-gray-700 px-5 py-4 flex gap-3">
+                    <div className="border-t border-stone-300 px-5 py-4 flex gap-3">
                       <span className="text-2xl">🤖</span>
-                      <p className="text-gray-300 text-sm leading-relaxed">{aiSummaries[property.id]}</p>
+                      <p className="text-stone-700 text-sm leading-relaxed">{aiSummaries[property.id]}</p>
                     </div>
                   )}
                 </div>

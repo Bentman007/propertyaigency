@@ -88,7 +88,7 @@ export default function InterestButtons({ propertyId, agentId }: { propertyId: s
 
   if (status === 'rejected') return (
     <div className="text-center py-2 mb-3">
-      <p className="text-gray-500 text-xs mb-1">You marked this as not interested</p>
+      <p className="text-stone-400 text-xs mb-1">You marked this as not interested</p>
       <button onClick={() => {
         setStatus('none')
         supabase.from('rejected_properties').delete().eq('user_id', user.id).eq('property_id', propertyId)
@@ -101,8 +101,8 @@ export default function InterestButtons({ propertyId, agentId }: { propertyId: s
       <button onClick={() => handleInterest('very_interested')} disabled={loading}
         className={`w-full py-2.5 rounded-xl text-sm font-bold transition border-2 ${
           status === 'very_interested' 
-            ? 'bg-green-500 border-green-500 text-white' 
-            : 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-green-500 hover:border-green-500 hover:text-white'
+            ? 'bg-green-500 border-green-500 text-stone-900' 
+            : 'bg-stone-100 border-stone-300 text-stone-700 hover:bg-green-500 hover:border-green-500 hover:text-stone-900'
         }`}>
         {status === 'very_interested' ? '🔥 Very Interested!' : '🔥 Very Interested'}
       </button>
@@ -111,13 +111,13 @@ export default function InterestButtons({ propertyId, agentId }: { propertyId: s
         className={`w-full py-2.5 rounded-xl text-sm font-bold transition border-2 ${
           status === 'interested' 
             ? 'bg-amber-500 border-amber-500 text-black' 
-            : 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-amber-500 hover:border-amber-500 hover:text-black'
+            : 'bg-stone-100 border-stone-300 text-stone-700 hover:bg-amber-500 hover:border-amber-500 hover:text-black'
         }`}>
         {status === 'interested' ? '💛 Saved — Still Looking' : '💛 Still Looking But Like It'}
       </button>
 
       <button onClick={handleNotInterested} disabled={loading}
-        className="w-full py-2.5 rounded-xl text-sm font-bold transition border-2 bg-gray-700 border-gray-600 text-gray-300 hover:bg-red-600 hover:border-red-600 hover:text-white">
+        className="w-full py-2.5 rounded-xl text-sm font-bold transition border-2 bg-stone-100 border-stone-300 text-stone-700 hover:bg-red-600 hover:border-red-600 hover:text-stone-900">
         👎 Not Interested — Don&apos;t Show Again
       </button>
     </div>

@@ -64,25 +64,25 @@ export default function PushNotifications() {
   if (!user) return null
   
   if (!supported) return (
-    <div className="flex items-center gap-3 px-4 py-3 rounded-xl border bg-gray-700 border-gray-600">
+    <div className="flex items-center gap-3 px-4 py-3 rounded-xl border bg-stone-100 border-stone-300">
       <span className="text-xl">🔕</span>
       <div className="flex-1">
         <p className="text-sm font-semibold">Notifications not supported</p>
-        <p className="text-xs text-gray-400">Try opening this page in Chrome on your phone</p>
+        <p className="text-xs text-stone-500">Try opening this page in Chrome on your phone</p>
       </div>
     </div>
   )
 
   return (
     <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border ${
-      subscribed ? 'bg-green-900 border-green-700' : 'bg-gray-700 border-gray-600'
+      subscribed ? 'bg-green-900 border-green-700' : 'bg-stone-100 border-stone-300'
     }`}>
       <span className="text-xl">{subscribed ? '🔔' : '🔕'}</span>
       <div className="flex-1">
         <p className="text-sm font-semibold">
           {subscribed ? 'Notifications enabled' : 'Enable notifications'}
         </p>
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-stone-500">
           {subscribed 
             ? 'You\'ll be notified of viewings and messages' 
             : 'Get instant alerts for bookings and messages'}

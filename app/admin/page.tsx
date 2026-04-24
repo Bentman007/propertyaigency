@@ -167,29 +167,29 @@ export default function AdminPage() {
   }
 
   if (loading) return (
-    <main className="min-h-screen bg-gray-900 flex items-center justify-center">
+    <main className="min-h-screen bg-stone-50 flex items-center justify-center">
       <p className="text-orange-500 animate-pulse text-xl">Loading Control Centre...</p>
     </main>
   )
 
   return (
-    <main className="min-h-screen bg-gray-900 text-white">
-      <nav className="bg-gray-950 border-b border-gray-800 px-6 py-4 flex justify-between items-center">
+    <main className="min-h-screen bg-stone-50 text-stone-900">
+      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
         <div>
           <a href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</a>
           <span className="ml-3 bg-orange-500 text-black text-xs font-bold px-2 py-0.5 rounded">ADMIN</span>
         </div>
         <div className="flex items-center gap-4">
-          <Link href="/dashboard" className="text-gray-400 hover:text-white text-sm">Agent Dashboard</Link>
+          <Link href="/dashboard" className="text-stone-500 hover:text-stone-900 text-sm">Agent Dashboard</Link>
           <button onClick={() => supabase.auth.signOut().then(() => window.location.href = '/')}
-            className="text-gray-400 hover:text-white text-sm">Sign Out</button>
+            className="text-stone-500 hover:text-stone-900 text-sm">Sign Out</button>
         </div>
       </nav>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold">🎛️ Control Centre</h1>
-          <p className="text-gray-400 mt-1">Platform overview — {new Date().toLocaleDateString('en-ZA', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</p>
+          <p className="text-stone-500 mt-1">Platform overview — {new Date().toLocaleDateString('en-ZA', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</p>
         </div>
 
         {/* Traffic */}
@@ -201,9 +201,9 @@ export default function AdminPage() {
             { label: 'Logins This Month', value: stats.loginsMonth, color: 'text-orange-400' },
             { label: 'Total Users', value: stats.totalUsers, color: 'text-orange-400' },
           ].map(s => (
-            <div key={s.label} className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+            <div key={s.label} className="bg-white rounded-xl p-4 border border-stone-300">
               <p className={`text-3xl font-bold ${s.color}`}>{s.value}</p>
-              <p className="text-gray-400 text-sm mt-1">{s.label}</p>
+              <p className="text-stone-500 text-sm mt-1">{s.label}</p>
             </div>
           ))}
         </div>
@@ -218,9 +218,9 @@ export default function AdminPage() {
             { label: 'Under Offer', value: stats.underOffer, color: 'text-yellow-400' },
             { label: 'Sold/Rented', value: stats.sold, color: 'text-red-400' },
           ].map(s => (
-            <div key={s.label} className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+            <div key={s.label} className="bg-white rounded-xl p-4 border border-stone-300">
               <p className={`text-3xl font-bold ${s.color}`}>{s.value}</p>
-              <p className="text-gray-400 text-sm mt-1">{s.label}</p>
+              <p className="text-stone-500 text-sm mt-1">{s.label}</p>
             </div>
           ))}
         </div>
@@ -234,9 +234,9 @@ export default function AdminPage() {
             { label: 'Buyers/Renters', value: stats.buyers, color: 'text-purple-400' },
             { label: 'New Today', value: stats.todaySignups, color: 'text-purple-400' },
           ].map(s => (
-            <div key={s.label} className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+            <div key={s.label} className="bg-white rounded-xl p-4 border border-stone-300">
               <p className={`text-3xl font-bold ${s.color}`}>{s.value}</p>
-              <p className="text-gray-400 text-sm mt-1">{s.label}</p>
+              <p className="text-stone-500 text-sm mt-1">{s.label}</p>
             </div>
           ))}
         </div>
@@ -249,21 +249,21 @@ export default function AdminPage() {
             { label: 'This Week', value: stats.weekBookings, color: 'text-green-400' },
             { label: 'This Month', value: stats.bookingsMonth, color: 'text-green-400' },
           ].map(s => (
-            <div key={s.label} className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+            <div key={s.label} className="bg-white rounded-xl p-4 border border-stone-300">
               <p className={`text-3xl font-bold ${s.color}`}>{s.value}</p>
-              <p className="text-gray-400 text-sm mt-1">{s.label}</p>
+              <p className="text-stone-500 text-sm mt-1">{s.label}</p>
             </div>
           ))}
         </div>
 
         {/* User Management */}
         <h2 className="text-lg font-bold text-orange-500 mb-3">🔍 User Management</h2>
-        <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6 mb-8">
+        <div className="bg-white rounded-2xl border border-stone-300 p-6 mb-8">
           <div className="flex gap-3 mb-6">
             <input value={searchEmail} onChange={e => setSearchEmail(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && searchUser()}
               placeholder="Search by email address..."
-              className="flex-1 bg-gray-700 text-white rounded-xl px-4 py-3 outline-none border border-gray-600 focus:border-orange-500 text-sm"/>
+              className="flex-1 bg-stone-100 text-stone-900 rounded-xl px-4 py-3 outline-none border border-stone-300 focus:border-orange-500 text-sm"/>
             <button onClick={searchUser} disabled={searchingUser}
               className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-6 py-3 rounded-xl disabled:opacity-50 transition text-sm">
               {searchingUser ? 'Searching...' : 'Search'}
@@ -271,18 +271,18 @@ export default function AdminPage() {
           </div>
 
           {actionMessage && (
-            <div className="bg-gray-700 rounded-xl p-3 mb-4 text-sm text-center">{actionMessage}</div>
+            <div className="bg-stone-100 rounded-xl p-3 mb-4 text-sm text-center">{actionMessage}</div>
           )}
 
           {foundUser && (
             <div className="space-y-4">
-              <div className="bg-gray-700 rounded-xl p-4">
+              <div className="bg-stone-100 rounded-xl p-4">
                 <div className="flex justify-between items-start">
                   <div>
                     <p className="font-bold text-lg">{foundUser.full_name || 'Unknown'}</p>
-                    <p className="text-gray-400 text-sm">{foundUser.email}</p>
-                    <p className="text-gray-400 text-sm capitalize">Account type: {foundUser.account_type || 'buyer'}</p>
-                    <p className="text-gray-400 text-sm">Listing credits: {foundUser.listing_credits || 0}</p>
+                    <p className="text-stone-500 text-sm">{foundUser.email}</p>
+                    <p className="text-stone-500 text-sm capitalize">Account type: {foundUser.account_type || 'buyer'}</p>
+                    <p className="text-stone-500 text-sm">Listing credits: {foundUser.listing_credits || 0}</p>
                   </div>
                   <span className={`text-xs px-3 py-1 rounded-full font-bold ${foundUser.is_suspended ? 'bg-red-900 text-red-300' : 'bg-green-900 text-green-300'}`}>
                     {foundUser.is_suspended ? 'Suspended' : 'Active'}
@@ -291,12 +291,12 @@ export default function AdminPage() {
 
                 {userListings.length > 0 && (
                   <div className="mt-4">
-                    <p className="text-xs text-gray-400 mb-2 font-semibold uppercase tracking-wide">Their Listings ({userListings.length})</p>
+                    <p className="text-xs text-stone-500 mb-2 font-semibold uppercase tracking-wide">Their Listings ({userListings.length})</p>
                     <div className="space-y-1">
                       {userListings.slice(0, 5).map((l: any) => (
                         <div key={l.id} className="flex justify-between items-center text-sm">
-                          <span className="text-gray-300">{l.title}</span>
-                          <span className={`text-xs px-2 py-0.5 rounded-full ${l.status === 'active' ? 'bg-green-900 text-green-300' : l.status === 'draft' ? 'bg-gray-600 text-gray-300' : 'bg-red-900 text-red-300'}`}>{l.status}</span>
+                          <span className="text-stone-700">{l.title}</span>
+                          <span className={`text-xs px-2 py-0.5 rounded-full ${l.status === 'active' ? 'bg-green-900 text-green-300' : l.status === 'draft' ? 'bg-stone-200 text-stone-700' : 'bg-red-900 text-red-300'}`}>{l.status}</span>
                         </div>
                       ))}
                     </div>
@@ -305,30 +305,30 @@ export default function AdminPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-gray-700 rounded-xl p-4">
+                <div className="bg-stone-100 rounded-xl p-4">
                   <p className="font-semibold text-sm mb-2">🎁 Add Free Listing Credits</p>
                   <div className="flex gap-2">
                     <input type="number" value={creditAmount} onChange={e => setCreditAmount(e.target.value)}
                       placeholder="No. of listings"
-                      className="flex-1 bg-gray-600 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-500"/>
+                      className="flex-1 bg-stone-200 text-stone-900 rounded-lg px-3 py-2 text-sm outline-none border border-gray-500"/>
                     <button onClick={applyCredit} disabled={!creditAmount}
                       className="bg-green-600 hover:bg-green-500 text-white font-bold px-4 py-2 rounded-lg text-sm disabled:opacity-50">Apply</button>
                   </div>
                 </div>
 
-                <div className="bg-gray-700 rounded-xl p-4">
+                <div className="bg-stone-100 rounded-xl p-4">
                   <p className="font-semibold text-sm mb-2">💰 Apply Discount (%)</p>
                   <div className="flex gap-2">
                     <input type="number" value={discountAmount} onChange={e => setDiscountAmount(e.target.value)}
                       placeholder="% discount (e.g. 50)" min="1" max="100"
-                      className="flex-1 bg-gray-600 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-500"/>
+                      className="flex-1 bg-stone-200 text-stone-900 rounded-lg px-3 py-2 text-sm outline-none border border-gray-500"/>
                     <button onClick={applyDiscount} disabled={!discountAmount}
-                      className="bg-yellow-600 hover:bg-yellow-500 text-white font-bold px-4 py-2 rounded-lg text-sm disabled:opacity-50">Apply</button>
+                      className="bg-yellow-600 hover:bg-yellow-500 text-stone-900 font-bold px-4 py-2 rounded-lg text-sm disabled:opacity-50">Apply</button>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-gray-700 rounded-xl p-4">
+              <div className="bg-stone-100 rounded-xl p-4">
                 <p className="font-semibold text-sm mb-2">{foundUser.is_suspended ? '✅ Reinstate Account' : '🔴 Suspend Account'}</p>
                 <button onClick={() => suspendUser(!foundUser.is_suspended)}
                   className={`w-full font-bold py-2 rounded-lg text-sm transition ${foundUser.is_suspended ? 'bg-green-600 hover:bg-green-500 text-white' : 'bg-red-600 hover:bg-red-500 text-white'}`}>
@@ -337,10 +337,10 @@ export default function AdminPage() {
               </div>
 
               <div>
-                <label className="text-gray-400 text-xs mb-1 block">Internal note (optional)</label>
+                <label className="text-stone-500 text-xs mb-1 block">Internal note (optional)</label>
                 <input value={adminNote} onChange={e => setAdminNote(e.target.value)}
                   placeholder="e.g. Compensated for 3 days downtime..."
-                  className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
+                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
               </div>
             </div>
           )}
@@ -348,9 +348,9 @@ export default function AdminPage() {
 
         {/* User Feedback Summary */}
         <h2 className="text-lg font-bold text-orange-500 mb-3">💬 User Feedback</h2>
-        <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6 mb-8">
+        <div className="bg-white rounded-2xl border border-stone-300 p-6 mb-8">
           {feedback.length === 0 ? (
-            <p className="text-gray-400 text-center py-4">No feedback yet — it will appear once users have been on the platform for a while</p>
+            <p className="text-stone-500 text-center py-4">No feedback yet — it will appear once users have been on the platform for a while</p>
           ) : (
             <div>
               {/* Summary stats */}
@@ -362,7 +362,7 @@ export default function AdminPage() {
                 ].map(s => (
                   <div key={s.label} className={`${s.bg} rounded-xl p-4 text-center`}>
                     <p className={`text-3xl font-bold ${s.color}`}>{s.count}</p>
-                    <p className="text-gray-300 text-sm mt-1">{s.label}</p>
+                    <p className="text-stone-700 text-sm mt-1">{s.label}</p>
                     <p className={`text-xs ${s.color} font-bold mt-1`}>
                       {feedback.length > 0 ? Math.round((s.count / feedback.length) * 100) : 0}%
                     </p>
@@ -370,28 +370,28 @@ export default function AdminPage() {
                 ))}
               </div>
               {/* Positive % headline */}
-              <div className="bg-gray-700 rounded-xl p-4 mb-4 text-center">
+              <div className="bg-stone-100 rounded-xl p-4 mb-4 text-center">
                 <p className="text-2xl font-bold text-green-400">
                   ⭐ {feedback.length > 0 ? Math.round((feedback.filter((f:any) => f.sentiment === 'positive').length / feedback.length) * 100) : 0}% Positive Rating
                 </p>
-                <p className="text-gray-400 text-sm mt-1">from {feedback.length} user responses</p>
+                <p className="text-stone-500 text-sm mt-1">from {feedback.length} user responses</p>
               </div>
               {/* Latest 3 feedback items */}
               <div className="space-y-3 mb-4">
                 {feedback.slice(0, 3).map((f: any) => (
-                  <div key={f.id} className="bg-gray-700 rounded-xl p-3 flex gap-3 items-start">
+                  <div key={f.id} className="bg-stone-100 rounded-xl p-3 flex gap-3 items-start">
                     <span className={`text-xs font-bold px-2 py-1 rounded-full flex-shrink-0 ${
                       f.sentiment === 'positive' ? 'bg-green-900 text-green-300' :
                       f.sentiment === 'negative' ? 'bg-red-900 text-red-300' :
-                      'bg-gray-600 text-gray-300'
+                      'bg-stone-200 text-stone-700'
                     }`}>{f.sentiment || 'neutral'}</span>
-                    <p className="text-gray-200 text-sm flex-1" style={{display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>{f.feedback}</p>
-                    <span className="text-gray-500 text-xs flex-shrink-0">{f.user_type}</span>
+                    <p className="text-stone-800 text-sm flex-1" style={{display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>{f.feedback}</p>
+                    <span className="text-stone-400 text-xs flex-shrink-0">{f.user_type}</span>
                   </div>
                 ))}
               </div>
               <a href="/admin/suppliers" className="block w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2.5 rounded-xl text-center text-sm transition mb-2">Supplier Management</a>
-              <a href="/admin/feedback" className="block w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-2.5 rounded-xl text-center text-sm transition">
+              <a href="/admin/feedback" className="block w-full bg-stone-100 hover:bg-stone-200 text-stone-900 font-bold py-2.5 rounded-xl text-center text-sm transition">
                 View All Feedback →
               </a>
             </div>
@@ -400,8 +400,8 @@ export default function AdminPage() {
 
         {/* AI Team */}
         <h2 className="text-lg font-bold text-orange-500 mb-3 mt-8">🤖 Your AI Team</h2>
-        <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden mb-8">
-          <div className="grid grid-cols-3 md:grid-cols-6 border-b border-gray-700">
+        <div className="bg-white rounded-2xl border border-stone-300 overflow-hidden mb-8">
+          <div className="grid grid-cols-3 md:grid-cols-6 border-b border-stone-300">
             {[
               { id: 'marketing', label: '🎯 Marketing AI', desc: 'Social media, campaigns, growth' },
               { id: 'sales', label: '📞 Sales AI', desc: 'Agent acquisition, outreach' },
@@ -411,9 +411,9 @@ export default function AdminPage() {
               { id: 'security', label: '🔐 Security AI', desc: 'Threats, hacking, protection' },
             ].map(ai => (
               <button key={ai.id} onClick={() => { setActiveAI(ai.id as any); setAiHistory([]) }}
-                className={`p-4 text-left transition ${activeAI === ai.id ? 'bg-gray-700 border-b-2 border-orange-500' : 'hover:bg-gray-750'}`}>
+                className={`p-4 text-left transition ${activeAI === ai.id ? 'bg-stone-100 border-b-2 border-orange-500' : 'hover:bg-stone-50'}`}>
                 <p className="font-semibold text-sm">{ai.label}</p>
-                <p className="text-gray-400 text-xs mt-0.5">{ai.desc}</p>
+                <p className="text-stone-500 text-xs mt-0.5">{ai.desc}</p>
               </button>
             ))}
           </div>
@@ -422,7 +422,7 @@ export default function AdminPage() {
             {aiLoading && (
               <div className="flex gap-3">
                 <div className="w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs">AI</div>
-                <div className="bg-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-400 animate-pulse">Thinking...</div>
+                <div className="bg-stone-100 rounded-xl px-4 py-2.5 text-sm text-stone-500 animate-pulse">Thinking...</div>
               </div>
             )}
             {[...aiHistory].reverse().map((msg, i) => (
@@ -430,7 +430,7 @@ export default function AdminPage() {
                 {msg.role === 'assistant' && (
                   <div className="w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs flex-shrink-0">AI</div>
                 )}
-                <div className={`max-w-2xl rounded-xl px-4 py-2.5 text-sm whitespace-pre-wrap ${msg.role === 'user' ? 'bg-orange-500 text-black' : 'bg-gray-700 text-gray-200'}`}>
+                <div className={`max-w-2xl rounded-xl px-4 py-2.5 text-sm whitespace-pre-wrap ${msg.role === 'user' ? 'bg-orange-500 text-black' : 'bg-stone-100 text-stone-800'}`}>
                   {msg.content}
                 </div>
               </div>
@@ -438,38 +438,38 @@ export default function AdminPage() {
             {aiHistory.length === 0 && (
               <div className="text-center py-8">
                 <p className="text-3xl mb-2">{activeAI === 'marketing' ? '🎯' : activeAI === 'sales' ? '📞' : activeAI === 'finance' ? '💰' : activeAI === 'developer' ? '💻' : activeAI === 'security' ? '🔐' : '💬'}</p>
-                <p className="text-gray-400 text-sm font-semibold">{activeAI.charAt(0).toUpperCase() + activeAI.slice(1)} AI ready</p>
-                <p className="text-gray-500 text-xs mt-1">Ask me anything about {activeAI}</p>
+                <p className="text-stone-500 text-sm font-semibold">{activeAI.charAt(0).toUpperCase() + activeAI.slice(1)} AI ready</p>
+                <p className="text-stone-400 text-xs mt-1">Ask me anything about {activeAI}</p>
               </div>
             )}
           </div>
 
-          <div className="px-4 py-2 border-t border-gray-700 flex gap-2 overflow-x-auto">
+          <div className="px-4 py-2 border-t border-stone-300 flex gap-2 overflow-x-auto">
             {activeAI === 'marketing' && ['Write a LinkedIn post about our AI Concierge', 'Draft an email to estate agents in Johannesburg', 'Suggest 3 growth strategies for this month'].map(p => (
-              <button key={p} onClick={() => setAiInput(p)} className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-1.5 rounded-full whitespace-nowrap transition">{p}</button>
+              <button key={p} onClick={() => setAiInput(p)} className="text-xs bg-stone-100 hover:bg-stone-200 text-stone-700 px-3 py-1.5 rounded-full whitespace-nowrap transition">{p}</button>
             ))}
             {activeAI === 'sales' && ['Draft outreach email to Pam Golding', 'Handle objection: We already use Property24', 'Create a pitch for a small agency'].map(p => (
-              <button key={p} onClick={() => setAiInput(p)} className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-1.5 rounded-full whitespace-nowrap transition">{p}</button>
+              <button key={p} onClick={() => setAiInput(p)} className="text-xs bg-stone-100 hover:bg-stone-200 text-stone-700 px-3 py-1.5 rounded-full whitespace-nowrap transition">{p}</button>
             ))}
             {activeAI === 'finance' && ['What are my current monthly costs?', 'When will I break even with 50 agents?', 'How can I reduce my Anthropic costs?'].map(p => (
-              <button key={p} onClick={() => setAiInput(p)} className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-1.5 rounded-full whitespace-nowrap transition">{p}</button>
+              <button key={p} onClick={() => setAiInput(p)} className="text-xs bg-stone-100 hover:bg-stone-200 text-stone-700 px-3 py-1.5 rounded-full whitespace-nowrap transition">{p}</button>
             ))}
             {activeAI === 'developer' && ['Explain how the AI search works', 'What would it take to add a new feature?', 'How do I read my Vercel error logs?'].map(p => (
-              <button key={p} onClick={() => setAiInput(p)} className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-1.5 rounded-full whitespace-nowrap transition">{p}</button>
+              <button key={p} onClick={() => setAiInput(p)} className="text-xs bg-stone-100 hover:bg-stone-200 text-stone-700 px-3 py-1.5 rounded-full whitespace-nowrap transition">{p}</button>
             ))}
             {activeAI === 'security' && ['How secure is the platform right now?', 'What should I do if we get hacked?', 'How do I report a data breach under POPIA?'].map(p => (
-              <button key={p} onClick={() => setAiInput(p)} className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-1.5 rounded-full whitespace-nowrap transition">{p}</button>
+              <button key={p} onClick={() => setAiInput(p)} className="text-xs bg-stone-100 hover:bg-stone-200 text-stone-700 px-3 py-1.5 rounded-full whitespace-nowrap transition">{p}</button>
             ))}
             {activeAI === 'support' && ['Agent cannot edit their listing', 'Buyer not receiving notifications', 'How to handle a refund request'].map(p => (
-              <button key={p} onClick={() => setAiInput(p)} className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-1.5 rounded-full whitespace-nowrap transition">{p}</button>
+              <button key={p} onClick={() => setAiInput(p)} className="text-xs bg-stone-100 hover:bg-stone-200 text-stone-700 px-3 py-1.5 rounded-full whitespace-nowrap transition">{p}</button>
             ))}
           </div>
 
-          <div className="p-4 border-t border-gray-700 flex gap-3">
+          <div className="p-4 border-t border-stone-300 flex gap-3">
             <input value={aiInput} onChange={e => setAiInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && askAI()}
               placeholder={`Ask your ${activeAI.charAt(0).toUpperCase() + activeAI.slice(1)} AI...`}
-              className="flex-1 bg-gray-700 text-white rounded-xl px-4 py-3 outline-none border border-gray-600 focus:border-orange-500 text-sm"/>
+              className="flex-1 bg-stone-100 text-stone-900 rounded-xl px-4 py-3 outline-none border border-stone-300 focus:border-orange-500 text-sm"/>
             <button onClick={askAI} disabled={aiLoading || !aiInput.trim()}
               className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-5 py-3 rounded-xl disabled:opacity-50 transition">
               Send

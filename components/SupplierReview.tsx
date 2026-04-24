@@ -64,12 +64,12 @@ export default function SupplierReview({ supplierId }: { supplierId: string }) {
 
   const renderStars = (count: number, size = 'text-lg') => {
     return Array.from({ length: 5 }).map((_, i) => (
-      <span key={i} className={`${size} ${i < count ? 'text-yellow-400' : 'text-gray-600'}`}>★</span>
+      <span key={i} className={`${size} ${i < count ? 'text-yellow-400' : 'text-stone-400'}`}>★</span>
     ))
   }
 
   return (
-    <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6">
+    <div className="bg-white border border-stone-300 rounded-2xl p-6">
       <div className="flex justify-between items-center mb-4">
         <div>
           <h3 className="font-bold text-lg">⭐ Reviews</h3>
@@ -77,7 +77,7 @@ export default function SupplierReview({ supplierId }: { supplierId: string }) {
             <div className="flex items-center gap-2 mt-1">
               <div className="flex">{renderStars(Math.round(avgRating))}</div>
               <span className="text-yellow-400 font-bold">{avgRating.toFixed(1)}</span>
-              <span className="text-gray-400 text-sm">({reviews.length} review{reviews.length !== 1 ? 's' : ''})</span>
+              <span className="text-stone-500 text-sm">({reviews.length} review{reviews.length !== 1 ? 's' : ''})</span>
             </div>
           )}
         </div>
@@ -91,7 +91,7 @@ export default function SupplierReview({ supplierId }: { supplierId: string }) {
 
       {/* Review form */}
       {showForm && (
-        <div className="bg-gray-700 rounded-xl p-4 mb-4">
+        <div className="bg-stone-100 rounded-xl p-4 mb-4">
           <p className="font-semibold text-sm mb-3">Your Rating</p>
           <div className="flex gap-1 mb-3">
             {Array.from({ length: 5 }).map((_, i) => (
@@ -99,21 +99,21 @@ export default function SupplierReview({ supplierId }: { supplierId: string }) {
                 onMouseEnter={() => setHoveredStar(i + 1)}
                 onMouseLeave={() => setHoveredStar(0)}
                 onClick={() => setRating(i + 1)}
-                className={`text-3xl transition ${i < (hoveredStar || rating) ? 'text-yellow-400' : 'text-gray-600'}`}>
+                className={`text-3xl transition ${i < (hoveredStar || rating) ? 'text-yellow-400' : 'text-stone-400'}`}>
                 ★
               </button>
             ))}
           </div>
           <textarea value={review} onChange={e => setReview(e.target.value)}
             rows={3} placeholder="Share your experience with this supplier..."
-            className="w-full bg-gray-600 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-500 focus:border-orange-500 mb-3"/>
+            className="w-full bg-stone-200 text-stone-900 rounded-lg px-3 py-2 text-sm outline-none border border-gray-500 focus:border-orange-500 mb-3"/>
           <div className="flex gap-2">
             <button onClick={submitReview} disabled={submitting || !rating}
               className="flex-1 bg-orange-500 hover:bg-orange-400 text-black font-bold py-2 rounded-lg text-sm disabled:opacity-50">
               {submitting ? 'Submitting...' : '✓ Submit Review'}
             </button>
             <button onClick={() => setShowForm(false)}
-              className="px-4 bg-gray-600 hover:bg-gray-500 text-white py-2 rounded-lg text-sm">
+              className="px-4 bg-stone-200 hover:bg-gray-500 text-stone-900 py-2 rounded-lg text-sm">
               Cancel
             </button>
           </div>
@@ -128,21 +128,21 @@ export default function SupplierReview({ supplierId }: { supplierId: string }) {
 
       {/* Reviews list */}
       {reviews.length === 0 ? (
-        <p className="text-gray-500 text-sm text-center py-4">No reviews yet — be the first!</p>
+        <p className="text-stone-400 text-sm text-center py-4">No reviews yet — be the first!</p>
       ) : (
         <div className="space-y-3">
           {reviews.map(r => (
-            <div key={r.id} className="border-t border-gray-700 pt-3">
+            <div key={r.id} className="border-t border-stone-300 pt-3">
               <div className="flex justify-between items-start mb-1">
                 <div>
                   <p className="font-semibold text-sm">{r.profiles?.full_name || 'Anonymous'}</p>
                   <div className="flex">{renderStars(r.rating, 'text-sm')}</div>
                 </div>
-                <span className="text-gray-500 text-xs">
+                <span className="text-stone-400 text-xs">
                   {new Date(r.created_at).toLocaleDateString('en-ZA', { month: 'short', day: 'numeric', year: 'numeric' })}
                 </span>
               </div>
-              {r.review && <p className="text-gray-300 text-sm mt-1">{r.review}</p>}
+              {r.review && <p className="text-stone-700 text-sm mt-1">{r.review}</p>}
             </div>
           ))}
         </div>

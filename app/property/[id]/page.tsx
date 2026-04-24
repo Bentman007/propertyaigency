@@ -32,7 +32,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
     .single()
 
   if (!p) return (
-    <main className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+    <main className="min-h-screen bg-stone-50 text-stone-900 flex items-center justify-center">
       <div className="text-center">
         <div className="text-6xl mb-4">🏠</div>
         <h1 className="text-2xl font-bold mb-2">Property not found</h1>
@@ -47,14 +47,14 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
   })).filter(group => group.items.length > 0)
 
   return (
-    <main className="min-h-screen bg-gray-900 text-white">
+    <main className="min-h-screen bg-stone-50 text-stone-900">
       <ViewTracker propertyId={p.id} />
 
       {/* Nav */}
-      <nav className="bg-gray-950 border-b border-gray-800 px-4 md:px-6 py-4 flex justify-between items-center">
+      <nav className="bg-stone-100 border-b border-stone-200 px-4 md:px-6 py-4 flex justify-between items-center">
         <a href="/" className="text-xl md:text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</a>
         <div className="flex items-center gap-2 md:gap-3">
-          <a href="/dashboard" className="text-gray-400 hover:text-white text-sm hidden md:block">← Dashboard</a>
+          <a href="/dashboard" className="text-stone-500 hover:text-stone-900 text-sm hidden md:block">← Dashboard</a>
           <EditListingButton propertyId={p.id} agentId={p.user_id} />
         </div>
       </nav>
@@ -79,11 +79,11 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
             <span className="bg-orange-500 text-black text-xs font-bold px-3 py-1 rounded-full">
               {p.price_type === 'rent' ? 'To Rent' : 'For Sale'}
             </span>
-            <span className="bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full capitalize">{p.property_type}</span>
+            <span className="bg-stone-100 text-stone-700 text-xs px-3 py-1 rounded-full capitalize">{p.property_type}</span>
             {p.featured && <span className="bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-full">⭐ Featured</span>}
           </div>
           <h1 className="text-2xl md:text-4xl font-bold mb-1">{p.title}</h1>
-          <p className="text-gray-400 text-sm md:text-base">📍 {p.address && `${p.address}, `}{p.suburb}, {p.city}, {p.province}</p>
+          <p className="text-stone-500 text-sm md:text-base">📍 {p.address && `${p.address}, `}{p.suburb}, {p.city}, {p.province}</p>
         </div>
 
         {/* Photo Gallery */}
@@ -98,46 +98,46 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
             {/* Key stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {p.bedrooms && (
-                <div className="bg-gray-800 border border-gray-700 rounded-xl p-3 md:p-4 text-center">
+                <div className="bg-white border border-stone-300 rounded-xl p-3 md:p-4 text-center">
                   <div className="text-xl md:text-2xl mb-1">🛏</div>
                   <div className="text-lg md:text-xl font-bold">{p.bedrooms}</div>
-                  <div className="text-gray-400 text-xs">Bedrooms</div>
+                  <div className="text-stone-500 text-xs">Bedrooms</div>
                 </div>
               )}
               {p.bathrooms && (
-                <div className="bg-gray-800 border border-gray-700 rounded-xl p-3 md:p-4 text-center">
+                <div className="bg-white border border-stone-300 rounded-xl p-3 md:p-4 text-center">
                   <div className="text-xl md:text-2xl mb-1">🚿</div>
                   <div className="text-lg md:text-xl font-bold">{p.bathrooms}</div>
-                  <div className="text-gray-400 text-xs">Bathrooms</div>
+                  <div className="text-stone-500 text-xs">Bathrooms</div>
                 </div>
               )}
               {p.garages > 0 && (
-                <div className="bg-gray-800 border border-gray-700 rounded-xl p-3 md:p-4 text-center">
+                <div className="bg-white border border-stone-300 rounded-xl p-3 md:p-4 text-center">
                   <div className="text-xl md:text-2xl mb-1">🚗</div>
                   <div className="text-lg md:text-xl font-bold">{p.garages}</div>
-                  <div className="text-gray-400 text-xs">Garages</div>
+                  <div className="text-stone-500 text-xs">Garages</div>
                 </div>
               )}
               {p.size_sqm && (
-                <div className="bg-gray-800 border border-gray-700 rounded-xl p-3 md:p-4 text-center">
+                <div className="bg-white border border-stone-300 rounded-xl p-3 md:p-4 text-center">
                   <div className="text-xl md:text-2xl mb-1">📐</div>
                   <div className="text-lg md:text-xl font-bold">{p.size_sqm}</div>
-                  <div className="text-gray-400 text-xs">m²</div>
+                  <div className="text-stone-500 text-xs">m²</div>
                 </div>
               )}
             </div>
 
             {/* Description */}
             {p.description && (
-              <div className="bg-gray-800 border border-gray-700 rounded-xl p-5">
+              <div className="bg-white border border-stone-300 rounded-xl p-5">
                 <h2 className="text-lg font-bold mb-3 text-orange-500">About This Property</h2>
-                <p className="text-gray-300 leading-relaxed text-sm md:text-base">{p.description}</p>
+                <p className="text-stone-700 leading-relaxed text-sm md:text-base">{p.description}</p>
               </div>
             )}
 
             {/* Video */}
             {p.video_url && (
-              <div className="bg-gray-800 border border-gray-700 rounded-xl p-5">
+              <div className="bg-white border border-stone-300 rounded-xl p-5">
                 <h2 className="text-lg font-bold mb-3 text-orange-500">🎥 Property Video</h2>
                 <div className="relative w-full" style={{paddingBottom: '56.25%'}}>
                   <iframe
@@ -158,7 +158,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
 
             {/* Virtual Tour */}
             {p.virtual_tour_url && (
-              <div className="bg-gray-800 border border-gray-700 rounded-xl p-5">
+              <div className="bg-white border border-stone-300 rounded-xl p-5">
                 <h2 className="text-lg font-bold mb-3 text-orange-500">🏠 Virtual Tour</h2>
                 <div className="relative w-full" style={{paddingBottom: '56.25%'}}>
                   <iframe
@@ -172,15 +172,15 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
 
             {/* Features */}
             {activeFeatures.length > 0 && (
-              <div className="bg-gray-800 border border-gray-700 rounded-xl p-5">
+              <div className="bg-white border border-stone-300 rounded-xl p-5">
                 <h2 className="text-lg font-bold mb-4 text-orange-500">Property Features</h2>
                 <div className="space-y-4">
                   {activeFeatures.map(group => (
                     <div key={group.label}>
-                      <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">{group.label}</h3>
+                      <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-2">{group.label}</h3>
                       <div className="flex flex-wrap gap-2">
                         {group.items.map(([, label]) => (
-                          <span key={label} className="bg-gray-700 text-gray-300 text-xs md:text-sm px-3 py-1 rounded-full flex items-center gap-1">
+                          <span key={label} className="bg-stone-100 text-stone-700 text-xs md:text-sm px-3 py-1 rounded-full flex items-center gap-1">
                             <span className="text-green-400">✓</span> {label}
                           </span>
                         ))}
@@ -202,12 +202,12 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
           <div className="space-y-4">
 
             {/* Price card - sticky on desktop */}
-            <div className="bg-gray-800 border border-orange-500 rounded-xl p-5">
+            <div className="bg-white border border-orange-500 rounded-xl p-5">
               <div className="text-2xl md:text-3xl font-bold text-orange-500 mb-1">
                 {formatPrice(p.price, p.price_type)}
               </div>
               {p.size_sqm && p.price_type === 'sale' && (
-                <div className="text-gray-400 text-sm mb-3">R {Math.round(p.price / p.size_sqm).toLocaleString()} per m²</div>
+                <div className="text-stone-500 text-sm mb-3">R {Math.round(p.price / p.size_sqm).toLocaleString()} per m²</div>
               )}
               <div className="bg-green-900 border border-green-700 rounded-lg p-3 mb-4">
                 <div className="text-green-400 font-bold text-sm">✓ Good Price</div>
@@ -220,8 +220,8 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
 
               <MortgageCalculator price={p.price} priceType={p.price_type} />
 
-              <div className="mt-4 pt-4 border-t border-gray-700">
-                <div className="flex items-center gap-2 text-xs text-gray-500">
+              <div className="mt-4 pt-4 border-t border-stone-300">
+                <div className="flex items-center gap-2 text-xs text-stone-400">
                   <span className="w-2 h-2 bg-green-400 rounded-full"></span>
                   AI Verified Listing
                 </div>

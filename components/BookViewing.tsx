@@ -62,15 +62,15 @@ export default function BookViewing({ property }: { property: any }) {
   )
 
   if (showSlots) return (
-    <div className="mb-3 bg-gray-750 rounded-xl">
+    <div className="mb-3 bg-stone-50 rounded-xl">
       <div className="flex justify-between items-center mb-3">
-        <p className="text-sm font-semibold text-white">📅 Available viewing times:</p>
-        <button onClick={() => setShowSlots(false)} className="text-gray-500 hover:text-white text-sm">✕</button>
+        <p className="text-sm font-semibold text-stone-900">📅 Available viewing times:</p>
+        <button onClick={() => setShowSlots(false)} className="text-stone-400 hover:text-stone-900 text-sm">✕</button>
       </div>
       {loading ? (
-        <div className="text-center py-4 text-gray-400 text-sm">Finding available slots...</div>
+        <div className="text-center py-4 text-stone-500 text-sm">Finding available slots...</div>
       ) : noSlots ? (
-        <div className="bg-gray-700 rounded-lg p-3 text-sm text-gray-400 text-center">
+        <div className="bg-stone-100 rounded-lg p-3 text-sm text-stone-500 text-center">
           No slots available yet — request a preferred time below and we'll confirm ASAP!
         </div>
       ) : (
@@ -78,12 +78,12 @@ export default function BookViewing({ property }: { property: any }) {
           {slots.map((slot, i) => (
             <button key={i} onClick={() => confirmBooking(slot)}
               disabled={booking}
-              className="w-full text-left px-4 py-3 bg-gray-700 hover:bg-orange-500 hover:text-black rounded-lg text-sm transition disabled:opacity-50 group">
+              className="w-full text-left px-4 py-3 bg-stone-100 hover:bg-orange-500 hover:text-black rounded-lg text-sm transition disabled:opacity-50 group">
               <div className="flex justify-between items-center">
                 <span className="font-semibold">
                   {new Date(slot.date).toLocaleDateString('en-ZA', { weekday: 'long', month: 'long', day: 'numeric' })}
                 </span>
-                <span className="text-gray-400 group-hover:text-black">
+                <span className="text-stone-500 group-hover:text-black">
                   {slot.start_time} ({slot.viewing_duration} min)
                 </span>
               </div>
@@ -104,7 +104,7 @@ export default function BookViewing({ property }: { property: any }) {
         setShowSlots(true)
         fetchSlots()
       }}
-      className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-lg transition-colors mb-3"
+      className="w-full bg-stone-100 hover:bg-stone-200 text-stone-900 font-bold py-3 rounded-lg transition-colors mb-3"
     >
       📅 Book a Viewing
     </button>

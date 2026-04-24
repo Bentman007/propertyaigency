@@ -89,25 +89,25 @@ export default function BuyerQuotes({ userId }: { userId: string }) {
           const hasAccepted = req.supplier_quotes?.some((q: any) => q.status === 'accepted')
 
           return (
-            <div key={req.id} className="bg-gray-800 border border-gray-700 rounded-2xl overflow-hidden">
-              <div className="px-5 py-4 border-b border-gray-700 flex justify-between items-center">
+            <div key={req.id} className="bg-white border border-stone-300 rounded-2xl overflow-hidden">
+              <div className="px-5 py-4 border-b border-stone-300 flex justify-between items-center">
                 <div>
                   <p className="font-bold">
                     {serviceIcon[req.service_type] || '📦'} {req.service_type.replace(/_/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())}
                   </p>
                   {req.from_address && (
-                    <p className="text-gray-400 text-xs mt-0.5">{req.from_address} → {req.to_address}</p>
+                    <p className="text-stone-500 text-xs mt-0.5">{req.from_address} → {req.to_address}</p>
                   )}
                 </div>
                 <span className={`text-xs px-2 py-1 rounded-full font-semibold ${
                   req.status === 'accepted' ? 'bg-green-900 text-green-300' :
                   req.status === 'pending'  ? 'bg-yellow-900 text-yellow-300' :
-                  'bg-gray-700 text-gray-400'
+                  'bg-stone-100 text-stone-500'
                 }`}>{req.status}</span>
               </div>
 
               {req.supplier_quotes?.length === 0 ? (
-                <div className="px-5 py-4 text-gray-500 text-sm">
+                <div className="px-5 py-4 text-stone-400 text-sm">
                   Waiting for supplier quotes (within 24 hours)...
                 </div>
               ) : (
@@ -116,8 +116,8 @@ export default function BuyerQuotes({ userId }: { userId: string }) {
                     <div key={quote.id} className="px-5 py-4">
                       <div className="flex items-start gap-3 mb-2">
                         {quote.suppliers?.logo_url
-                          ? <img src={quote.suppliers.logo_url} alt="" className="w-10 h-10 rounded-lg object-contain bg-gray-700 flex-shrink-0"/>
-                          : <div className="w-10 h-10 rounded-lg bg-gray-700 flex items-center justify-center text-lg flex-shrink-0">🏢</div>
+                          ? <img src={quote.suppliers.logo_url} alt="" className="w-10 h-10 rounded-lg object-contain bg-stone-100 flex-shrink-0"/>
+                          : <div className="w-10 h-10 rounded-lg bg-stone-100 flex items-center justify-center text-lg flex-shrink-0">🏢</div>
                         }
                         <div className="flex-1">
                           <div className="flex justify-between items-start">
@@ -125,22 +125,22 @@ export default function BuyerQuotes({ userId }: { userId: string }) {
                               <p className="font-semibold">{quote.suppliers?.business_name}</p>
                               <div className="flex items-center gap-1 mt-0.5">
                                 {quote.suppliers?.rating > 0 && (
-                                  <span className="text-sm text-gray-300">★ {quote.suppliers.rating}/5 ({quote.suppliers.review_count} reviews)</span>
+                                  <span className="text-sm text-stone-700">★ {quote.suppliers.rating}/5 ({quote.suppliers.review_count} reviews)</span>
                                 )}
                               </div>
-                              <p className="text-gray-500 text-xs mt-0.5">Trusted by {quote.suppliers?.total_leads_received || 0} PropertyAIgency clients</p>
+                              <p className="text-stone-400 text-xs mt-0.5">Trusted by {quote.suppliers?.total_leads_received || 0} PropertyAIgency clients</p>
                             </div>
                             <div className="text-right">
                               <p className="text-2xl font-bold text-orange-500">R{quote.amount?.toLocaleString()}</p>
                               {quote.valid_until && (
-                                <p className="text-gray-500 text-xs">Valid until {new Date(quote.valid_until).toLocaleDateString('en-ZA', { month: 'short', day: 'numeric' })}</p>
+                                <p className="text-stone-400 text-xs">Valid until {new Date(quote.valid_until).toLocaleDateString('en-ZA', { month: 'short', day: 'numeric' })}</p>
                               )}
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      {quote.description && <p className="text-gray-400 text-sm mb-3">{quote.description}</p>}
+                      {quote.description && <p className="text-stone-500 text-sm mb-3">{quote.description}</p>}
 
                       {quote.status === 'pending' && !hasAccepted && (
                         <div className="flex gap-2">
@@ -149,14 +149,14 @@ export default function BuyerQuotes({ userId }: { userId: string }) {
                             Accept Quote
                           </button>
                           <button onClick={() => declineQuote(quote.id)}
-                            className="flex-1 bg-gray-700 hover:bg-gray-600 text-gray-300 py-2 rounded-lg text-sm transition">
+                            className="flex-1 bg-stone-100 hover:bg-stone-200 text-stone-700 py-2 rounded-lg text-sm transition">
                             Decline
                           </button>
                         </div>
                       )}
 
                       {quote.status === 'declined' && (
-                        <p className="text-gray-500 text-xs">Declined</p>
+                        <p className="text-stone-400 text-xs">Declined</p>
                       )}
 
                       {quote.status === 'pending' && (
@@ -201,21 +201,21 @@ export default function BuyerQuotes({ userId }: { userId: string }) {
 
               {/* Find alternatives */}
               {allDeclined && !hasAccepted && (
-                <div className="px-5 py-4 border-t border-gray-700 bg-gray-750">
+                <div className="px-5 py-4 border-t border-stone-300 bg-stone-50">
                   {alternatives[req.id]?.length > 0 ? (
                     <div>
                       <p className="font-semibold text-sm mb-3">Alternative suppliers in your area:</p>
                       <div className="space-y-3">
                         {alternatives[req.id].map((sup: any) => (
-                          <div key={sup.id} className="flex items-center justify-between gap-3 bg-gray-700 rounded-xl p-3">
+                          <div key={sup.id} className="flex items-center justify-between gap-3 bg-stone-100 rounded-xl p-3">
                             <div className="flex items-center gap-3">
                               {sup.logo_url
-                                ? <img src={sup.logo_url} alt="" className="w-9 h-9 rounded-lg object-contain bg-gray-600"/>
-                                : <div className="w-9 h-9 rounded-lg bg-gray-600 flex items-center justify-center text-lg">🏢</div>
+                                ? <img src={sup.logo_url} alt="" className="w-9 h-9 rounded-lg object-contain bg-stone-200"/>
+                                : <div className="w-9 h-9 rounded-lg bg-stone-200 flex items-center justify-center text-lg">🏢</div>
                               }
                               <div>
                                 <p className="font-semibold text-sm">{sup.business_name}</p>
-                                {sup.rating > 0 && <p className="text-xs text-gray-400">★ {sup.rating}/5</p>}
+                                {sup.rating > 0 && <p className="text-xs text-stone-500">★ {sup.rating}/5</p>}
                               </div>
                             </div>
                             <button onClick={() => requestAlternativeQuote(req, sup.id)}
@@ -228,7 +228,7 @@ export default function BuyerQuotes({ userId }: { userId: string }) {
                     </div>
                   ) : (
                     <div className="text-center">
-                      <p className="text-gray-400 text-sm mb-3">All quotes declined. Shall we find alternative suppliers?</p>
+                      <p className="text-stone-500 text-sm mb-3">All quotes declined. Shall we find alternative suppliers?</p>
                       <button onClick={() => findAlternatives(req)}
                         disabled={findingAlternatives === req.id}
                         className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-6 py-2 rounded-xl text-sm disabled:opacity-50 transition">

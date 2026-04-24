@@ -70,9 +70,9 @@ export default function PropertyAIsistant({ agentId }: { agentId: string }) {
   }
 
   return (
-    <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
+    <div className="bg-white rounded-2xl border border-stone-300 overflow-hidden">
       {/* Header */}
-      <div className="px-5 py-4 border-b border-gray-700 flex items-center justify-between">
+      <div className="px-5 py-4 border-b border-stone-300 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs">PA</div>
           <div>
@@ -90,24 +90,24 @@ export default function PropertyAIsistant({ agentId }: { agentId: string }) {
       {/* Messages */}
       <div className="divide-y divide-gray-700 max-h-96 overflow-y-auto">
         {loading ? (
-          <div className="p-6 text-center text-gray-500 text-sm">Loading messages...</div>
+          <div className="p-6 text-center text-stone-400 text-sm">Loading messages...</div>
         ) : messages.length === 0 ? (
           <div className="p-6 text-center">
             <p className="text-3xl mb-2">🤖</p>
-            <p className="text-gray-400 text-sm font-semibold">Your Property AIsistant is ready</p>
-            <p className="text-gray-500 text-xs mt-1">Messages about your listings will appear here</p>
+            <p className="text-stone-500 text-sm font-semibold">Your Property AIsistant is ready</p>
+            <p className="text-stone-400 text-xs mt-1">Messages about your listings will appear here</p>
           </div>
         ) : (
           messages.map(msg => (
-            <div key={msg.id} className={`p-4 border-l-4 ${getTypeBg(msg.message_type)} ${!msg.is_read ? 'bg-gray-750' : ''}`}>
+            <div key={msg.id} className={`p-4 border-l-4 ${getTypeBg(msg.message_type)} ${!msg.is_read ? 'bg-stone-50' : ''}`}>
               <div className="flex justify-between items-start mb-1">
                 <p className="font-semibold text-sm flex items-center gap-1">
                   <span>{getTypeIcon(msg.message_type)}</span>
                   <span>{msg.title}</span>
                 </p>
-                <span className="text-gray-500 text-xs flex-shrink-0 ml-2">{timeAgo(msg.created_at)}</span>
+                <span className="text-stone-400 text-xs flex-shrink-0 ml-2">{timeAgo(msg.created_at)}</span>
               </div>
-              <p className="text-gray-300 text-sm leading-relaxed">
+              <p className="text-stone-700 text-sm leading-relaxed">
                 {formatContent(msg.content)}
               </p>
             </div>

@@ -107,18 +107,18 @@ export default function AvailabilityManager({ agentId }: { agentId: string }) {
     }))
   }
 
-  if (loading) return <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6"><p className="text-gray-500 text-sm">Loading availability...</p></div>
+  if (loading) return <div className="bg-white rounded-2xl border border-stone-300 p-6"><p className="text-stone-400 text-sm">Loading availability...</p></div>
 
   return (
-    <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6 space-y-6">
+    <div className="bg-white rounded-2xl border border-stone-300 p-6 space-y-6">
       <div>
         <h3 className="text-lg font-bold mb-1">📅 My Viewing Availability</h3>
-        <p className="text-gray-400 text-xs">Set your weekly schedule once — the AI will manage bookings around your diary automatically</p>
+        <p className="text-stone-500 text-xs">Set your weekly schedule once — the AI will manage bookings around your diary automatically</p>
       </div>
 
       {/* Weekly Template */}
       <div>
-        <p className="text-sm font-semibold text-gray-300 mb-3">Weekly Schedule</p>
+        <p className="text-sm font-semibold text-stone-700 mb-3">Weekly Schedule</p>
         <div className="space-y-2">
           {DAYS.map((day, i) => {
             const isEnabled = !!template[`${day}_start`]
@@ -127,7 +127,7 @@ export default function AvailabilityManager({ agentId }: { agentId: string }) {
                 <button
                   onClick={() => toggleDay(day)}
                   className={`w-24 text-xs font-semibold py-1.5 rounded-lg transition ${
-                    isEnabled ? 'bg-orange-500 text-black' : 'bg-gray-700 text-gray-500'
+                    isEnabled ? 'bg-orange-500 text-black' : 'bg-stone-100 text-stone-400'
                   }`}
                 >
                   {DAY_LABELS[i]}
@@ -136,14 +136,14 @@ export default function AvailabilityManager({ agentId }: { agentId: string }) {
                   <div className="flex items-center gap-2">
                     <input type="time" value={template[`${day}_start`] || ''}
                       onChange={e => setTemplate((p: any) => ({ ...p, [`${day}_start`]: e.target.value }))}
-                      className="bg-gray-700 text-white rounded-lg px-2 py-1 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
-                    <span className="text-gray-500 text-sm">to</span>
+                      className="bg-stone-100 text-stone-800 rounded-lg px-2 py-1 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
+                    <span className="text-stone-400 text-sm">to</span>
                     <input type="time" value={template[`${day}_end`] || ''}
                       onChange={e => setTemplate((p: any) => ({ ...p, [`${day}_end`]: e.target.value }))}
-                      className="bg-gray-700 text-white rounded-lg px-2 py-1 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
+                      className="bg-stone-100 text-stone-800 rounded-lg px-2 py-1 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
                   </div>
                 ) : (
-                  <span className="text-gray-600 text-sm">Not available</span>
+                  <span className="text-stone-400 text-sm">Not available</span>
                 )}
               </div>
             )
@@ -153,13 +153,13 @@ export default function AvailabilityManager({ agentId }: { agentId: string }) {
 
       {/* Viewing Settings */}
       <div>
-        <p className="text-sm font-semibold text-gray-300 mb-3">🤖 AI Diary Settings</p>
+        <p className="text-sm font-semibold text-stone-700 mb-3">🤖 AI Diary Settings</p>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Viewing duration</label>
+            <label className="text-xs text-stone-500 mb-1 block">Viewing duration</label>
             <select value={template.viewing_duration_minutes}
               onChange={e => setTemplate((p: any) => ({ ...p, viewing_duration_minutes: parseInt(e.target.value) }))}
-              className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500">
+              className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500">
               <option value={30}>30 minutes</option>
               <option value={45}>45 minutes</option>
               <option value={60}>1 hour</option>
@@ -167,10 +167,10 @@ export default function AvailabilityManager({ agentId }: { agentId: string }) {
             </select>
           </div>
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Travel buffer between viewings</label>
+            <label className="text-xs text-stone-500 mb-1 block">Travel buffer between viewings</label>
             <select value={template.travel_buffer_minutes}
               onChange={e => setTemplate((p: any) => ({ ...p, travel_buffer_minutes: parseInt(e.target.value) }))}
-              className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500">
+              className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500">
               <option value={15}>15 minutes</option>
               <option value={20}>20 minutes</option>
               <option value={30}>30 minutes</option>
@@ -179,7 +179,7 @@ export default function AvailabilityManager({ agentId }: { agentId: string }) {
             </select>
           </div>
         </div>
-        <p className="text-xs text-gray-500 mt-2">
+        <p className="text-xs text-stone-400 mt-2">
           🤖 The AI will automatically prevent double-bookings and allow enough travel time between properties
         </p>
       </div>
@@ -194,16 +194,16 @@ export default function AvailabilityManager({ agentId }: { agentId: string }) {
 
       {/* Blocked Dates */}
       <div>
-        <p className="text-sm font-semibold text-gray-300 mb-3">🚫 Block Out Dates / Times</p>
+        <p className="text-sm font-semibold text-stone-700 mb-3">🚫 Block Out Dates / Times</p>
 
         {/* Block type selector */}
         <div className="grid grid-cols-2 gap-2 mb-3">
           <button onClick={() => setBlockType('all_day')}
-            className={`py-2 rounded-lg text-xs font-semibold transition ${blockType === 'all_day' ? 'bg-orange-500 text-black' : 'bg-gray-700 text-gray-300'}`}>
+            className={`py-2 rounded-lg text-xs font-semibold transition ${blockType === 'all_day' ? 'bg-orange-500 text-black' : 'bg-stone-100 text-stone-700'}`}>
             📅 All Day
           </button>
           <button onClick={() => setBlockType('time_range')}
-            className={`py-2 rounded-lg text-xs font-semibold transition ${blockType === 'time_range' ? 'bg-orange-500 text-black' : 'bg-gray-700 text-gray-300'}`}>
+            className={`py-2 rounded-lg text-xs font-semibold transition ${blockType === 'time_range' ? 'bg-orange-500 text-black' : 'bg-stone-100 text-stone-700'}`}>
             ⏰ Specific Times
           </button>
         </div>
@@ -212,22 +212,22 @@ export default function AvailabilityManager({ agentId }: { agentId: string }) {
           <input type="date" value={newBlockedDate}
             onChange={e => setNewBlockedDate(e.target.value)}
             min={new Date().toISOString().split('T')[0]}
-            className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
+            className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
         </div>
 
         {blockType === 'time_range' && (
           <div className="grid grid-cols-2 gap-2 mb-2">
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">From</label>
+              <label className="text-xs text-stone-500 mb-1 block">From</label>
               <input type="time" value={newBlockedStart}
                 onChange={e => setNewBlockedStart(e.target.value)}
-                className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
+                className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
             </div>
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">To</label>
+              <label className="text-xs text-stone-500 mb-1 block">To</label>
               <input type="time" value={newBlockedEnd}
                 onChange={e => setNewBlockedEnd(e.target.value)}
-                className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
+                className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
             </div>
           </div>
         )}

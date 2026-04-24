@@ -49,21 +49,21 @@ export default function ContactPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-900 text-white">
-      <nav className="bg-gray-950 border-b border-gray-800 px-6 py-4 flex justify-between items-center">
+    <main className="min-h-screen bg-stone-50 text-stone-900">
+      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">
           Property<span className="text-orange-500">AI</span>gency
         </Link>
         <div className="flex gap-4">
-          <Link href="/search" className="text-gray-400 hover:text-white text-sm">Search</Link>
-          <Link href="/auth/login" className="text-gray-400 hover:text-white text-sm">Sign In</Link>
+          <Link href="/search" className="text-stone-500 hover:text-stone-900 text-sm">Search</Link>
+          <Link href="/auth/login" className="text-stone-500 hover:text-stone-900 text-sm">Sign In</Link>
         </div>
       </nav>
 
       <div className="max-w-3xl mx-auto px-6 py-12">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2">How can we help? 👋</h1>
-          <p className="text-gray-400">Chat with our AI assistant — available 24/7. For complex enquiries, we'll connect you with Andrew directly.</p>
+          <p className="text-stone-500">Chat with our AI assistant — available 24/7. For complex enquiries, we'll connect you with Andrew directly.</p>
         </div>
 
         {/* Contact options */}
@@ -74,18 +74,18 @@ export default function ContactPage() {
             { icon: '🤝', title: 'Agency Partnership', desc: 'National contracts', prompt: 'I represent a large estate agency and want to discuss a partnership' },
           ].map(option => (
             <button key={option.title} onClick={() => setInput(option.prompt)}
-              className="bg-gray-800 border border-gray-700 hover:border-orange-500 rounded-xl p-4 text-left transition">
+              className="bg-white border border-stone-300 hover:border-orange-500 rounded-xl p-4 text-left transition">
               <div className="text-2xl mb-2">{option.icon}</div>
               <p className="font-semibold text-sm">{option.title}</p>
-              <p className="text-gray-400 text-xs mt-1">{option.desc}</p>
+              <p className="text-stone-500 text-xs mt-1">{option.desc}</p>
             </button>
           ))}
         </div>
 
         {/* Chat box */}
-        <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
+        <div className="bg-white rounded-2xl border border-stone-300 overflow-hidden">
           {/* Header */}
-          <div className="px-5 py-4 border-b border-gray-700 flex items-center gap-3">
+          <div className="px-5 py-4 border-b border-stone-300 flex items-center gap-3">
             <div className="w-9 h-9 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-sm">AI</div>
             <div>
               <p className="font-semibold text-sm">PropertyAIgency Assistant</p>
@@ -98,7 +98,7 @@ export default function ContactPage() {
             {messages.length === 0 && (
               <div className="flex gap-3">
                 <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs flex-shrink-0">AI</div>
-                <div className="bg-gray-700 rounded-xl px-4 py-3 text-sm text-gray-200 max-w-md">
+                <div className="bg-stone-100 rounded-xl px-4 py-3 text-sm text-stone-800 max-w-md">
                   Hi! 👋 I'm the PropertyAIgency assistant. I can help with questions about listing properties, pricing, how our platform works, or anything else. What can I help you with?
                 </div>
               </div>
@@ -109,7 +109,7 @@ export default function ContactPage() {
                   <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs flex-shrink-0">AI</div>
                 )}
                 <div className={`rounded-xl px-4 py-3 text-sm max-w-md whitespace-pre-wrap ${
-                  msg.role === 'user' ? 'bg-orange-500 text-black' : 'bg-gray-700 text-gray-200'
+                  msg.role === 'user' ? 'bg-orange-500 text-black' : 'bg-stone-100 text-stone-800'
                 }`}>
                   {msg.content}
                 </div>
@@ -118,7 +118,7 @@ export default function ContactPage() {
             {loading && (
               <div className="flex gap-3">
                 <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs flex-shrink-0">AI</div>
-                <div className="bg-gray-700 rounded-xl px-4 py-3 text-sm text-gray-400 animate-pulse">Typing...</div>
+                <div className="bg-stone-100 rounded-xl px-4 py-3 text-sm text-stone-500 animate-pulse">Typing...</div>
               </div>
             )}
           </div>
@@ -130,10 +130,10 @@ export default function ContactPage() {
               <div className="flex gap-3">
                 <input value={name} onChange={e => setName(e.target.value)}
                   placeholder="Your name"
-                  className="flex-1 bg-gray-800 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
+                  className="flex-1 bg-white text-stone-900 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
                 <input value={email} onChange={e => setEmail(e.target.value)}
                   placeholder="Your email"
-                  className="flex-1 bg-gray-800 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-600 focus:border-orange-500"/>
+                  className="flex-1 bg-white text-stone-900 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
                 <button onClick={submitEscalation}
                   className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-4 py-2 rounded-lg text-sm">
                   Send
@@ -150,13 +150,13 @@ export default function ContactPage() {
 
           {/* Input */}
           {!escalated && (
-            <div className="p-4 border-t border-gray-700 flex gap-3">
+            <div className="p-4 border-t border-stone-300 flex gap-3">
               <input
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && sendMessage()}
                 placeholder="Type your question..."
-                className="flex-1 bg-gray-700 text-white rounded-xl px-4 py-3 outline-none border border-gray-600 focus:border-orange-500 text-sm"
+                className="flex-1 bg-stone-100 text-stone-900 rounded-xl px-4 py-3 outline-none border border-stone-300 focus:border-orange-500 text-sm"
               />
               <button onClick={sendMessage} disabled={loading || !input.trim()}
                 className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-5 py-3 rounded-xl disabled:opacity-50 transition">

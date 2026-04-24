@@ -22,25 +22,25 @@ function FeatureGroup({ group, form, update }: { group: any, form: any, update: 
   const [open, setOpen] = useState(false)
   const selected = group.features.filter(([field]: [string, string]) => form[field]).length
   return (
-    <div className="border border-gray-700 rounded-xl overflow-hidden">
+    <div className="border border-stone-300 rounded-xl overflow-hidden">
       <button type="button" onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-4 py-3 bg-gray-700 hover:bg-gray-650 transition">
+        className="w-full flex items-center justify-between px-4 py-3 bg-stone-100 hover:bg-gray-650 transition">
         <div className="flex items-center gap-3">
-          <span className="text-xs font-bold text-gray-300 uppercase tracking-wider">{group.label}</span>
+          <span className="text-xs font-bold text-stone-700 uppercase tracking-wider">{group.label}</span>
           {selected > 0 && (
             <span className="bg-orange-500 text-black text-xs font-bold px-2 py-0.5 rounded-full">{selected}</span>
           )}
         </div>
-        <span className="text-gray-400 text-sm">{open ? '▲' : '▼'}</span>
+        <span className="text-stone-500 text-sm">{open ? '▲' : '▼'}</span>
       </button>
       {open && (
-        <div className="p-3 grid grid-cols-2 gap-2 bg-gray-800">
+        <div className="p-3 grid grid-cols-2 gap-2 bg-white">
           {group.features.map(([field, label]: [string, string]) => (
-            <label key={field} className="flex items-center gap-3 bg-gray-700 rounded-lg px-3 py-2.5 cursor-pointer hover:bg-gray-600 transition-colors">
+            <label key={field} className="flex items-center gap-3 bg-stone-100 rounded-lg px-3 py-2.5 cursor-pointer hover:bg-stone-200 transition-colors">
               <input type="checkbox" checked={form[field] || false}
                 onChange={e => update(field, e.target.checked)}
                 className="w-4 h-4 accent-orange-500" />
-              <span className="text-gray-300 text-sm">{label}</span>
+              <span className="text-stone-700 text-sm">{label}</span>
             </label>
           ))}
         </div>
@@ -264,15 +264,15 @@ function ListPropertyInner() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-900 text-white">
-      <nav className="bg-gray-950 border-b border-gray-800 px-6 py-4 flex justify-between items-center">
+    <main className="min-h-screen bg-stone-50 text-stone-900">
+      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
         <a href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</a>
-        <a href="/dashboard" className="text-gray-400 hover:text-white text-sm">← Back to Dashboard</a>
+        <a href="/dashboard" className="text-stone-500 hover:text-stone-900 text-sm">← Back to Dashboard</a>
       </nav>
 
       <div className="max-w-3xl mx-auto px-6 py-12">
         <h1 className="text-4xl font-bold mb-2">List Your Property</h1>
-        <p className="text-gray-400 mb-8">Complete each step below — AI will help write your advert automatically</p>
+        <p className="text-stone-500 mb-8">Complete each step below — AI will help write your advert automatically</p>
 
         <div className="flex gap-2 mb-8 flex-wrap">
           {[
@@ -283,7 +283,7 @@ function ListPropertyInner() {
             ['5', 'Price & Valuation', stepComplete.price],
             ['6', 'Photos', stepComplete.photos],
           ].map(([num, label, done]) => (
-            <div key={num as string} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold border ${done ? 'bg-green-900 border-green-700 text-green-400' : 'bg-gray-800 border-gray-700 text-gray-400'}`}>
+            <div key={num as string} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold border ${done ? 'bg-green-900 border-green-700 text-green-400' : 'bg-white border-stone-300 text-stone-500'}`}>
               <span>{done ? '✓' : num}</span> {label as string}
             </div>
           ))}
@@ -291,44 +291,44 @@ function ListPropertyInner() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
 
-          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+          <div className="bg-white rounded-xl p-6 border border-stone-300">
             <h2 className="text-lg font-bold mb-1 text-orange-500">Step 1 — Property Address</h2>
-            <p className="text-gray-400 text-sm mb-4">Start typing your address and select from the suggestions</p>
+            <p className="text-stone-500 text-sm mb-4">Start typing your address and select from the suggestions</p>
             <AddressAutocomplete onSelect={handleAddressSelect} />
             {form.suburb && (
               <div className="grid grid-cols-3 gap-3 mt-3">
-                <div className="bg-gray-700 rounded-lg px-3 py-2">
-                  <div className="text-xs text-gray-400">Suburb</div>
-                  <div className="text-white text-sm font-medium">{form.suburb}</div>
+                <div className="bg-stone-100 rounded-lg px-3 py-2">
+                  <div className="text-xs text-stone-500">Suburb</div>
+                  <div className="text-stone-900 text-sm font-medium">{form.suburb}</div>
                 </div>
-                <div className="bg-gray-700 rounded-lg px-3 py-2">
-                  <div className="text-xs text-gray-400">City</div>
-                  <div className="text-white text-sm font-medium">{form.city}</div>
+                <div className="bg-stone-100 rounded-lg px-3 py-2">
+                  <div className="text-xs text-stone-500">City</div>
+                  <div className="text-stone-900 text-sm font-medium">{form.city}</div>
                 </div>
-                <div className="bg-gray-700 rounded-lg px-3 py-2">
-                  <div className="text-xs text-gray-400">Province</div>
-                  <div className="text-white text-sm font-medium">{form.province}</div>
+                <div className="bg-stone-100 rounded-lg px-3 py-2">
+                  <div className="text-xs text-stone-500">Province</div>
+                  <div className="text-stone-900 text-sm font-medium">{form.province}</div>
                 </div>
               </div>
             )}
           </div>
 
-          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+          <div className="bg-white rounded-xl p-6 border border-stone-300">
             <h2 className="text-lg font-bold mb-1 text-orange-500">Step 2 — Property Details</h2>
-            <p className="text-gray-400 text-sm mb-4">Tell us about the property size and type</p>
+            <p className="text-stone-500 text-sm mb-4">Tell us about the property size and type</p>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-gray-300 text-sm mb-1 block">Listing Type</label>
+                <label className="text-stone-700 text-sm mb-1 block">Listing Type</label>
                 <select value={form.price_type} onChange={e => update('price_type', e.target.value)}
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500">
+                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500">
                   <option value="sale">For Sale</option>
                   <option value="rent">To Rent</option>
                 </select>
               </div>
               <div>
-                <label className="text-gray-300 text-sm mb-1 block">Property Type</label>
+                <label className="text-stone-700 text-sm mb-1 block">Property Type</label>
                 <select value={form.property_type} onChange={e => update('property_type', e.target.value)}
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500">
+                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500">
                   <option value="house">House</option>
                   <option value="apartment">Apartment</option>
                   <option value="townhouse">Townhouse</option>
@@ -339,78 +339,78 @@ function ListPropertyInner() {
               </div>
               {[['bedrooms','Bedrooms','3'],['bathrooms','Bathrooms','2'],['garages','Garages','2']].map(([field,label,ph]) => (
                 <div key={field}>
-                  <label className="text-gray-300 text-sm mb-1 block">{label}</label>
+                  <label className="text-stone-700 text-sm mb-1 block">{label}</label>
                   <input value={(form as any)[field]} onChange={e => update(field, e.target.value)}
-                    type="number" className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
+                    type="number" className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                     placeholder={ph} required />
                 </div>
               ))}
               <div>
-                <label className="text-gray-300 text-sm mb-1 block">Size (m²) <span className="text-gray-500 text-xs">(optional)</span></label>
+                <label className="text-stone-700 text-sm mb-1 block">Size (m²) <span className="text-stone-400 text-xs">(optional)</span></label>
                 <input value={(form as any)['size_sqm']} onChange={e => update('size_sqm', e.target.value)}
-                  type="number" className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
+                  type="number" className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                   placeholder="250" />
               </div>
             </div>
           </div>
 
-          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+          <div className="bg-white rounded-xl p-6 border border-stone-300">
             <h2 className="text-lg font-bold mb-1 text-orange-500">Step 3 — Property Features</h2>
-            <p className="text-gray-400 text-sm mb-4">Tick all features — these help buyers find your property and improve your AI-generated advert</p>
+            <p className="text-stone-500 text-sm mb-4">Tick all features — these help buyers find your property and improve your AI-generated advert</p>
             <div className="space-y-3">
               {featureGroups.map(group => (
                 <FeatureGroup key={group.label} group={group} form={form} update={update} />
               ))}
             </div>
-            <div className="mt-5 border-t border-gray-700 pt-4">
-              <label className="text-gray-300 text-sm mb-1 block">Additional Features <span className="text-gray-500 text-xs">(e.g. Inverter, Borehole pump, Staff bathroom)</span></label>
+            <div className="mt-5 border-t border-stone-300 pt-4">
+              <label className="text-stone-700 text-sm mb-1 block">Additional Features <span className="text-stone-400 text-xs">(e.g. Inverter, Borehole pump, Staff bathroom)</span></label>
               <input value={(form as any)['custom_features'] || ''} onChange={e => update('custom_features', e.target.value)}
-                className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
+                className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                 placeholder="Type any features not listed above, separated by commas" />
             </div>
           </div>
 
-          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+          <div className="bg-white rounded-xl p-6 border border-stone-300">
             <h2 className="text-lg font-bold mb-1 text-orange-500">Step 4 — AI Writes Your Advert</h2>
-            <p className="text-gray-400 text-sm mb-4">Click the button and AI will write a professional title and description based on your property details</p>
+            <p className="text-stone-500 text-sm mb-4">Click the button and AI will write a professional title and description based on your property details</p>
             <button type="button" onClick={generateWithAI}
               disabled={aiLoading || !form.suburb || !form.bedrooms}
-              className="w-full bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white font-bold py-3 rounded-lg transition-colors mb-4 flex items-center justify-center gap-2">
+              className="w-full bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-stone-900 font-bold py-3 rounded-lg transition-colors mb-4 flex items-center justify-center gap-2">
               {aiLoading ? '✨ Writing your advert...' : '✨ Generate Professional Advert with AI'}
             </button>
             {!form.suburb && <p className="text-yellow-500 text-xs mb-3">⚠ Complete Steps 1 & 2 first</p>}
             <div className="space-y-3">
               <div>
-                <label className="text-gray-300 text-sm mb-1 block">Property Title</label>
+                <label className="text-stone-700 text-sm mb-1 block">Property Title</label>
                 <input value={form.title} onChange={e => update('title', e.target.value)}
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
+                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                   placeholder="AI will generate this — or type your own" required />
               </div>
               <div>
-                <label className="text-gray-300 text-sm mb-1 block">Description</label>
+                <label className="text-stone-700 text-sm mb-1 block">Description</label>
                 <textarea value={form.description} onChange={e => update('description', e.target.value)}
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500 h-32"
+                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500 h-32"
                   placeholder="AI will generate this — or write your own" />
               </div>
             </div>
           </div>
 
-          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+          <div className="bg-white rounded-xl p-6 border border-stone-300">
             <h2 className="text-lg font-bold mb-1 text-orange-500">Step 5 — Asking Price</h2>
-            <p className="text-gray-400 text-sm mb-4">Enter your price or use AI to get a market estimate first</p>
+            <p className="text-stone-500 text-sm mb-4">Enter your price or use AI to get a market estimate first</p>
             <div className="flex gap-2 mb-3">
               <input value={form.price} onChange={e => update('price', e.target.value)}
-                type="number" className="flex-1 bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
+                type="number" className="flex-1 bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                 placeholder={form.price_type === 'rent' ? 'Monthly rent e.g. 15000' : 'Asking price e.g. 2500000'} required />
               <button type="button" onClick={getValuation}
                 disabled={valuationLoading || !form.suburb || !form.bedrooms}
-                className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-bold px-4 py-3 rounded-lg text-sm transition-colors whitespace-nowrap">
+                className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-stone-900 font-bold px-4 py-3 rounded-lg text-sm transition-colors whitespace-nowrap">
                 {valuationLoading ? 'Estimating...' : '🤖 Get AI Estimate'}
               </button>
             </div>
             {!form.suburb && <p className="text-yellow-500 text-xs">Complete Step 1 and 2 first to get an AI estimate</p>}
-            <div className="mt-4 border-t border-gray-700 pt-4">
-              <p className="text-gray-400 text-sm mb-3">Price flexibility <span className="text-gray-600 text-xs">(only visible to our AI Concierge — never shown to buyers)</span></p>
+            <div className="mt-4 border-t border-stone-300 pt-4">
+              <p className="text-stone-500 text-sm mb-3">Price flexibility <span className="text-stone-400 text-xs">(only visible to our AI Concierge — never shown to buyers)</span></p>
               <div className="grid grid-cols-2 gap-2">
                 {[
                   ['negotiable', '💬 Open to negotiation'],
@@ -418,25 +418,25 @@ function ListPropertyInner() {
                   ['priced_to_go', '⚡ Priced to go'],
                   ['close_offer_considered', '🤝 Close offers considered'],
                 ].map(([key, label]) => (
-                  <label key={key} className="flex items-center gap-2 bg-gray-700 rounded-lg px-3 py-2 cursor-pointer hover:bg-gray-600 transition-colors">
+                  <label key={key} className="flex items-center gap-2 bg-stone-100 rounded-lg px-3 py-2 cursor-pointer hover:bg-stone-200 transition-colors">
                     <input type="checkbox" checked={(form as any)[key] || false}
                       onChange={e => update(key, e.target.checked)}
                       className="w-4 h-4 accent-orange-500" />
-                    <span className="text-gray-300 text-sm">{label}</span>
+                    <span className="text-stone-700 text-sm">{label}</span>
                   </label>
                 ))}
               </div>
-              <p className="text-gray-600 text-xs mt-2">If ticked, our Concierge will intelligently match buyers whose budget is close to your asking price</p>
+              <p className="text-stone-400 text-xs mt-2">If ticked, our Concierge will intelligently match buyers whose budget is close to your asking price</p>
             </div>
             {valuation?.insufficient_data && (
-            <div className="bg-gray-700 border border-gray-600 rounded-xl p-4 text-sm text-gray-400">
-              <p className="font-semibold text-gray-300 mb-1">📊 Valuation Data Building...</p>
+            <div className="bg-stone-100 border border-stone-300 rounded-xl p-4 text-sm text-stone-500">
+              <p className="font-semibold text-stone-700 mb-1">📊 Valuation Data Building...</p>
               <p>{valuation.message}</p>
-              <p className="text-xs mt-2 text-gray-500">Currently have {valuation.comparable_count} comparable listings. We need at least 5 to provide accurate estimates.</p>
+              <p className="text-xs mt-2 text-stone-400">Currently have {valuation.comparable_count} comparable listings. We need at least 5 to provide accurate estimates.</p>
             </div>
           )}
           {valuation && !valuation.insufficient_data && (
-              <div className="bg-gray-900 border border-blue-500 rounded-xl p-4 mt-3">
+              <div className="bg-stone-50 border border-blue-500 rounded-xl p-4 mt-3">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="text-blue-400 font-bold text-sm">🤖 AI Market Estimate</span>
                   <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${valuation.trend === 'rising' ? 'bg-green-900 text-green-400' : valuation.trend === 'declining' ? 'bg-red-900 text-red-400' : 'bg-yellow-900 text-yellow-400'}`}>
@@ -444,23 +444,23 @@ function ListPropertyInner() {
                   </span>
                 </div>
                 <div className="grid grid-cols-2 gap-3 mb-3">
-                  <div className="bg-gray-800 rounded-lg p-3">
-                    <div className="text-gray-400 text-xs mb-1">Sale Value Estimate</div>
-                    <div className="text-white font-bold text-sm">R {valuation.sale_min?.toLocaleString()} – R {valuation.sale_max?.toLocaleString()}</div>
+                  <div className="bg-white rounded-lg p-3">
+                    <div className="text-stone-500 text-xs mb-1">Sale Value Estimate</div>
+                    <div className="text-stone-900 font-bold text-sm">R {valuation.sale_min?.toLocaleString()} – R {valuation.sale_max?.toLocaleString()}</div>
                   </div>
-                  <div className="bg-gray-800 rounded-lg p-3">
-                    <div className="text-gray-400 text-xs mb-1">Rental Estimate</div>
-                    <div className="text-white font-bold text-sm">R {valuation.rent_min?.toLocaleString()} – R {valuation.rent_max?.toLocaleString()}/mo</div>
+                  <div className="bg-white rounded-lg p-3">
+                    <div className="text-stone-500 text-xs mb-1">Rental Estimate</div>
+                    <div className="text-stone-900 font-bold text-sm">R {valuation.rent_min?.toLocaleString()} – R {valuation.rent_max?.toLocaleString()}/mo</div>
                   </div>
                 </div>
-                <p className="text-gray-400 text-xs mb-3">{valuation.reason}</p>
+                <p className="text-stone-500 text-xs mb-3">{valuation.reason}</p>
                 <div className="flex gap-2">
                   <button type="button" onClick={() => update('price', valuation.sale_min)}
-                    className="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1.5 rounded-lg transition-colors">
+                    className="text-xs bg-stone-100 hover:bg-stone-200 text-stone-900 px-3 py-1.5 rounded-lg transition-colors">
                     Use min sale price
                   </button>
                   <button type="button" onClick={() => update('price', valuation.rent_min)}
-                    className="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1.5 rounded-lg transition-colors">
+                    className="text-xs bg-stone-100 hover:bg-stone-200 text-stone-900 px-3 py-1.5 rounded-lg transition-colors">
                     Use min rental
                   </button>
                 </div>
@@ -469,22 +469,22 @@ function ListPropertyInner() {
           </div>
 
           {form.price_type === 'rent' && (
-          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
-            <h2 className="text-lg font-bold mb-1 text-orange-500">Step 5b — Rental Terms <span className="text-gray-500 text-sm font-normal">(optional)</span></h2>
-            <p className="text-gray-400 text-sm mb-4">💡 Listings with rental terms get significantly more enquiries — tenants want to know before they ask</p>
+          <div className="bg-white rounded-xl p-6 border border-stone-300">
+            <h2 className="text-lg font-bold mb-1 text-orange-500">Step 5b — Rental Terms <span className="text-stone-400 text-sm font-normal">(optional)</span></h2>
+            <p className="text-stone-500 text-sm mb-4">💡 Listings with rental terms get significantly more enquiries — tenants want to know before they ask</p>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-gray-300 text-sm mb-1 block">Available From</label>
+                <label className="text-stone-700 text-sm mb-1 block">Available From</label>
                 <input type="date" value={(form as any)['available_from'] || ''}
                   onChange={e => update('available_from', e.target.value)}
                   min={new Date().toISOString().split('T')[0]}
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500" />
+                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500" />
               </div>
               <div>
-                <label className="text-gray-300 text-sm mb-1 block">Minimum Lease</label>
+                <label className="text-stone-700 text-sm mb-1 block">Minimum Lease</label>
                 <select value={(form as any)['lease_term'] || ''}
                   onChange={e => update('lease_term', e.target.value)}
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500">
+                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500">
                   <option value="">Not specified</option>
                   <option value="month_to_month">Month to month</option>
                   <option value="6_months">6 months</option>
@@ -493,10 +493,10 @@ function ListPropertyInner() {
                 </select>
               </div>
               <div>
-                <label className="text-gray-300 text-sm mb-1 block">Deposit Required</label>
+                <label className="text-stone-700 text-sm mb-1 block">Deposit Required</label>
                 <select value={(form as any)['deposit_months'] || ''}
                   onChange={e => update('deposit_months', e.target.value)}
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500">
+                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500">
                   <option value="">Not specified</option>
                   <option value="1">1 month deposit</option>
                   <option value="2">2 months deposit</option>
@@ -504,10 +504,10 @@ function ListPropertyInner() {
                 </select>
               </div>
               <div>
-                <label className="text-gray-300 text-sm mb-1 block">Pets Allowed</label>
+                <label className="text-stone-700 text-sm mb-1 block">Pets Allowed</label>
                 <select value={(form as any)['pets_allowed'] || ''}
                   onChange={e => update('pets_allowed', e.target.value)}
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500">
+                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500">
                   <option value="">Not specified</option>
                   <option value="yes">Yes — pets welcome</option>
                   <option value="negotiable">Negotiable</option>
@@ -518,9 +518,9 @@ function ListPropertyInner() {
           </div>
           )}
 
-          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+          <div className="bg-white rounded-xl p-6 border border-stone-300">
             <h2 className="text-lg font-bold mb-1 text-orange-500">Step 6 — Property Photos</h2>
-            <p className="text-gray-400 text-sm mb-4">Upload at least 3 photos — listings with more photos get significantly more enquiries</p>
+            <p className="text-stone-500 text-sm mb-4">Upload at least 3 photos — listings with more photos get significantly more enquiries</p>
             <PhotoUpload propertyId={Date.now().toString()} onUpload={setPhotos} />
             {photos.length > 0 && photos.length < 3 && (
               <p className="text-yellow-500 text-sm mt-2">⚠ Please upload at least 3 photos</p>
@@ -538,7 +538,7 @@ function ListPropertyInner() {
             {loading ? 'Saving...' : isEditing ? '✏️ Update Listing' : '🏠 Publish My Listing'}
           </button>
           {(photos.length < 3 || !form.title) && (
-            <p className="text-center text-gray-500 text-sm">
+            <p className="text-center text-stone-400 text-sm">
               {!form.title ? 'Generate or write a title first' : 'Upload at least 3 photos to publish'}
             </p>
           )}
@@ -550,7 +550,7 @@ function ListPropertyInner() {
 
 export default function ListProperty() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gray-900 flex items-center justify-center text-white">Loading...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-stone-50 flex items-center justify-center text-stone-900">Loading...</div>}>
       <ListPropertyInner />
     </Suspense>
   )

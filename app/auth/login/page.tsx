@@ -38,14 +38,14 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-900 flex items-center justify-center px-4 relative">
-      <Link href="/" className="absolute top-4 left-6 text-gray-400 hover:text-white text-sm">← Back to Home</Link>
-      <div className="bg-gray-800 rounded-2xl p-8 w-full max-w-md border border-gray-700">
+    <main className="min-h-screen bg-stone-50 flex items-center justify-center px-4 relative">
+      <Link href="/" className="absolute top-4 left-6 text-stone-500 hover:text-stone-900 text-sm">← Back to Home</Link>
+      <div className="bg-white rounded-2xl p-8 w-full max-w-md border border-stone-300">
         <div className="text-center mb-8">
-          <Link href="/" className="text-3xl font-bold text-white">
+          <Link href="/" className="text-3xl font-bold text-stone-900">
             Property<span className="text-orange-500">AI</span>gency
           </Link>
-          <p className="text-gray-400 mt-2">Sign in to your account</p>
+          <p className="text-stone-500 mt-2">Sign in to your account</p>
         </div>
 
         {message && (
@@ -56,25 +56,25 @@ export default function LoginPage() {
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="text-gray-300 text-sm mb-1 block">Email</label>
+            <label className="text-stone-700 text-sm mb-1 block">Email</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
+              className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
             />
           </div>
           <div>
-            <label className="text-gray-300 text-sm mb-1 block">Password</label>
+            <label className="text-stone-700 text-sm mb-1 block">Password</label>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
+              className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
             />
             <div className="text-right mt-1">
               <Link href="/auth/forgot-password" className="text-orange-500 hover:underline text-sm">
@@ -92,7 +92,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="text-center text-gray-400 mt-6 text-sm">
+        <p className="text-center text-stone-500 mt-6 text-sm">
           Don't have an account?{' '}
           <Link href="/auth/register" className="text-orange-500 hover:underline">Register here</Link>
         </p>

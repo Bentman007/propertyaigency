@@ -18,10 +18,10 @@ export default function ListLayout({ children }: { children: React.ReactNode }) 
   }, [])
 
   if (checking) return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-      <div className="text-white text-center">
+    <div className="min-h-screen bg-stone-50 flex items-center justify-center">
+      <div className="text-stone-900 text-center">
         <div className="text-4xl mb-4">🏠</div>
-        <p className="text-gray-400">Checking your account...</p>
+        <p className="text-stone-500">Checking your account...</p>
       </div>
     </div>
   )

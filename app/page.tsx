@@ -99,13 +99,13 @@ export default function Home() {
     `R ${price?.toLocaleString()}${type === 'rent' ? '/mo' : ''}`
 
   return (
-    <main className="min-h-screen bg-gray-900 text-white">
-      <nav className="bg-gray-800 border-b border-gray-700 px-4 md:px-6 py-4 flex justify-between items-center">
+    <main className="min-h-screen bg-stone-50 text-stone-900">
+      <nav className="bg-white border-b border-stone-300 px-4 md:px-6 py-4 flex justify-between items-center">
         <div className="text-xl md:text-2xl font-bold flex-shrink-0">
           Property<span className="text-orange-500">AI</span>gency
         </div>
         {/* Desktop nav */}
-        <div className="hidden md:flex gap-4 text-gray-300 text-sm">
+        <div className="hidden md:flex gap-4 text-stone-700 text-sm">
           <Link href="/search" className="hover:text-orange-500">🔍 AI Search</Link>
           <Link href="/buy" className="hover:text-orange-500">Buy</Link>
           <Link href="/rent" className="hover:text-orange-500">Rent</Link>
@@ -121,7 +121,7 @@ export default function Home() {
               <span className="hidden md:inline">My Dashboard</span>
               <span className="md:hidden">🏠</span>
             </Link>
-            <button onClick={() => supabase.auth.signOut().then(() => setUser(null))} className="text-gray-400 hover:text-white text-sm">
+            <button onClick={() => supabase.auth.signOut().then(() => setUser(null))} className="text-stone-500 hover:text-stone-900 text-sm">
               Sign Out
             </button>
           </div>
@@ -136,15 +136,15 @@ export default function Home() {
       {/* Hero */}
       <section className="text-center py-24 px-6 bg-gradient-to-b from-gray-950 to-gray-900">
         <h1 className="text-6xl font-bold mb-4">Find Your Perfect <span className="text-orange-500">Property</span></h1>
-        <p className="text-gray-400 text-xl mb-8">South Africa's smartest AI-powered property platform</p>
+        <p className="text-stone-500 text-xl mb-8">South Africa's smartest AI-powered property platform</p>
         <div className="flex flex-col items-center gap-4">
           <Link href="/search" className="bg-orange-500 text-black px-10 py-4 rounded-2xl font-bold text-lg hover:bg-orange-400 transition flex items-center gap-2">
             🤖 Chat with AI Concierge
           </Link>
-          <p className="text-gray-500 text-sm">Tell our AI what you want in plain English — it will find your perfect match</p>
+          <p className="text-stone-400 text-sm">Tell our AI what you want in plain English — it will find your perfect match</p>
           <div className="flex gap-4 mt-2">
-            <Link href="/buy" className="text-gray-300 hover:text-orange-500 text-sm border border-gray-700 px-4 py-2 rounded-lg">Browse for Sale</Link>
-            <Link href="/rent" className="text-gray-300 hover:text-orange-500 text-sm border border-gray-700 px-4 py-2 rounded-lg">Browse to Rent</Link>
+            <Link href="/buy" className="text-stone-700 hover:text-orange-500 text-sm border border-stone-300 px-4 py-2 rounded-lg">Browse for Sale</Link>
+            <Link href="/rent" className="text-stone-700 hover:text-orange-500 text-sm border border-stone-300 px-4 py-2 rounded-lg">Browse to Rent</Link>
           </div>
         </div>
       </section>
@@ -159,11 +159,11 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {featuredProperties.map((p, i) => (
               <Link href={`/property/${p.id}`} key={i}
-                className="bg-gray-800 rounded-2xl overflow-hidden border-2 border-yellow-500 hover:border-yellow-400 transition-colors block relative">
+                className="bg-white rounded-2xl overflow-hidden border-2 border-yellow-500 hover:border-yellow-400 transition-colors block relative">
                 <div className="absolute top-3 left-3 z-10">
                   <span className="bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded-full">⭐ Featured</span>
                 </div>
-                <div className="h-48 bg-gray-700">
+                <div className="h-48 bg-stone-100">
                   {p.photos?.[0] ? (
                     <img src={p.photos[0]} alt={p.title} className="w-full h-full object-cover"/>
                   ) : (
@@ -175,9 +175,9 @@ export default function Home() {
                     {p.price_type === 'rent' ? 'To Rent' : 'For Sale'}
                   </span>
                   <h3 className="text-lg font-bold mt-2">{p.title}</h3>
-                  <p className="text-gray-400 text-sm">📍 {p.suburb}, {p.city}</p>
+                  <p className="text-stone-500 text-sm">📍 {p.suburb}, {p.city}</p>
                   <p className="text-yellow-400 font-bold text-xl mt-2">{formatPrice(p.price, p.price_type)}</p>
-                  <p className="text-gray-400 text-sm mt-1">🛏 {p.bedrooms} beds · 🚿 {p.bathrooms} baths · ⭐ Featured</p>
+                  <p className="text-stone-500 text-sm mt-1">🛏 {p.bedrooms} beds · 🚿 {p.bathrooms} baths · ⭐ Featured</p>
                 </div>
               </Link>
             ))}
@@ -196,8 +196,8 @@ export default function Home() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {properties.length > 0 ? properties.map((p, i) => (
-            <Link href={`/property/${p.id}`} key={i} className="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 hover:border-orange-500 transition-colors block">
-              <div className="h-48 bg-gray-700">
+            <Link href={`/property/${p.id}`} key={i} className="bg-white rounded-2xl overflow-hidden border border-stone-300 hover:border-orange-500 transition-colors block">
+              <div className="h-48 bg-stone-100">
                 {p.photos?.[0] ? (
                   <img src={p.photos[0]} alt={p.title} className="w-full h-full object-cover"/>
                 ) : (
@@ -209,9 +209,9 @@ export default function Home() {
                   {p.price_type === 'rent' ? 'To Rent' : 'For Sale'}
                 </span>
                 <h3 className="text-lg font-bold mt-2">{p.title}</h3>
-                <p className="text-gray-400 text-sm">📍 {p.suburb}, {p.city}</p>
+                <p className="text-stone-500 text-sm">📍 {p.suburb}, {p.city}</p>
                 <p className="text-orange-500 font-bold text-xl mt-2">{formatPrice(p.price, p.price_type)}</p>
-                <p className="text-gray-400 text-sm mt-1">🛏 {p.bedrooms} beds · 🚿 {p.bathrooms} baths · AI Verified ✓</p>
+                <p className="text-stone-500 text-sm mt-1">🛏 {p.bedrooms} beds · 🚿 {p.bathrooms} baths · AI Verified ✓</p>
               </div>
             </Link>
           )) : (
@@ -220,14 +220,14 @@ export default function Home() {
              {title:"Sea Point Apartment",location:"Sea Point, Cape Town",price:"R 18,500/mo",beds:2,baths:2,type:"To Rent"},
              {title:"Family Home",location:"Umhlanga, Durban",price:"R 2,850,000",beds:3,baths:2,type:"For Sale"}
             ].map((p,i) => (
-              <div key={i} className="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700">
-                <div className="h-48 bg-gray-700 flex items-center justify-center text-4xl">🏠</div>
+              <div key={i} className="bg-white rounded-2xl overflow-hidden border border-stone-300">
+                <div className="h-48 bg-stone-100 flex items-center justify-center text-4xl">🏠</div>
                 <div className="p-4">
                   <span className={`text-xs px-2 py-1 rounded font-bold ${p.type === 'To Rent' ? 'bg-blue-500' : 'bg-orange-500'} text-black`}>{p.type}</span>
                   <h3 className="text-lg font-bold mt-2">{p.title}</h3>
-                  <p className="text-gray-400 text-sm">📍 {p.location}</p>
+                  <p className="text-stone-500 text-sm">📍 {p.location}</p>
                   <p className="text-orange-500 font-bold text-xl mt-2">{p.price}</p>
-                  <p className="text-gray-400 text-sm mt-1">🛏 {p.beds} beds · 🚿 {p.baths} baths · AI Verified ✓</p>
+                  <p className="text-stone-500 text-sm mt-1">🛏 {p.beds} beds · 🚿 {p.baths} baths · AI Verified ✓</p>
                 </div>
               </div>
             ))
@@ -236,9 +236,9 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="text-center py-16 px-6 bg-gray-800">
+      <section className="text-center py-16 px-6 bg-white">
         <h2 className="text-3xl font-bold mb-4">Ready to list your property?</h2>
-        <p className="text-gray-400 mb-6">Use AI to write your advert, get a valuation and reach thousands of buyers</p>
+        <p className="text-stone-500 mb-6">Use AI to write your advert, get a valuation and reach thousands of buyers</p>
         <Link href="/list" className="bg-orange-500 text-black px-8 py-3 rounded-lg font-bold hover:bg-orange-400">
           List My Property
         </Link>
@@ -246,11 +246,11 @@ export default function Home() {
 
       
       <MobileBanner />
-      <footer className="border-t border-gray-800 px-6 py-8 mt-12 text-center text-gray-500 text-sm">
+      <footer className="border-t border-stone-200 px-6 py-8 mt-12 text-center text-stone-400 text-sm">
         <div className="flex justify-center gap-6">
-          <a href="/terms" className="hover:text-white">Terms of Service</a>
-          <a href="/privacy" className="hover:text-white">Privacy Policy</a>
-          <a href="/contact" className="hover:text-white">Contact</a>
+          <a href="/terms" className="hover:text-stone-900">Terms of Service</a>
+          <a href="/privacy" className="hover:text-stone-900">Privacy Policy</a>
+          <a href="/contact" className="hover:text-stone-900">Contact</a>
         </div>
         <p className="mt-3">© 2026 PropertyAIgency. All rights reserved.</p>
       </footer>

@@ -107,8 +107,8 @@ export default function PropertyChat({ property }: PropertyChatProps) {
   }
 
   return (
-    <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
-      <div className="px-4 py-3 border-b border-gray-700 flex items-center justify-between">
+    <div className="bg-white rounded-2xl border border-stone-300 overflow-hidden">
+      <div className="px-4 py-3 border-b border-stone-300 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-sm">AI</div>
           <div>
@@ -130,7 +130,7 @@ export default function PropertyChat({ property }: PropertyChatProps) {
             <div className={`max-w-xs rounded-2xl px-3 py-2 text-sm leading-relaxed ${
               message.role === 'user'
                 ? 'bg-orange-500 text-black rounded-br-sm'
-                : 'bg-gray-700 text-gray-100 rounded-bl-sm'
+                : 'bg-stone-100 text-stone-900 rounded-bl-sm'
             }`}>
               {message.content.split('\n').map((line, j) => (
                 <span key={j}>{line.replace(/\*\*(.*?)\*\*/g, '$1')}{j < message.content.split('\n').length - 1 && <br/>}</span>
@@ -141,7 +141,7 @@ export default function PropertyChat({ property }: PropertyChatProps) {
         {loading && (
           <div className="flex justify-start">
             <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs mr-2">AI</div>
-            <div className="bg-gray-700 rounded-2xl rounded-bl-sm px-3 py-2">
+            <div className="bg-stone-100 rounded-2xl rounded-bl-sm px-3 py-2">
               <div className="flex gap-1">
                 <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{animationDelay: '0ms'}}/>
                 <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{animationDelay: '150ms'}}/>
@@ -155,12 +155,12 @@ export default function PropertyChat({ property }: PropertyChatProps) {
 
       {/* Booking slots */}
       {showBooking && availableSlots.length > 0 && (
-        <div className="px-4 py-3 border-t border-gray-700 bg-gray-750">
+        <div className="px-4 py-3 border-t border-stone-300 bg-stone-50">
           <p className="text-sm font-semibold mb-2">📅 Available viewing slots:</p>
           <div className="space-y-2">
             {availableSlots.map((slot, i) => (
               <button key={i} onClick={() => bookViewing(slot)}
-                className="w-full text-left px-3 py-2 bg-gray-700 hover:bg-orange-500 hover:text-black rounded-lg text-sm transition">
+                className="w-full text-left px-3 py-2 bg-stone-100 hover:bg-orange-500 hover:text-black rounded-lg text-sm transition">
                 {slot.date} at {slot.start_time}
               </button>
             ))}
@@ -169,11 +169,11 @@ export default function PropertyChat({ property }: PropertyChatProps) {
       )}
 
       {/* Input */}
-      <div className="px-4 py-3 border-t border-gray-700">
+      <div className="px-4 py-3 border-t border-stone-300">
         <div className="flex gap-2 mb-2" style={{overflowX: 'auto'}}>
           {suggestedPrompts.map((p, i) => (
             <button key={i} onClick={() => setInput(p)}
-              className="whitespace-nowrap text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 border border-gray-600 rounded-full px-3 py-1.5 transition flex-shrink-0">
+              className="whitespace-nowrap text-xs bg-stone-100 hover:bg-stone-200 text-stone-800 border border-stone-300 rounded-full px-3 py-1.5 transition flex-shrink-0">
               {p}
             </button>
           ))}
@@ -185,7 +185,7 @@ export default function PropertyChat({ property }: PropertyChatProps) {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
             placeholder="Ask anything about this property..."
-            className="flex-1 bg-gray-700 text-white rounded-lg px-3 py-2 outline-none border border-gray-600 focus:border-orange-500 text-sm"
+            className="flex-1 bg-stone-100 text-stone-800 rounded-lg px-3 py-2 outline-none border border-stone-300 focus:border-orange-500 text-sm"
           />
           <button onClick={sendMessage} disabled={loading || !input.trim()}
             className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-4 py-2 rounded-lg disabled:opacity-50 text-sm">
@@ -193,7 +193,7 @@ export default function PropertyChat({ property }: PropertyChatProps) {
           </button>
         </div>
         {!user && (
-          <p className="text-xs text-gray-500 mt-1 text-center">
+          <p className="text-xs text-stone-400 mt-1 text-center">
             <a href={`/auth/login?next=/property/${property.id}`} className="text-orange-500 hover:underline">Sign in</a> to book a viewing
           </p>
         )}
