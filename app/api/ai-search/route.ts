@@ -349,7 +349,7 @@ ${feedbackData.text}`,
       cleanContent = cleanContent.replace(/<lead>[\s\S]*?<\/lead>/, '').trim()
     }
 
-    const result = { 
+    const result = {
       message: cleanContent,
       properties: matchedProperties,
       lead: leadData,
@@ -357,8 +357,19 @@ ${feedbackData.text}`,
       property_count: matchedProperties.length
     }
     
+    // Strip any remaining XML tags that leaked into content
+    cleanContent = cleanContent
+      .replace(/<profile>[\s\S]*?<\/profile>/g, '')
+      .replace(/<lead>[\s\S]*?<\/lead>/g, '')
+      .replace(/<properties>[\s\S]*?<\/properties>/g, '')
+      .replace(/<prompts>[\s\S]*?<\/prompts>/g, '')
+      .replace(/<feedback>[\s\S]*?<\/feedback>/g, '')
+      .replace(/<profile>/g, '').replace(/<\/profile>/g, '')
+      .replace(/<lead>/g, '').replace(/<\/lead>/g, '')
+      .trim()
+
     // Cache this result
-    searchCache.set(cacheKey, { result, timestamp: Date.now() })
+    searchCache.set(cacheKey, { result: {...result, message: cleanContent}, timestamp: Date.now() })
 
     // If no matches found and user has enough criteria — search competitor sites
     if (matchedProperties.length === 0 && user_id && existingProfile?.locations?.length > 0) {
