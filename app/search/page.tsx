@@ -163,8 +163,8 @@ export default function SearchPage() {
           💬 AI Chat
         </button>
         <button onClick={() => setMobileTab('results')}
-          className={`flex-1 py-3 text-sm font-semibold transition ${mobileTab === 'results' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-stone-500'}`}>
-          🏠 Properties
+          className={`flex-1 py-3 text-sm font-semibold transition ${mobileTab === 'results' ? 'text-orange-500 border-b-2 border-orange-500' : properties.length > 0 ? 'text-orange-400 border-b-2 border-orange-300' : 'text-stone-500'}`}>
+          🏠 Properties {properties.length > 0 && <span className="bg-orange-500 text-white text-xs rounded-full px-1.5 ml-1">{properties.length}</span>}
         </button>
       </div>
 
