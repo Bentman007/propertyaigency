@@ -76,10 +76,11 @@ export default function PropertyChat({ property }: PropertyChatProps) {
     }
   }, [messages])
 
-  const sendMessage = async () => {
-    if (!input.trim() || loading) return
+  const sendMessage = async (directMessage?: string) => {
+    const text = directMessage ?? input
+    if (!text.trim() || loading) return
 
-    const newMessages: Message[] = [...messages, { role: 'user', content: input }]
+    const newMessages: Message[] = [...messages, { role: 'user', content: text }]
     setMessages(newMessages)
     setInput('')
     setLoading(true)
@@ -89,7 +90,7 @@ export default function PropertyChat({ property }: PropertyChatProps) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: newMessages.map(m => ({ role: m.role, content: m.content })),
+          messages: newMessages.map((m: Message) => ({ role: m.role, content: m.content })),
           property,
           user_id: user?.id,
           session_id: sessionId.current
@@ -203,7 +204,7 @@ export default function PropertyChat({ property }: PropertyChatProps) {
       <div className="px-4 py-3 border-t border-stone-300">
         <div className="flex gap-2 mb-2" style={{overflowX: 'auto'}}>
           {suggestedPrompts.map((p, i) => (
-            <button key={i} onClick={() => setInput(p)}
+            <button key={i} onClick={() => sendMessage(p)}
               className="whitespace-nowrap text-xs bg-stone-100 hover:bg-stone-200 text-stone-800 border border-stone-300 rounded-full px-3 py-1.5 transition flex-shrink-0">
               {p}
             </button>
@@ -218,7 +219,7 @@ export default function PropertyChat({ property }: PropertyChatProps) {
             placeholder="Ask anything about this property..."
             className="flex-1 bg-stone-100 text-stone-800 rounded-lg px-3 py-2 outline-none border border-stone-300 focus:border-orange-500 text-sm"
           />
-          <button onClick={sendMessage} disabled={loading || !input.trim()}
+          <button onClick={() => sendMessage()} disabled={loading || !input.trim()}
             className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-4 py-2 rounded-lg disabled:opacity-50 text-sm">
             Send
           </button>

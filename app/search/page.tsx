@@ -209,7 +209,7 @@ export default function SearchPage() {
       <div className="flex flex-1 overflow-hidden">
 
         {/* Chat Panel */}
-        <div className={`flex flex-col w-full md:w-96 md:max-w-sm border-r border-stone-200 ${mobileTab === 'chat' ? 'flex' : 'hidden md:flex'}`}>
+        <div className={`flex flex-col w-full md:w-96 md:max-w-sm border-r border-stone-200 bg-[#f5f0eb] ${mobileTab === 'chat' ? 'flex' : 'hidden md:flex'}`}>
           <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#f5f0eb]">
             {messages.map((message, i) => (
               <div key={i} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -261,7 +261,7 @@ export default function SearchPage() {
         </div>
 
         {/* Properties Panel */}
-        <div className={`flex-1 overflow-y-auto p-4 md:p-6 ${mobileTab === 'results' ? 'block' : 'hidden md:block'}`}>
+        <div className={`flex-1 overflow-y-auto p-4 md:p-6 bg-[#f5f0eb] ${mobileTab === 'results' ? 'block' : 'hidden md:block'}`}>
           {properties.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <div className="text-6xl mb-4">🏡</div>

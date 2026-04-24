@@ -12,18 +12,19 @@ export default function ContactPage() {
   const [email, setEmail] = useState('')
   const [showForm, setShowForm] = useState(false)
 
-  const sendMessage = async () => {
-    if (!input.trim()) return
+  const sendMessage = async (directMessage?: string) => {
+    const text = directMessage ?? input
+    if (!text.trim()) return
     setLoading(true)
-    const newMessages = [...messages, { role: 'user', content: input }]
+    const newMessages = [...messages, { role: 'user', content: text }]
     setMessages(newMessages)
     setInput('')
 
     const response = await fetch('/api/contact-ai', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        message: input,
+      body: JSON.stringify({
+        message: text,
         history: messages
       })
     })
@@ -73,7 +74,7 @@ export default function ContactPage() {
             { icon: '💰', title: 'Pricing', desc: 'Plans and costs', prompt: 'What does it cost to advertise on PropertyAIgency?' },
             { icon: '🤝', title: 'Agency Partnership', desc: 'National contracts', prompt: 'I represent a large estate agency and want to discuss a partnership' },
           ].map(option => (
-            <button key={option.title} onClick={() => setInput(option.prompt)}
+            <button key={option.title} onClick={() => sendMessage(option.prompt)}
               className="bg-white border border-stone-300 hover:border-orange-500 rounded-xl p-4 text-left transition">
               <div className="text-2xl mb-2">{option.icon}</div>
               <p className="font-semibold text-sm">{option.title}</p>
@@ -158,7 +159,7 @@ export default function ContactPage() {
                 placeholder="Type your question..."
                 className="flex-1 bg-stone-100 text-stone-900 rounded-xl px-4 py-3 outline-none border border-stone-300 focus:border-orange-500 text-sm"
               />
-              <button onClick={sendMessage} disabled={loading || !input.trim()}
+              <button onClick={() => sendMessage()} disabled={loading || !input.trim()}
                 className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-5 py-3 rounded-xl disabled:opacity-50 transition">
                 Send
               </button>
