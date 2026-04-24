@@ -70,7 +70,10 @@ export default function PropertyChat({ property }: PropertyChatProps) {
   }, [])
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (messages.length > 0) {
+      const container = messagesEndRef.current?.parentElement
+      if (container) container.scrollTop = container.scrollHeight
+    }
   }, [messages])
 
   const sendMessage = async () => {

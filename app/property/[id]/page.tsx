@@ -52,7 +52,10 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
 
       {/* Nav */}
       <nav className="bg-stone-100 border-b border-stone-200 px-4 md:px-6 py-4 flex justify-between items-center">
-        <a href="/" className="text-xl md:text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</a>
+        <div className="flex items-center gap-3">
+          <a href="/saved" className="text-stone-500 hover:text-stone-900 text-sm">← Back</a>
+          <a href="/" className="text-xl md:text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</a>
+        </div>
         <div className="flex items-center gap-2 md:gap-3">
           <a href="/dashboard" className="text-stone-500 hover:text-stone-900 text-sm hidden md:block">← Dashboard</a>
           <EditListingButton propertyId={p.id} agentId={p.user_id} />
