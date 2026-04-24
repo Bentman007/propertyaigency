@@ -95,8 +95,13 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
         {/* Main content - stacks on mobile, side by side on desktop */}
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-          {/* Left/Main column */}
-          <div className="lg:col-span-2 space-y-5">
+          {/* Left column - sticky Concierge */}
+          <div className="hidden lg:block lg:col-span-1 lg:sticky lg:top-4 lg:self-start">
+            <PropertyChat property={p} />
+          </div>
+
+          {/* Main column - property details */}
+          <div className="lg:col-span-1 space-y-5">
 
             {/* Key stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -194,10 +199,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
               </div>
             )}
 
-            {/* AI Concierge Chat - full width on mobile, in left column on desktop */}
-            <div className="lg:hidden">
-              <PropertyChat property={p} />
-            </div>
+
 
           </div>
 
@@ -231,10 +233,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
               </div>
             </div>
 
-            {/* Chat - hidden on mobile (shown above), visible on desktop */}
-            <div className="hidden lg:block">
-              <PropertyChat property={p} />
-            </div>
+
 
           </div>
         </div>
