@@ -34,7 +34,7 @@ export default function SupplierLoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-stone-200 to-stone-50 flex items-center justify-center px-4">
+    <main className="min-h-screen bg-stone-50 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <Link href="/" className="block text-stone-500 hover:text-stone-900 text-sm mb-6 text-center">← Back to Home</Link>
 
