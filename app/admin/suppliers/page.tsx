@@ -77,12 +77,12 @@ export default function AdminSuppliers() {
   }
 
   return (
-    <main className="min-h-screen bg-amber-50 text-stone-900">
+    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
       <nav className="bg-white border-b border-stone-300 px-6 py-4 flex justify-between items-center">
         <Link href="/admin" className="text-2xl font-bold">
           Property<span className="text-orange-500">AI</span>gency <span className="text-stone-400 text-sm font-normal ml-2">Admin</span>
         </Link>
-        <Link href="/admin" className="text-stone-300 hover:text-white text-sm">← Admin Home</Link>
+        <Link href="/admin" className="text-stone-500 hover:text-stone-900 text-sm">← Admin Home</Link>
       </nav>
 
       <div className="max-w-5xl mx-auto px-6 py-8">
@@ -95,7 +95,7 @@ export default function AdminSuppliers() {
           {(['pending_review','active','rejected'] as const).map(f => (
             <button key={f} onClick={() => setFilter(f)}
               className={`px-4 py-2 rounded-xl text-sm font-semibold transition ${
-                filter === f ? 'bg-orange-500 text-black' : 'bg-white text-stone-300 hover:text-white border border-stone-300'
+                filter === f ? 'bg-orange-500 text-black' : 'bg-white text-stone-500 hover:text-stone-900 border border-stone-300'
               }`}>
               {f === 'pending_review' ? 'Pending Review' : f === 'active' ? 'Active' : 'Rejected'}
             </button>
@@ -191,7 +191,7 @@ export default function AdminSuppliers() {
                       value={rejectReason[sup.id] || ''}
                       onChange={e => setRejectReason(prev => ({ ...prev, [sup.id]: e.target.value }))}
                       placeholder="Rejection reason (optional — sent to supplier)"
-                      className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-2.5 text-sm outline-none border border-stone-300 focus:border-red-500"/>
+                      className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-2.5 text-sm outline-none border border-stone-300 focus:border-red-500"/>
                   </div>
                 )}
 

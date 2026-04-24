@@ -147,7 +147,7 @@ export default function RegisterPage() {
         ) : intent === 'listing' && !listingType ? (
           /* ── Step 2: Listing type ── */
           <div className="max-w-2xl mx-auto">
-            <button onClick={() => setIntent(null)} className="text-stone-300 hover:text-white text-sm mb-6 flex items-center gap-2">← Back</button>
+            <button onClick={() => setIntent(null)} className="text-stone-500 hover:text-stone-900 text-sm mb-6 flex items-center gap-2">← Back</button>
             <h2 className="text-2xl font-bold text-center text-stone-900 mb-8">Are you a private seller or an estate agent?</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
@@ -188,7 +188,7 @@ export default function RegisterPage() {
           /* ── Step 3: Registration form ── */
           <div className="max-w-md mx-auto bg-white border border-stone-300 rounded-2xl p-8">
             <button onClick={() => intent === 'looking' ? setIntent(null) : setListingType(null)}
-              className="text-stone-300 hover:text-white text-sm mb-6 flex items-center gap-2">← Back</button>
+              className="text-stone-500 hover:text-stone-900 text-sm mb-6 flex items-center gap-2">← Back</button>
 
             <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-semibold mb-6 ${
               accountType === 'buyer'         ? 'bg-blue-900 text-blue-300' :

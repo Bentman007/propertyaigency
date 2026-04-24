@@ -49,14 +49,14 @@ export default function ContactPage() {
   }
 
   return (
-    <main className="min-h-screen bg-amber-50 text-stone-900">
-      <nav className="bg-stone-700 border-b border-stone-600 px-6 py-4 flex justify-between items-center">
+    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
+      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">
           Property<span className="text-orange-500">AI</span>gency
         </Link>
         <div className="flex gap-4">
-          <Link href="/search" className="text-stone-300 hover:text-white text-sm">Search</Link>
-          <Link href="/auth/login" className="text-stone-300 hover:text-white text-sm">Sign In</Link>
+          <Link href="/search" className="text-stone-500 hover:text-stone-900 text-sm">Search</Link>
+          <Link href="/auth/login" className="text-stone-500 hover:text-stone-900 text-sm">Sign In</Link>
         </div>
       </nav>
 
@@ -98,7 +98,7 @@ export default function ContactPage() {
             {messages.length === 0 && (
               <div className="flex gap-3">
                 <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs flex-shrink-0">AI</div>
-                <div className="bg-amber-50 rounded-xl px-4 py-3 text-sm text-stone-800 max-w-md">
+                <div className="bg-stone-100 rounded-xl px-4 py-3 text-sm text-stone-800 max-w-md">
                   Hi! 👋 I'm the PropertyAIgency assistant. I can help with questions about listing properties, pricing, how our platform works, or anything else. What can I help you with?
                 </div>
               </div>
@@ -109,7 +109,7 @@ export default function ContactPage() {
                   <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs flex-shrink-0">AI</div>
                 )}
                 <div className={`rounded-xl px-4 py-3 text-sm max-w-md whitespace-pre-wrap ${
-                  msg.role === 'user' ? 'bg-orange-500 text-black' : 'bg-amber-50 text-stone-800'
+                  msg.role === 'user' ? 'bg-orange-500 text-black' : 'bg-stone-100 text-stone-800'
                 }`}>
                   {msg.content}
                 </div>
@@ -118,7 +118,7 @@ export default function ContactPage() {
             {loading && (
               <div className="flex gap-3">
                 <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs flex-shrink-0">AI</div>
-                <div className="bg-amber-50 rounded-xl px-4 py-3 text-sm text-stone-500 animate-pulse">Typing...</div>
+                <div className="bg-stone-100 rounded-xl px-4 py-3 text-sm text-stone-500 animate-pulse">Typing...</div>
               </div>
             )}
           </div>

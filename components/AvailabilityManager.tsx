@@ -136,11 +136,11 @@ export default function AvailabilityManager({ agentId }: { agentId: string }) {
                   <div className="flex items-center gap-2">
                     <input type="time" value={template[`${day}_start`] || ''}
                       onChange={e => setTemplate((p: any) => ({ ...p, [`${day}_start`]: e.target.value }))}
-                      className="bg-amber-50 text-stone-800 rounded-lg px-2 py-1 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
+                      className="bg-stone-100 text-stone-800 rounded-lg px-2 py-1 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
                     <span className="text-stone-400 text-sm">to</span>
                     <input type="time" value={template[`${day}_end`] || ''}
                       onChange={e => setTemplate((p: any) => ({ ...p, [`${day}_end`]: e.target.value }))}
-                      className="bg-amber-50 text-stone-800 rounded-lg px-2 py-1 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
+                      className="bg-stone-100 text-stone-800 rounded-lg px-2 py-1 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
                   </div>
                 ) : (
                   <span className="text-stone-400 text-sm">Not available</span>
@@ -159,7 +159,7 @@ export default function AvailabilityManager({ agentId }: { agentId: string }) {
             <label className="text-xs text-stone-500 mb-1 block">Viewing duration</label>
             <select value={template.viewing_duration_minutes}
               onChange={e => setTemplate((p: any) => ({ ...p, viewing_duration_minutes: parseInt(e.target.value) }))}
-              className="w-full bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500">
+              className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500">
               <option value={30}>30 minutes</option>
               <option value={45}>45 minutes</option>
               <option value={60}>1 hour</option>
@@ -170,7 +170,7 @@ export default function AvailabilityManager({ agentId }: { agentId: string }) {
             <label className="text-xs text-stone-500 mb-1 block">Travel buffer between viewings</label>
             <select value={template.travel_buffer_minutes}
               onChange={e => setTemplate((p: any) => ({ ...p, travel_buffer_minutes: parseInt(e.target.value) }))}
-              className="w-full bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500">
+              className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500">
               <option value={15}>15 minutes</option>
               <option value={20}>20 minutes</option>
               <option value={30}>30 minutes</option>
@@ -212,7 +212,7 @@ export default function AvailabilityManager({ agentId }: { agentId: string }) {
           <input type="date" value={newBlockedDate}
             onChange={e => setNewBlockedDate(e.target.value)}
             min={new Date().toISOString().split('T')[0]}
-            className="w-full bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
+            className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
         </div>
 
         {blockType === 'time_range' && (
@@ -221,13 +221,13 @@ export default function AvailabilityManager({ agentId }: { agentId: string }) {
               <label className="text-xs text-stone-500 mb-1 block">From</label>
               <input type="time" value={newBlockedStart}
                 onChange={e => setNewBlockedStart(e.target.value)}
-                className="w-full bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
+                className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
             </div>
             <div>
               <label className="text-xs text-stone-500 mb-1 block">To</label>
               <input type="time" value={newBlockedEnd}
                 onChange={e => setNewBlockedEnd(e.target.value)}
-                className="w-full bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
+                className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
             </div>
           </div>
         )}

@@ -91,7 +91,7 @@ export default function SupplierReview({ supplierId }: { supplierId: string }) {
 
       {/* Review form */}
       {showForm && (
-        <div className="bg-amber-50 rounded-xl p-4 mb-4">
+        <div className="bg-stone-100 rounded-xl p-4 mb-4">
           <p className="font-semibold text-sm mb-3">Your Rating</p>
           <div className="flex gap-1 mb-3">
             {Array.from({ length: 5 }).map((_, i) => (

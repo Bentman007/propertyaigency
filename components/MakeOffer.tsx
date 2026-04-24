@@ -81,7 +81,7 @@ export default function MakeOffer({ property }: { property: any }) {
       </div>
 
       {/* Moving Services Upsell */}
-      <div className="bg-amber-50 rounded-xl p-4 border border-orange-500">
+      <div className="bg-stone-100 rounded-xl p-4 border border-orange-500">
         <div className="flex gap-3">
           <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs flex-shrink-0">AI</div>
           <div>
@@ -109,10 +109,10 @@ export default function MakeOffer({ property }: { property: any }) {
   )
 
   return (
-    <div className="bg-amber-50 rounded-xl p-4 mb-3 space-y-3">
+    <div className="bg-stone-100 rounded-xl p-4 mb-3 space-y-3">
       <div className="flex justify-between items-center">
         <p className="font-bold text-sm">{isRent ? '📋 Rental Application' : '💰 Make an Offer'}</p>
-        <button onClick={() => setShowForm(false)} className="text-stone-300 hover:text-white text-sm">✕</button>
+        <button onClick={() => setShowForm(false)} className="text-stone-500 hover:text-stone-900 text-sm">✕</button>
       </div>
 
       {isRent ? (

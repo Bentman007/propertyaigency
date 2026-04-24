@@ -173,16 +173,16 @@ export default function AdminPage() {
   )
 
   return (
-    <main className="min-h-screen bg-amber-50 text-stone-900">
-      <nav className="bg-stone-700 border-b border-stone-600 px-6 py-4 flex justify-between items-center">
+    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
+      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
         <div>
           <a href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</a>
           <span className="ml-3 bg-orange-500 text-black text-xs font-bold px-2 py-0.5 rounded">ADMIN</span>
         </div>
         <div className="flex items-center gap-4">
-          <Link href="/dashboard" className="text-stone-300 hover:text-white text-sm">Agent Dashboard</Link>
+          <Link href="/dashboard" className="text-stone-500 hover:text-stone-900 text-sm">Agent Dashboard</Link>
           <button onClick={() => supabase.auth.signOut().then(() => window.location.href = '/')}
-            className="text-stone-300 hover:text-white text-sm">Sign Out</button>
+            className="text-stone-500 hover:text-stone-900 text-sm">Sign Out</button>
         </div>
       </nav>
 
@@ -271,12 +271,12 @@ export default function AdminPage() {
           </div>
 
           {actionMessage && (
-            <div className="bg-amber-50 rounded-xl p-3 mb-4 text-sm text-center">{actionMessage}</div>
+            <div className="bg-stone-100 rounded-xl p-3 mb-4 text-sm text-center">{actionMessage}</div>
           )}
 
           {foundUser && (
             <div className="space-y-4">
-              <div className="bg-amber-50 rounded-xl p-4">
+              <div className="bg-stone-100 rounded-xl p-4">
                 <div className="flex justify-between items-start">
                   <div>
                     <p className="font-bold text-lg">{foundUser.full_name || 'Unknown'}</p>
@@ -305,7 +305,7 @@ export default function AdminPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-amber-50 rounded-xl p-4">
+                <div className="bg-stone-100 rounded-xl p-4">
                   <p className="font-semibold text-sm mb-2">🎁 Add Free Listing Credits</p>
                   <div className="flex gap-2">
                     <input type="number" value={creditAmount} onChange={e => setCreditAmount(e.target.value)}
@@ -316,7 +316,7 @@ export default function AdminPage() {
                   </div>
                 </div>
 
-                <div className="bg-amber-50 rounded-xl p-4">
+                <div className="bg-stone-100 rounded-xl p-4">
                   <p className="font-semibold text-sm mb-2">💰 Apply Discount (%)</p>
                   <div className="flex gap-2">
                     <input type="number" value={discountAmount} onChange={e => setDiscountAmount(e.target.value)}
@@ -328,7 +328,7 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              <div className="bg-amber-50 rounded-xl p-4">
+              <div className="bg-stone-100 rounded-xl p-4">
                 <p className="font-semibold text-sm mb-2">{foundUser.is_suspended ? '✅ Reinstate Account' : '🔴 Suspend Account'}</p>
                 <button onClick={() => suspendUser(!foundUser.is_suspended)}
                   className={`w-full font-bold py-2 rounded-lg text-sm transition ${foundUser.is_suspended ? 'bg-green-600 hover:bg-green-500 text-white' : 'bg-red-600 hover:bg-red-500 text-white'}`}>
@@ -340,7 +340,7 @@ export default function AdminPage() {
                 <label className="text-stone-500 text-xs mb-1 block">Internal note (optional)</label>
                 <input value={adminNote} onChange={e => setAdminNote(e.target.value)}
                   placeholder="e.g. Compensated for 3 days downtime..."
-                  className="w-full bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
+                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
               </div>
             </div>
           )}
@@ -370,7 +370,7 @@ export default function AdminPage() {
                 ))}
               </div>
               {/* Positive % headline */}
-              <div className="bg-amber-50 rounded-xl p-4 mb-4 text-center">
+              <div className="bg-stone-100 rounded-xl p-4 mb-4 text-center">
                 <p className="text-2xl font-bold text-green-400">
                   ⭐ {feedback.length > 0 ? Math.round((feedback.filter((f:any) => f.sentiment === 'positive').length / feedback.length) * 100) : 0}% Positive Rating
                 </p>
@@ -379,7 +379,7 @@ export default function AdminPage() {
               {/* Latest 3 feedback items */}
               <div className="space-y-3 mb-4">
                 {feedback.slice(0, 3).map((f: any) => (
-                  <div key={f.id} className="bg-amber-50 rounded-xl p-3 flex gap-3 items-start">
+                  <div key={f.id} className="bg-stone-100 rounded-xl p-3 flex gap-3 items-start">
                     <span className={`text-xs font-bold px-2 py-1 rounded-full flex-shrink-0 ${
                       f.sentiment === 'positive' ? 'bg-green-900 text-green-300' :
                       f.sentiment === 'negative' ? 'bg-red-900 text-red-300' :
@@ -422,7 +422,7 @@ export default function AdminPage() {
             {aiLoading && (
               <div className="flex gap-3">
                 <div className="w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs">AI</div>
-                <div className="bg-amber-50 rounded-xl px-4 py-2.5 text-sm text-stone-500 animate-pulse">Thinking...</div>
+                <div className="bg-stone-100 rounded-xl px-4 py-2.5 text-sm text-stone-500 animate-pulse">Thinking...</div>
               </div>
             )}
             {[...aiHistory].reverse().map((msg, i) => (
@@ -430,7 +430,7 @@ export default function AdminPage() {
                 {msg.role === 'assistant' && (
                   <div className="w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-xs flex-shrink-0">AI</div>
                 )}
-                <div className={`max-w-2xl rounded-xl px-4 py-2.5 text-sm whitespace-pre-wrap ${msg.role === 'user' ? 'bg-orange-500 text-black' : 'bg-amber-50 text-stone-800'}`}>
+                <div className={`max-w-2xl rounded-xl px-4 py-2.5 text-sm whitespace-pre-wrap ${msg.role === 'user' ? 'bg-orange-500 text-black' : 'bg-stone-100 text-stone-800'}`}>
                   {msg.content}
                 </div>
               </div>

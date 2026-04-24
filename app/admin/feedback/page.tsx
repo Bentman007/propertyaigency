@@ -41,10 +41,10 @@ export default function FeedbackPage() {
   )
 
   return (
-    <main className="min-h-screen bg-amber-50 text-stone-900">
-      <nav className="bg-stone-700 border-b border-stone-600 px-6 py-4 flex justify-between items-center">
+    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
+      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
         <Link href="/admin" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
-        <Link href="/admin" className="text-stone-300 hover:text-white text-sm">← Back to Admin</Link>
+        <Link href="/admin" className="text-stone-500 hover:text-stone-900 text-sm">← Back to Admin</Link>
       </nav>
 
       <div className="max-w-5xl mx-auto px-6 py-8">

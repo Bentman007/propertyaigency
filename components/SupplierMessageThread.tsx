@@ -143,7 +143,7 @@ export default function SupplierMessageThread({
                 </div>
               )}
               <div className={`rounded-xl px-3 py-2 text-sm max-w-xs ${
-                isMe ? 'bg-orange-500 text-black' : 'bg-amber-50 text-stone-800'
+                isMe ? 'bg-orange-500 text-black' : 'bg-stone-100 text-stone-800'
               }`}>
                 <p>{msg.content}</p>
                 <p className={`text-xs mt-1 ${isMe ? 'text-orange-900' : 'text-stone-400'}`}>
@@ -172,7 +172,7 @@ export default function SupplierMessageThread({
         <input value={input} onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage(input)}
           placeholder={currentUserType === 'buyer' ? 'Ask a question...' : 'Reply to client...'}
-          className="flex-1 bg-amber-50 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
+          className="flex-1 bg-stone-100 text-stone-800 rounded-lg px-3 py-2 text-sm outline-none border border-stone-300 focus:border-orange-500"/>
         <button onClick={() => sendMessage(input)} disabled={sending || !input.trim()}
           className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-4 py-2 rounded-lg text-sm disabled:opacity-50">
           {sending ? '...' : 'Send'}

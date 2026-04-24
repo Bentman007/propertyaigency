@@ -128,7 +128,7 @@ export default function ViewingBookings({ agentId }: { agentId: string }) {
 
 function BookingCard({ booking, onAction, processing, getTempColor, getStatusColor, showActions }: any) {
   return (
-    <div className="bg-amber-50 rounded-xl p-4 mb-2">
+    <div className="bg-stone-100 rounded-xl p-4 mb-2">
       <div className="flex justify-between items-start mb-2">
         <div>
           <p className="font-semibold text-sm">{booking.properties?.title}</p>

@@ -159,10 +159,10 @@ export default function BulkUploadPage() {
   const errorCount = results.filter(r => r.status === 'error').length
 
   return (
-    <main className="min-h-screen bg-amber-50 text-stone-900">
+    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
       <nav className="bg-white border-b border-stone-300 px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
-        <Link href="/dashboard" className="text-stone-300 hover:text-white text-sm">← Back to Dashboard</Link>
+        <Link href="/dashboard" className="text-stone-500 hover:text-stone-900 text-sm">← Back to Dashboard</Link>
       </nav>
 
       <div className="max-w-3xl mx-auto px-6 py-12">

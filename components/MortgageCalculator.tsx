@@ -95,7 +95,7 @@ export default function MortgageCalculator({ price, priceType }: { price: number
           </div>
 
           {/* Results */}
-          <div className="bg-amber-50 rounded-xl p-4 space-y-2">
+          <div className="bg-stone-100 rounded-xl p-4 space-y-2">
             <div className="flex justify-between">
               <span className="text-stone-500 text-sm">Loan amount</span>
               <span className="font-bold">R {(price * (1 - deposit/100)).toLocaleString()}</span>

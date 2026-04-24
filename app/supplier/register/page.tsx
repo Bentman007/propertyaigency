@@ -234,10 +234,10 @@ export default function SupplierRegister() {
   }
 
   return (
-    <main className="min-h-screen bg-amber-50 text-stone-900">
-      <nav className="bg-stone-700 border-b border-stone-600 px-6 py-4 flex justify-between items-center">
+    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
+      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
-        <Link href="/supplier/login" className="text-stone-300 hover:text-white text-sm">Already registered? Sign in</Link>
+        <Link href="/supplier/login" className="text-stone-500 hover:text-stone-900 text-sm">Already registered? Sign in</Link>
       </nav>
 
       <div className="max-w-2xl mx-auto px-6 py-12">
@@ -306,7 +306,7 @@ export default function SupplierRegister() {
         {/* ── Step 2: Pricing for selected services ── */}
         {step === 2 && (
           <div className="bg-white border border-stone-300 rounded-2xl p-8">
-            <button onClick={() => setStep(1)} className="text-stone-300 hover:text-white text-sm mb-6 block">← Back</button>
+            <button onClick={() => setStep(1)} className="text-stone-500 hover:text-stone-900 text-sm mb-6 block">← Back</button>
             <h2 className="text-lg font-bold text-orange-500 mb-6">Your Lead Pricing</h2>
 
             <div className="space-y-3 mb-6">
@@ -314,7 +314,7 @@ export default function SupplierRegister() {
                 const svcLabel = CATEGORIES.flatMap(c => c.services).find(s => s.value === sv)?.label || sv
                 const price    = LEAD_PRICES[sv] || 0
                 return (
-                  <div key={sv} className="flex items-center justify-between bg-amber-50 rounded-xl px-4 py-3">
+                  <div key={sv} className="flex items-center justify-between bg-stone-100 rounded-xl px-4 py-3">
                     <p className="text-sm font-semibold">{svcLabel}</p>
                     <span className="text-orange-400 font-bold">R{price}/lead</span>
                   </div>
@@ -327,7 +327,7 @@ export default function SupplierRegister() {
               <p className="text-stone-700 text-sm">Start receiving leads at no cost. After your trial, continue for R2000/year or R199/month. Per-lead fees apply throughout.</p>
             </div>
 
-            <div className="bg-amber-50 rounded-xl p-4 mb-6 text-sm text-stone-700 space-y-2">
+            <div className="bg-stone-100 rounded-xl p-4 mb-6 text-sm text-stone-700 space-y-2">
               {['You only pay for leads you receive', 'Invoiced on the 1st of each month — 7 day payment terms', 'Pause or stop any time — no lock-in', 'Full address only shared after you quote'].map(b => (
                 <p key={b} className="flex items-start gap-2"><span className="text-orange-500 mt-0.5">✓</span>{b}</p>
               ))}
@@ -344,7 +344,7 @@ export default function SupplierRegister() {
         {step === 3 && (
           <div className="bg-white border border-stone-300 rounded-2xl p-8 space-y-4">
             <div className="flex items-center gap-3 mb-2">
-              <button onClick={() => setStep(2)} className="text-stone-300 hover:text-white text-sm">← Back</button>
+              <button onClick={() => setStep(2)} className="text-stone-500 hover:text-stone-900 text-sm">← Back</button>
               <h2 className="text-lg font-bold text-orange-500">Your Business Details</h2>
             </div>
 
@@ -365,7 +365,7 @@ export default function SupplierRegister() {
             <div>
               <label className="text-stone-500 text-sm mb-1 block">Business Name</label>
               <input value={form.business_name} onChange={e => update('business_name', e.target.value)}
-                className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+                className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                 placeholder="e.g. Sharp Garden Services"/>
             </div>
 
@@ -373,13 +373,13 @@ export default function SupplierRegister() {
               <div>
                 <label className="text-stone-500 text-sm mb-1 block">Phone</label>
                 <input value={form.phone} onChange={e => update('phone', e.target.value)}
-                  className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                   placeholder="+27 82 123 4567"/>
               </div>
               <div>
                 <label className="text-stone-500 text-sm mb-1 block">Website <span className="text-orange-500">*</span></label>
                 <input value={form.website} onChange={e => update('website', e.target.value)}
-                  className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                   placeholder="www.yourbusiness.co.za"/>
               </div>
             </div>
@@ -387,7 +387,7 @@ export default function SupplierRegister() {
             <div>
               <label className="text-stone-500 text-sm mb-1 block">Areas Served (comma separated)</label>
               <input value={form.areas_served} onChange={e => update('areas_served', e.target.value)}
-                className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+                className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                 placeholder="Johannesburg, Sandton, Randburg, Midrand"/>
             </div>
 
@@ -396,7 +396,7 @@ export default function SupplierRegister() {
               <div className="flex items-center gap-3">
                 <input type="number" min="5" max="100" value={form.weekly_lead_limit}
                   onChange={e => update('weekly_lead_limit', e.target.value)}
-                  className="w-28 bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"/>
+                  className="w-28 bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"/>
                 <p className="text-stone-500 text-sm">leads per week max. Change any time.</p>
               </div>
             </div>
@@ -404,14 +404,14 @@ export default function SupplierRegister() {
             <div>
               <label className="text-stone-500 text-sm mb-1 block">Email</label>
               <input type="email" value={form.email} onChange={e => update('email', e.target.value)}
-                className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+                className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                 placeholder="you@business.co.za"/>
             </div>
 
             <div>
               <label className="text-stone-500 text-sm mb-1 block">Password</label>
               <input type="password" value={form.password} onChange={e => update('password', e.target.value)}
-                className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
+                className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"
                 placeholder="••••••••"/>
             </div>
 
@@ -439,8 +439,8 @@ export default function SupplierRegister() {
               <>
                 <p className="text-stone-500 text-sm">Edit your profile below then submit for review.</p>
                 <textarea value={aiProfile} onChange={e => setAiProfile(e.target.value)} rows={8}
-                  className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500 text-sm leading-relaxed"/>
-                <div className="bg-amber-50 rounded-xl p-4 text-sm">
+                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500 text-sm leading-relaxed"/>
+                <div className="bg-stone-100 rounded-xl p-4 text-sm">
                   <p className="font-semibold mb-2">Preview</p>
                   <div className="flex items-center gap-3 mb-2">
                     {logoPreview && <img src={logoPreview} alt="" className="w-10 h-10 rounded-lg object-contain bg-stone-200"/>}
@@ -456,7 +456,7 @@ export default function SupplierRegister() {
                   className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-3 rounded-xl disabled:opacity-50 transition">
                   {loading ? 'Submitting...' : '🚀 Submit for Review'}
                 </button>
-                <button onClick={generateAIProfile} className="w-full text-stone-300 hover:text-white text-sm py-2">
+                <button onClick={generateAIProfile} className="w-full text-stone-500 hover:text-stone-900 text-sm py-2">
                   ↺ Regenerate profile
                 </button>
               </>

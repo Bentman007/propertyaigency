@@ -2,14 +2,14 @@ import Link from 'next/link'
 
 export default function PricingPage() {
   return (
-    <main className="min-h-screen bg-amber-50 text-stone-900">
-      <nav className="bg-stone-700 border-b border-stone-600 px-6 py-4 flex justify-between items-center">
+    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
+      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">
           Property<span className="text-orange-500">AI</span>gency
         </Link>
         <div className="flex gap-4 items-center">
-          <Link href="/contact" className="text-stone-300 hover:text-white text-sm">Contact</Link>
-          <Link href="/auth/login" className="text-stone-300 hover:text-white text-sm">Sign In</Link>
+          <Link href="/contact" className="text-stone-500 hover:text-stone-900 text-sm">Contact</Link>
+          <Link href="/auth/login" className="text-stone-500 hover:text-stone-900 text-sm">Sign In</Link>
           <Link href="/auth/register" className="bg-orange-500 text-black px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-400">
             Get Started Free
           </Link>
@@ -265,7 +265,7 @@ export default function PricingPage() {
         </div>
       </div>
 
-      <footer className="border-t border-stone-300 px-6 py-8 text-center text-stone-500 bg-stone-100 text-sm">
+      <footer className="border-t border-stone-200 px-6 py-8 text-center text-stone-400 text-sm">
         <div className="flex justify-center gap-6">
           <Link href="/how-it-works" className="hover:text-stone-900">How It Works</Link>
           <Link href="/terms" className="hover:text-stone-900">Terms of Service</Link>

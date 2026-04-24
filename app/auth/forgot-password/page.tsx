@@ -26,7 +26,7 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-amber-100 to-amber-50 flex items-center justify-center px-4">
+    <main className="min-h-screen bg-gradient-to-b from-stone-200 to-stone-50 flex items-center justify-center px-4">
       <div className="bg-white rounded-2xl p-8 w-full max-w-md border border-stone-300">
         <div className="text-center mb-8">
           <Link href="/" className="text-3xl font-bold text-stone-900">
@@ -61,7 +61,7 @@ export default function ForgotPasswordPage() {
                 <input type="email" required value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="w-full bg-amber-50 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"/>
+                  className="w-full bg-stone-100 text-stone-800 rounded-lg px-4 py-3 outline-none border border-stone-300 focus:border-orange-500"/>
               </div>
               <button type="submit" disabled={loading}
                 className="w-full bg-orange-500 hover:bg-orange-400 text-black font-bold py-3 rounded-xl disabled:opacity-50 transition">
