@@ -88,10 +88,6 @@ export default function Home() {
           <p style={{color:T.heroSub, fontSize:'13px', marginTop:'12px'}}>
             Tell our AI what you want — it finds your perfect match
           </p>
-          <div style={{display:'flex', gap:'12px', marginTop:'16px', justifyContent:'center'}}>
-            <Link href="/buy" style={{color:T.heroSub, fontSize:'14px', border:'1px solid rgba(255,255,255,0.4)', padding:'8px 16px', borderRadius:'8px', textDecoration:'none'}}>Browse for Sale</Link>
-            <Link href="/rent" style={{color:T.heroSub, fontSize:'14px', border:'1px solid rgba(255,255,255,0.4)', padding:'8px 16px', borderRadius:'8px', textDecoration:'none'}}>Browse to Rent</Link>
-          </div>
         </div>
       </section>
 
