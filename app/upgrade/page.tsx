@@ -33,7 +33,7 @@ export default function UpgradePage() {
   const selectedBundle = BUNDLES.find(b => b.key === selected)!
 
   return (
-    <main className="min-h-screen bg-stone-50 text-stone-900">
+    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
       <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
         <Link href="/dashboard" className="text-stone-500 hover:text-stone-900 text-sm">← Back to Dashboard</Link>

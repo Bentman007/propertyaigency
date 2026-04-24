@@ -47,7 +47,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
   })).filter(group => group.items.length > 0)
 
   return (
-    <main className="min-h-screen bg-stone-50 text-stone-900">
+    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
       <ViewTracker propertyId={p.id} />
 
       {/* Nav */}

@@ -307,7 +307,7 @@ export default function DashboardPage() {
   )
 
   return (
-    <main className="min-h-screen bg-stone-50 text-stone-900">
+    <main className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-50 text-stone-900">
       {/* Header */}
       <nav className="bg-white border-b border-stone-300 px-4 md:px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">
