@@ -37,7 +37,7 @@ export default function Home() {
       {/* Mobile menu dropdown */}
       {menuOpen && (
         <div style={{backgroundColor:T.nav, borderBottom:`1px solid ${T.navBdr}`, padding:'16px 20px', display:'flex', flexDirection:'column', gap:'16px', zIndex:49, position:'relative'}}>
-          {[['🔍 AI Search','/search'],['Buy','/buy'],['Rent','/rent'],['List a Property','/list'],['How It Works','/how-it-works'],['Pricing','/pricing'],['Contact','/contact']].map(([label,href])=>(
+          {[['🔍 AI Search','/search'],['List a Property','/list'],['How It Works','/how-it-works'],['Pricing','/pricing'],['Contact','/contact']].map(([label,href])=>(
             <Link key={href} href={href} onClick={() => setMenuOpen(false)} style={{color:T.navLink, fontSize:'15px', textDecoration:'none', paddingBottom:'8px', borderBottom:`1px solid ${T.navBdr}`}}>{label}</Link>
           ))}
           {user ? (
