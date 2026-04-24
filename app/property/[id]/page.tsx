@@ -47,17 +47,17 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
   })).filter(group => group.items.length > 0)
 
   return (
-    <main className="min-h-screen bg-stone-50 text-stone-900">
+    <main className="min-h-screen bg-[#f5f0eb] text-stone-900">
       <ViewTracker propertyId={p.id} />
 
       {/* Nav */}
-      <nav className="bg-stone-100 border-b border-stone-200 px-4 md:px-6 py-4 flex justify-between items-center">
+      <nav className="bg-[#4a4238] px-4 md:px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
-          <a href="/search" className="text-stone-500 hover:text-stone-900 text-sm">← Back to Search</a>
-          <a href="/" className="text-xl md:text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</a>
+          <a href="/search?tab=results" className="text-stone-300 hover:text-white text-sm">← Back to Search</a>
+          <a href="/" className="text-xl md:text-2xl font-bold text-white">Property<span className="text-orange-400">AI</span>gency</a>
         </div>
         <div className="flex items-center gap-2 md:gap-3">
-          <a href="/dashboard" className="text-stone-500 hover:text-stone-900 text-sm hidden md:block">← Dashboard</a>
+          <a href="/dashboard" className="text-stone-300 hover:text-white text-sm hidden md:block">← Dashboard</a>
           <EditListingButton propertyId={p.id} agentId={p.user_id} />
         </div>
       </nav>
@@ -95,8 +95,8 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
         {/* Main content - stacks on mobile, side by side on desktop */}
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-          {/* Left column - sticky Concierge */}
-          <div className="hidden lg:block lg:col-span-1 lg:sticky lg:top-4 lg:self-start">
+          {/* Left column - sticky Concierge: desktop sidebar, mobile bottom */}
+          <div className="lg:col-span-1 lg:sticky lg:top-4 lg:self-start order-last lg:order-first">
             <PropertyChat property={p} />
           </div>
 

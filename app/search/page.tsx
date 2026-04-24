@@ -1,6 +1,5 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react'
-import VoiceInput from '@/components/VoiceInput'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 
@@ -14,14 +13,15 @@ interface Property {
 
 export default function SearchPage() {
   const [mobileTab, setMobileTab] = useState<'chat'|'results'>('chat')
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([{
     role: 'assistant',
     content: "Hi! I'm your PropertyAIgency Concierge. Tell me what you're looking for and I'll find your perfect match. 🏡"
-  // Note: greeting will be personalised on load
   }])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [properties, setProperties] = useState<Property[]>([])
+  const [rejectingIds, setRejectingIds] = useState<string[]>([])
   const [suggestedPrompts, setSuggestedPrompts] = useState<string[]>([
     'Show me what is available', '3 bedrooms', 'I want to rent', 'I want to buy', 'Pool and garden', 'Under R15,000/mo'
   ])
@@ -29,18 +29,24 @@ export default function SearchPage() {
   const [rejectedIds, setRejectedIds] = useState<string[]>([])
   const [user, setUser] = useState<any>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const allActionedShown = useRef(false)
+
+  // Fix #4: read ?tab=results from URL on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('tab') === 'results') setMobileTab('results')
+  }, [])
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       setUser(data.user)
       if (data.user) {
         fetchUserPreferences(data.user.id)
-        // Restore chat history from localStorage
         const saved = localStorage.getItem(`chat_${data.user.id}`)
         if (saved) {
           try {
             const parsed = JSON.parse(saved)
-            if (parsed.length > 1) setMessages(parsed) // keep if more than just greeting
+            if (parsed.length > 1) setMessages(parsed)
           } catch(e) {}
         }
       }
@@ -51,33 +57,31 @@ export default function SearchPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  // Auto-switch back to chat when all properties have been actioned
+  // Fix #3: auto-switch to chat and show message when all properties actioned
   useEffect(() => {
     if (properties.length === 0) return
-    const actioned = properties.filter(p => savedIds.includes(p.id) || rejectedIds.includes(p.id))
-    if (actioned.length === properties.length && mobileTab === 'results') {
-      // All properties actioned - switch back to chat after short delay
+    const allActioned = properties.every(p => savedIds.includes(p.id) || rejectedIds.includes(p.id))
+    if (allActioned && !allActionedShown.current) {
+      allActionedShown.current = true
       setTimeout(() => {
-        // Stay on current tab
+        setMobileTab('chat')
         setMessages(prev => [...prev, {
           role: 'assistant',
           content: "You've been through all the matches! Want me to find more options? I can widen the search area, adjust the budget, or remove a requirement to show you more properties."
         }])
-        setSuggestedPrompts(['Show me more options', 'Widen the search area', 'Adjust my budget', 'Remove a requirement'])
-      }, 1000)
+        setSuggestedPrompts(['Show me what is available', 'Widen the search area', 'Adjust my budget', 'Remove a requirement'])
+      }, 800)
     }
-  }, [savedIds, rejectedIds, properties, mobileTab])
+  }, [savedIds, rejectedIds, properties])
 
   const fetchUserPreferences = async (userId: string) => {
     const { data: saved } = await supabase.from('saved_properties').select('property_id').eq('user_id', userId)
     const { data: rejected } = await supabase.from('rejected_properties').select('property_id').eq('user_id', userId)
     setSavedIds(saved?.map((s: any) => s.property_id) || [])
     setRejectedIds(rejected?.map((r: any) => r.property_id) || [])
-    
-    // Personalise greeting if user has an existing profile
     const { data: profile } = await supabase.from('searcher_profiles').select('*').eq('user_id', userId).single()
     if (profile && (profile.locations?.length > 0 || profile.budget_max)) {
-      const parts = []
+      const parts: string[] = []
       if (profile.bedrooms_min) parts.push(`${profile.bedrooms_min} bedroom`)
       if (profile.locations?.length > 0) parts.push(`in ${profile.locations[0]}`)
       if (profile.budget_max) parts.push(`around R${Number(profile.budget_max).toLocaleString()}`)
@@ -111,13 +115,18 @@ export default function SearchPage() {
         .replace(/<properties>/g, '').replace(/<\/properties>/g, '')
         .trim()
       setMessages(prev => [...prev, { role: 'assistant', content: cleanMsg }])
-      if (data.suggested_prompts?.length > 0) setSuggestedPrompts(data.suggested_prompts)
+      // Fix #5: always keep "Show me what is available" first
+      if (data.suggested_prompts?.length > 0) {
+        const rest = (data.suggested_prompts as string[]).filter((p: string) => p !== 'Show me what is available')
+        setSuggestedPrompts(['Show me what is available', ...rest])
+      }
       if (data.properties?.length > 0) {
+        allActionedShown.current = false
+        // Fix #1: add new properties but never remove; rejectedIds filter handles hiding
         setProperties(prev => {
           const existingIds = prev.map(p => p.id)
           const newProps = data.properties.filter((p: Property) => !existingIds.includes(p.id))
-          const updated = [...newProps, ...prev]
-          return updated
+          return [...newProps, ...prev]
         })
         setMobileTab('results')
       }
@@ -137,18 +146,19 @@ export default function SearchPage() {
     setSavedIds(prev => [...prev, propertyId])
   }
 
-  const handleReject = async (propertyId: string) => {
+  // Fix #1 + #2: keep properties in state, use rejectedIds to filter; animate out with rejectingIds
+  const handleReject = (propertyId: string) => {
     if (!user) { window.location.href = '/auth/login?next=/search'; return }
-    // Remove immediately from UI for instant feedback
-    setProperties(prev => prev.filter(p => p.id !== propertyId))
-    await fetch('/api/reject-property', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: user.id, property_id: propertyId })
-    })
-    setRejectedIds(prev => [...prev, propertyId])
-    setProperties(prev => prev.filter(p => p.id !== propertyId))
-    setMessages(prev => [...prev, { role: 'assistant', content: "Got it — I won't show you that one again. Want me to search for something similar with different criteria?" }])
+    setRejectingIds(prev => [...prev, propertyId])
+    setTimeout(() => {
+      setRejectedIds(prev => [...prev, propertyId])
+      setRejectingIds(prev => prev.filter(id => id !== propertyId))
+      fetch('/api/reject-property', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: user.id, property_id: propertyId })
+      })
+    }, 350)
   }
 
   const formatPrice = (price: number, type: string) => {
@@ -156,28 +166,42 @@ export default function SearchPage() {
     return type === 'rent' ? `${formatted}/mo` : formatted
   }
 
+  const visibleCount = properties.filter(p => !rejectedIds.includes(p.id) && !rejectingIds.includes(p.id)).length
+
   return (
-    <main className="h-screen flex flex-col bg-stone-50 text-stone-900 overflow-hidden">
-      {/* Nav */}
-      <nav className="bg-stone-100 border-b border-stone-200 px-4 py-3 flex justify-between items-center flex-shrink-0">
-        <Link href="/" className="text-xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
-        <div className="flex gap-3 items-center">
-          {user && <Link href="/dashboard" className="text-stone-700 hover:text-orange-500 text-sm">My Dashboard</Link>}
-          <Link href="/saved" className="bg-orange-500 text-black px-3 py-1.5 rounded-lg font-semibold hover:bg-orange-400 text-sm">
+    <main className="h-screen flex flex-col bg-[#f5f0eb] text-stone-900 overflow-hidden">
+
+      {/* Fix #7 + #8: taupe nav, hamburger on mobile */}
+      <nav className="bg-[#4a4238] px-4 py-3 flex justify-between items-center flex-shrink-0">
+        <Link href="/" className="text-xl font-bold text-white">Property<span className="text-orange-400">AI</span>gency</Link>
+        <div className="hidden md:flex gap-3 items-center">
+          {user && <Link href="/dashboard" className="text-stone-300 hover:text-orange-300 text-sm">My Dashboard</Link>}
+          <Link href="/saved" className="bg-orange-500 text-white px-3 py-1.5 rounded-lg font-semibold hover:bg-orange-400 text-sm">
             Saved ({savedIds.length})
           </Link>
         </div>
+        <button className="md:hidden text-white text-xl leading-none px-1" onClick={() => setMobileMenuOpen(o => !o)} aria-label="Menu">
+          {mobileMenuOpen ? '✕' : '☰'}
+        </button>
       </nav>
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-[#3d3530] px-4 py-3 space-y-2 flex-shrink-0">
+          {user && <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="block text-stone-200 text-sm py-1.5">My Dashboard</Link>}
+          <Link href="/saved" onClick={() => setMobileMenuOpen(false)} className="block text-orange-400 font-semibold text-sm py-1.5">
+            Saved ({savedIds.length})
+          </Link>
+        </div>
+      )}
 
       {/* Mobile tabs */}
-      <div className="md:hidden flex border-b border-stone-300 flex-shrink-0">
+      <div className="md:hidden flex border-b border-stone-200 flex-shrink-0 bg-white">
         <button onClick={() => setMobileTab('chat')}
           className={`flex-1 py-3 text-sm font-semibold transition ${mobileTab === 'chat' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-stone-500'}`}>
           💬 AI Chat
         </button>
         <button onClick={() => setMobileTab('results')}
-          className={`flex-1 py-3 text-sm font-semibold transition ${mobileTab === 'results' ? 'text-orange-500 border-b-2 border-orange-500' : properties.length > 0 ? 'text-orange-400 border-b-2 border-orange-300' : 'text-stone-500'}`}>
-          🏠 Properties {properties.length > 0 && <span className="bg-orange-500 text-white text-xs rounded-full px-1.5 ml-1">{properties.length}</span>}
+          className={`flex-1 py-3 text-sm font-semibold transition ${mobileTab === 'results' ? 'text-orange-500 border-b-2 border-orange-500' : visibleCount > 0 ? 'text-orange-400' : 'text-stone-500'}`}>
+          🏠 Properties {visibleCount > 0 && <span className="bg-orange-500 text-white text-xs rounded-full px-1.5 ml-1">{visibleCount}</span>}
         </button>
       </div>
 
@@ -185,15 +209,14 @@ export default function SearchPage() {
       <div className="flex flex-1 overflow-hidden">
 
         {/* Chat Panel */}
-        <div className={`flex flex-col w-full md:w-96 md:max-w-sm border-r border-stone-300 ${mobileTab === 'chat' ? 'flex' : 'hidden md:flex'}`}>
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className={`flex flex-col w-full md:w-96 md:max-w-sm border-r border-stone-200 ${mobileTab === 'chat' ? 'flex' : 'hidden md:flex'}`}>
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#f5f0eb]">
             {messages.map((message, i) => (
               <div key={i} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 {message.role === 'assistant' && (
-                  <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-sm mr-2 flex-shrink-0 mt-1">AI</div>
+                  <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm mr-2 flex-shrink-0 mt-1">AI</div>
                 )}
-                <div className={`max-w-xs rounded-2xl px-4 py-3 text-sm leading-relaxed ${message.role === 'user' ? 'bg-orange-500 text-black rounded-br-sm' : 'bg-white text-stone-900 rounded-bl-sm'}`}>
+                <div className={`max-w-xs rounded-2xl px-4 py-3 text-sm leading-relaxed ${message.role === 'user' ? 'bg-[#4a4238] text-white rounded-br-sm' : 'bg-white text-stone-900 rounded-bl-sm shadow-sm'}`}>
                   {message.content.split('\n').map((line, j) => (
                     <span key={j}>{line}{j < message.content.split('\n').length - 1 && <br/>}</span>
                   ))}
@@ -202,8 +225,8 @@ export default function SearchPage() {
             ))}
             {loading && (
               <div className="flex justify-start">
-                <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-black font-bold text-sm mr-2 flex-shrink-0">AI</div>
-                <div className="bg-white rounded-2xl rounded-bl-sm px-4 py-3">
+                <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm mr-2 flex-shrink-0">AI</div>
+                <div className="bg-white rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
                   <div className="flex gap-1">
                     <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{animationDelay:'0ms'}}/>
                     <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{animationDelay:'150ms'}}/>
@@ -214,13 +237,11 @@ export default function SearchPage() {
             )}
             <div ref={messagesEndRef}/>
           </div>
-
-          {/* Prompts + Input */}
-          <div className="flex-shrink-0 border-t border-stone-300 p-3">
+          <div className="flex-shrink-0 border-t border-stone-200 p-3 bg-white">
             <div className="flex gap-2 mb-2" style={{overflowX:'auto'}}>
               {suggestedPrompts.map((p, i) => (
                 <button key={i} onClick={() => sendMessage(p)}
-                  className="whitespace-nowrap text-xs bg-stone-100 hover:bg-stone-200 text-stone-800 border border-stone-300 rounded-full px-3 py-1.5 transition flex-shrink-0">
+                  className="whitespace-nowrap text-xs bg-[#f5f0eb] hover:bg-[#ede7e0] text-stone-800 border border-stone-300 rounded-full px-3 py-1.5 transition flex-shrink-0">
                   {p}
                 </button>
               ))}
@@ -229,9 +250,9 @@ export default function SearchPage() {
               <input type="text" value={input} onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && sendMessage()}
                 placeholder="Tell me what you're looking for..."
-                className="flex-1 bg-white text-stone-900 rounded-xl px-4 py-2.5 outline-none border border-stone-300 focus:border-orange-500 text-sm"/>
+                className="flex-1 bg-[#f5f0eb] text-stone-900 rounded-xl px-4 py-2.5 outline-none border border-stone-300 focus:border-orange-500 text-sm"/>
               <button onClick={() => sendMessage()} disabled={loading || !input.trim()}
-                className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-4 py-2.5 rounded-xl disabled:opacity-50 transition text-sm">
+                className="bg-orange-500 hover:bg-orange-400 text-white font-bold px-4 py-2.5 rounded-xl disabled:opacity-50 transition text-sm">
                 Send
               </button>
             </div>
@@ -245,15 +266,17 @@ export default function SearchPage() {
             <div className="flex flex-col items-center justify-center h-full text-center">
               <div className="text-6xl mb-4">🏡</div>
               <h3 className="text-xl font-bold text-stone-700 mb-2">Your matches will appear here</h3>
-              <p className="text-stone-400 text-sm max-w-xs">Chat with your AI Concierge and tell it what you're looking for. It will find the perfect properties for you.</p>
+              <p className="text-stone-500 text-sm max-w-xs">Chat with your AI Concierge and tell it what you're looking for. It will find the perfect properties for you.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <h3 className="text-lg font-bold text-stone-700 col-span-full">
-                🏡 Properties Found ({properties.filter(p => !rejectedIds.includes(p.id)).length})
+                🏡 Properties Found ({visibleCount})
               </h3>
+              {/* Fix #1: filter by rejectedIds only; rejectingIds drives animation */}
               {properties.filter(p => !rejectedIds.includes(p.id)).map(property => (
-                <div key={property.id} className="bg-white rounded-2xl border border-stone-300 overflow-hidden">
+                <div key={property.id}
+                  className={`bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-sm transition-all duration-300 ${rejectingIds.includes(property.id) ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
                   <div className="h-1 bg-stone-100">
                     <div className={`h-full ${property.match_score >= 90 ? 'bg-green-500' : property.match_score >= 75 ? 'bg-yellow-500' : 'bg-orange-500'}`}
                       style={{width:`${property.match_score}%`}}/>
@@ -263,7 +286,7 @@ export default function SearchPage() {
                       ? <img src={property.photos[0]} alt={property.title} className="w-full h-full object-cover"/>
                       : <div className="w-full h-full flex items-center justify-center text-4xl">🏠</div>
                     }
-                    <div className={`absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-bold ${property.match_score >= 90 ? 'bg-green-500' : property.match_score >= 75 ? 'bg-yellow-500' : 'bg-orange-500'} text-black`}>
+                    <div className={`absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-bold ${property.match_score >= 90 ? 'bg-green-500' : property.match_score >= 75 ? 'bg-yellow-500' : 'bg-orange-500'} text-white`}>
                       {property.match_score}% Match
                     </div>
                   </div>
@@ -278,24 +301,23 @@ export default function SearchPage() {
                       {property.has_solar && <span>☀️ Solar</span>}
                       {property.has_gated_community && <span>🔒 Gated</span>}
                     </div>
-                    <div className="mt-3 p-2 bg-stone-100 rounded-lg">
+                    <div className="mt-3 p-2 bg-[#f5f0eb] rounded-lg">
                       <p className="text-xs text-stone-700">🤖 {property.match_reason}</p>
                     </div>
                     <div className="flex gap-2 mt-3">
-                      <button onClick={() => { 
-                const el = document.getElementById('prop-'+property.id)
-                if (el) { el.style.opacity='0.3'; el.style.transition='opacity 0.3s' }
-                setTimeout(() => handleReject(property.id), 300)
-              }}
-                        className="flex-1 py-2 rounded-lg border border-stone-300 text-stone-500 hover:border-red-500 hover:text-red-400 text-sm transition">
+                      {/* Fix #2: instant fade on tap via rejectingIds state */}
+                      <button
+                        onClick={() => handleReject(property.id)}
+                        disabled={rejectingIds.includes(property.id)}
+                        className="flex-1 py-2 rounded-lg border border-stone-300 text-stone-500 hover:border-red-400 hover:text-red-400 text-sm transition disabled:opacity-50">
                         ✕ Not for me
                       </button>
                       <Link href={`/property/${property.id}`}
-                        className="flex-1 py-2 rounded-lg border border-stone-300 text-stone-700 hover:border-gray-400 text-sm transition text-center">
+                        className="flex-1 py-2 rounded-lg border border-stone-300 text-stone-700 hover:border-stone-400 text-sm transition text-center">
                         👁 View
                       </Link>
                       <button onClick={() => handleSave(property.id)} disabled={savedIds.includes(property.id)}
-                        className={`flex-1 py-2 rounded-lg text-sm font-semibold transition ${savedIds.includes(property.id) ? 'bg-green-700 text-green-300' : 'bg-orange-500 hover:bg-orange-400 text-black'}`}>
+                        className={`flex-1 py-2 rounded-lg text-sm font-semibold transition ${savedIds.includes(property.id) ? 'bg-green-600 text-white' : 'bg-orange-500 hover:bg-orange-400 text-white'}`}>
                         {savedIds.includes(property.id) ? '✓ Saved' : '♡ Save'}
                       </button>
                     </div>

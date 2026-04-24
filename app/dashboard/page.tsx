@@ -303,31 +303,31 @@ export default function DashboardPage() {
   }
 
   if (loading) return (
-    <main className="min-h-screen bg-stone-50 flex items-center justify-center">
+    <main className="min-h-screen bg-[#f5f0eb] flex items-center justify-center">
       <div className="text-orange-500 text-xl">Loading your dashboard...</div>
     </main>
   )
 
   return (
-    <main className="min-h-screen bg-stone-50 text-stone-900">
+    <main className="min-h-screen bg-[#f5f0eb] text-stone-900">
       {/* Header */}
-      <nav className="bg-white border-b border-stone-300 px-4 md:px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold">
-          Property<span className="text-orange-500">AI</span>gency
+      <nav className="bg-[#4a4238] px-4 md:px-6 py-4 flex justify-between items-center">
+        <Link href="/" className="text-2xl font-bold text-white">
+          Property<span className="text-orange-400">AI</span>gency
         </Link>
         <div className="flex gap-4 items-center">
-          <Link href="/list" className="bg-orange-500 text-black px-4 py-2 rounded-lg font-semibold hover:bg-orange-400 text-sm">
+          <Link href="/list" className="bg-orange-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-orange-400 text-sm">
             + New Listing
           </Link>
-          <Link href="/bulk-upload" className="bg-stone-100 text-stone-900 px-4 py-2 rounded-lg font-semibold hover:bg-stone-200 text-sm">
+          <Link href="/bulk-upload" className="bg-stone-600 text-stone-100 px-4 py-2 rounded-lg font-semibold hover:bg-stone-500 text-sm">
             📦 Bulk Upload
           </Link>
-          <Link href="/profile" className="text-stone-500 hover:text-stone-900 text-sm">
+          <Link href="/profile" className="text-stone-300 hover:text-white text-sm">
             👤 Profile
           </Link>
-          <button 
+          <button
             onClick={() => supabase.auth.signOut().then(() => window.location.href = '/')}
-            className="text-stone-500 hover:text-stone-900 text-sm"
+            className="text-stone-300 hover:text-white text-sm"
           >
             Sign Out
           </button>

@@ -127,23 +127,23 @@ export default function SavedPage() {
   }
 
   if (loading) return (
-    <main className="min-h-screen bg-stone-50 flex items-center justify-center">
+    <main className="min-h-screen bg-[#f5f0eb] flex items-center justify-center">
       <div className="text-orange-500 text-xl">Loading your saved properties...</div>
     </main>
   )
 
   return (
-    <main className="min-h-screen bg-stone-50 text-stone-900">
-      <nav className="bg-white border-b border-stone-300 px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold">
-          Property<span className="text-orange-500">AI</span>gency
+    <main className="min-h-screen bg-[#f5f0eb] text-stone-900">
+      <nav className="bg-[#4a4238] px-6 py-4 flex justify-between items-center">
+        <Link href="/" className="text-2xl font-bold text-white">
+          Property<span className="text-orange-400">AI</span>gency
         </Link>
         <div className="flex gap-4 items-center">
-          <Link href="/search" className="text-stone-700 hover:text-orange-500 text-sm">🔍 AI Search</Link>
-          <Link href="/dashboard" className="text-stone-700 hover:text-orange-500 text-sm">My Dashboard</Link>
+          <Link href="/search" className="text-stone-300 hover:text-orange-300 text-sm">🔍 AI Search</Link>
+          <Link href="/dashboard" className="text-stone-300 hover:text-orange-300 text-sm">My Dashboard</Link>
           <button
             onClick={() => supabase.auth.signOut().then(() => window.location.href = '/')}
-            className="text-stone-500 hover:text-stone-900 text-sm"
+            className="text-stone-300 hover:text-white text-sm"
           >
             Sign Out
           </button>
