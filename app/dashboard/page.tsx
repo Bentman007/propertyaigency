@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
+import VoiceInput from '@/components/VoiceInput'
 import AvailabilityManager from '@/components/AvailabilityManager'
 import PropertyAIsistant from '@/components/PropertyAIsistant'
 import PushNotifications from '@/components/PushNotifications'

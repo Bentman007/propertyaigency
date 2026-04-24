@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react'
+import VoiceInput from '@/components/VoiceInput'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 
