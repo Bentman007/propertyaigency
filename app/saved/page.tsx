@@ -52,6 +52,7 @@ export default function SavedPage() {
       .from('properties')
       .select('*')
       .in('id', saved.map(s => s.property_id))
+      .in('status', ['active', 'under_offer'])
 
     const { data: views } = await supabase
       .from('property_views')
@@ -68,6 +69,12 @@ export default function SavedPage() {
       }
     }) || []
 
+    // Sort by most recently saved first
+    withStats.sort((a, b) => new Date(b.saved_at).getTime() - new Date(a.saved_at).getTime())
+
+    // Sort by most recently saved first
+    withStats.sort((a, b) => new Date(b.saved_at).getTime() - new Date(a.saved_at).getTime())
+
     setProperties(withStats)
     setLoading(false)
   }
@@ -82,13 +89,14 @@ export default function SavedPage() {
     setProperties(prev => prev.filter(p => p.id !== propertyId))
   }
 
-  const getAiSummary = async (property: SavedProperty) => {
+  const getAiSummary = async (property: SavedProperty, viewerType: string = 'buyer') => {
     setLoadingSummary(property.id)
     try {
       const response = await fetch('/api/property-insight', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          viewer_type: viewerType,
           title: property.title,
           price: property.price,
           price_type: property.price_type,
@@ -208,7 +216,7 @@ export default function SavedPage() {
                           View Property
                         </Link>
                         <button
-                          onClick={() => getAiSummary(property)}
+                          onClick={() => getAiSummary(property, 'buyer')}
                           disabled={loadingSummary === property.id}
                           className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg text-sm disabled:opacity-50"
                         >

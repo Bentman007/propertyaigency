@@ -17,6 +17,38 @@ const featureGroups = [
 const allKeys = featureGroups.flatMap(g => g.features.map(([k]) => k))
 const defaultFeatures = Object.fromEntries(allKeys.map(k => [k, false]))
 
+
+function FeatureGroup({ group, form, update }: { group: any, form: any, update: (field: string, value: any) => void }) {
+  const [open, setOpen] = useState(false)
+  const selected = group.features.filter(([field]: [string, string]) => form[field]).length
+  return (
+    <div className="border border-gray-700 rounded-xl overflow-hidden">
+      <button type="button" onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-4 py-3 bg-gray-700 hover:bg-gray-650 transition">
+        <div className="flex items-center gap-3">
+          <span className="text-xs font-bold text-gray-300 uppercase tracking-wider">{group.label}</span>
+          {selected > 0 && (
+            <span className="bg-orange-500 text-black text-xs font-bold px-2 py-0.5 rounded-full">{selected}</span>
+          )}
+        </div>
+        <span className="text-gray-400 text-sm">{open ? '▲' : '▼'}</span>
+      </button>
+      {open && (
+        <div className="p-3 grid grid-cols-2 gap-2 bg-gray-800">
+          {group.features.map(([field, label]: [string, string]) => (
+            <label key={field} className="flex items-center gap-3 bg-gray-700 rounded-lg px-3 py-2.5 cursor-pointer hover:bg-gray-600 transition-colors">
+              <input type="checkbox" checked={form[field] || false}
+                onChange={e => update(field, e.target.checked)}
+                className="w-4 h-4 accent-orange-500" />
+              <span className="text-gray-300 text-sm">{label}</span>
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function ListPropertyInner() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
@@ -63,7 +95,16 @@ function ListPropertyInner() {
         province: data.province || '',
         latitude: data.latitude?.toString() || '',
         longitude: data.longitude?.toString() || '',
-        ...defaultFeatures
+        ...defaultFeatures,
+        custom_features: data.custom_features || '',
+        available_from: data.available_from || '',
+        lease_term: data.lease_term || '',
+        deposit_months: data.deposit_months || '',
+        pets_allowed: data.pets_allowed || '',
+        negotiable: data.negotiable || false,
+        motivated_seller: data.motivated_seller || false,
+        priced_to_go: data.priced_to_go || false,
+        close_offer_considered: data.close_offer_considered || false,
       })
       if (data.photos) setPhotos(data.photos)
       // Load feature flags
@@ -83,6 +124,10 @@ function ListPropertyInner() {
   const [form, setForm] = useState({
     title: '', description: '', price: '', price_type: 'sale',
     bedrooms: '', bathrooms: '', garages: '', size_sqm: '',
+    custom_features: '', available_from: '', lease_term: '',
+    deposit_months: '', pets_allowed: '',
+    negotiable: false as boolean, motivated_seller: false as boolean,
+    priced_to_go: false as boolean, close_offer_considered: false as boolean,
     property_type: 'house', address: '', suburb: '', city: '', province: '',
     latitude: '', longitude: '',
     ...defaultFeatures
@@ -162,6 +207,15 @@ function ListPropertyInner() {
       bathrooms: parseInt(form.bathrooms),
       garages: parseInt(form.garages) || 0,
       size_sqm: parseFloat(form.size_sqm) || null,
+      custom_features: form.custom_features || null,
+      available_from: form.available_from || null,
+      lease_term: form.lease_term || null,
+      deposit_months: form.deposit_months || null,
+      pets_allowed: form.pets_allowed || null,
+      negotiable: form.negotiable || false,
+      motivated_seller: form.motivated_seller || false,
+      priced_to_go: form.priced_to_go || false,
+      close_offer_considered: form.close_offer_considered || false,
       latitude: parseFloat(form.latitude as string) || null,
       longitude: parseFloat(form.longitude as string) || null,
       user_id: user.id,
@@ -283,7 +337,7 @@ function ListPropertyInner() {
                   <option value="commercial">Commercial</option>
                 </select>
               </div>
-              {[['bedrooms','Bedrooms','3'],['bathrooms','Bathrooms','2'],['garages','Garages','2'],['size_sqm','Size (m²)','250']].map(([field,label,ph]) => (
+              {[['bedrooms','Bedrooms','3'],['bathrooms','Bathrooms','2'],['garages','Garages','2']].map(([field,label,ph]) => (
                 <div key={field}>
                   <label className="text-gray-300 text-sm mb-1 block">{label}</label>
                   <input value={(form as any)[field]} onChange={e => update(field, e.target.value)}
@@ -291,28 +345,28 @@ function ListPropertyInner() {
                     placeholder={ph} required />
                 </div>
               ))}
+              <div>
+                <label className="text-gray-300 text-sm mb-1 block">Size (m²) <span className="text-gray-500 text-xs">(optional)</span></label>
+                <input value={(form as any)['size_sqm']} onChange={e => update('size_sqm', e.target.value)}
+                  type="number" className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
+                  placeholder="250" />
+              </div>
             </div>
           </div>
 
           <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
             <h2 className="text-lg font-bold mb-1 text-orange-500">Step 3 — Property Features</h2>
             <p className="text-gray-400 text-sm mb-4">Tick all features — these help buyers find your property and improve your AI-generated advert</p>
-            <div className="space-y-5">
+            <div className="space-y-3">
               {featureGroups.map(group => (
-                <div key={group.label}>
-                  <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 border-b border-gray-700 pb-1">{group.label}</h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    {group.features.map(([field, label]) => (
-                      <label key={field} className="flex items-center gap-3 bg-gray-700 rounded-lg px-3 py-2.5 cursor-pointer hover:bg-gray-600 transition-colors">
-                        <input type="checkbox" checked={(form as any)[field]}
-                          onChange={e => update(field, e.target.checked)}
-                          className="w-4 h-4 accent-orange-500" />
-                        <span className="text-gray-300 text-sm">{label}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
+                <FeatureGroup key={group.label} group={group} form={form} update={update} />
               ))}
+            </div>
+            <div className="mt-5 border-t border-gray-700 pt-4">
+              <label className="text-gray-300 text-sm mb-1 block">Additional Features <span className="text-gray-500 text-xs">(e.g. Inverter, Borehole pump, Staff bathroom)</span></label>
+              <input value={(form as any)['custom_features'] || ''} onChange={e => update('custom_features', e.target.value)}
+                className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500"
+                placeholder="Type any features not listed above, separated by commas" />
             </div>
           </div>
 
@@ -355,6 +409,25 @@ function ListPropertyInner() {
               </button>
             </div>
             {!form.suburb && <p className="text-yellow-500 text-xs">Complete Step 1 and 2 first to get an AI estimate</p>}
+            <div className="mt-4 border-t border-gray-700 pt-4">
+              <p className="text-gray-400 text-sm mb-3">Price flexibility <span className="text-gray-600 text-xs">(only visible to our AI Concierge — never shown to buyers)</span></p>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  ['negotiable', '💬 Open to negotiation'],
+                  ['motivated_seller', form.price_type === 'rent' ? '🔑 Motivated to let' : '🏃 Motivated seller'],
+                  ['priced_to_go', '⚡ Priced to go'],
+                  ['close_offer_considered', '🤝 Close offers considered'],
+                ].map(([key, label]) => (
+                  <label key={key} className="flex items-center gap-2 bg-gray-700 rounded-lg px-3 py-2 cursor-pointer hover:bg-gray-600 transition-colors">
+                    <input type="checkbox" checked={(form as any)[key] || false}
+                      onChange={e => update(key, e.target.checked)}
+                      className="w-4 h-4 accent-orange-500" />
+                    <span className="text-gray-300 text-sm">{label}</span>
+                  </label>
+                ))}
+              </div>
+              <p className="text-gray-600 text-xs mt-2">If ticked, our Concierge will intelligently match buyers whose budget is close to your asking price</p>
+            </div>
             {valuation?.insufficient_data && (
             <div className="bg-gray-700 border border-gray-600 rounded-xl p-4 text-sm text-gray-400">
               <p className="font-semibold text-gray-300 mb-1">📊 Valuation Data Building...</p>
@@ -394,6 +467,56 @@ function ListPropertyInner() {
               </div>
             )}
           </div>
+
+          {form.price_type === 'rent' && (
+          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+            <h2 className="text-lg font-bold mb-1 text-orange-500">Step 5b — Rental Terms <span className="text-gray-500 text-sm font-normal">(optional)</span></h2>
+            <p className="text-gray-400 text-sm mb-4">💡 Listings with rental terms get significantly more enquiries — tenants want to know before they ask</p>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-gray-300 text-sm mb-1 block">Available From</label>
+                <input type="date" value={(form as any)['available_from'] || ''}
+                  onChange={e => update('available_from', e.target.value)}
+                  min={new Date().toISOString().split('T')[0]}
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500" />
+              </div>
+              <div>
+                <label className="text-gray-300 text-sm mb-1 block">Minimum Lease</label>
+                <select value={(form as any)['lease_term'] || ''}
+                  onChange={e => update('lease_term', e.target.value)}
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500">
+                  <option value="">Not specified</option>
+                  <option value="month_to_month">Month to month</option>
+                  <option value="6_months">6 months</option>
+                  <option value="12_months">12 months</option>
+                  <option value="24_months">24 months</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-gray-300 text-sm mb-1 block">Deposit Required</label>
+                <select value={(form as any)['deposit_months'] || ''}
+                  onChange={e => update('deposit_months', e.target.value)}
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500">
+                  <option value="">Not specified</option>
+                  <option value="1">1 month deposit</option>
+                  <option value="2">2 months deposit</option>
+                  <option value="3">3 months deposit</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-gray-300 text-sm mb-1 block">Pets Allowed</label>
+                <select value={(form as any)['pets_allowed'] || ''}
+                  onChange={e => update('pets_allowed', e.target.value)}
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 outline-none border border-gray-600 focus:border-orange-500">
+                  <option value="">Not specified</option>
+                  <option value="yes">Yes — pets welcome</option>
+                  <option value="negotiable">Negotiable</option>
+                  <option value="no">No pets</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          )}
 
           <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
             <h2 className="text-lg font-bold mb-1 text-orange-500">Step 6 — Property Photos</h2>

@@ -15,7 +15,7 @@ export default function SearchPage() {
   const [mobileTab, setMobileTab] = useState<'chat'|'results'>('chat')
   const [messages, setMessages] = useState<Message[]>([{
     role: 'assistant',
-    content: "Hi! I'm your PropertyAI Concierge 👋 I'm here to help you find your perfect property in South Africa.\n\nJust tell me what you're looking for in your own words — where you want to live, what type of property, how many bedrooms, any must-have features.\n\nWhat kind of property are you dreaming of? 🏡"
+    content: "Hi! I'm your PropertyAIgency Concierge. Tell me what you're looking for and I'll find your perfect match. 🏡"
   }])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
