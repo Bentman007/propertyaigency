@@ -58,7 +58,7 @@ export default function SearchPage() {
     if (actioned.length === properties.length && mobileTab === 'results') {
       // All properties actioned - switch back to chat after short delay
       setTimeout(() => {
-        setMobileTab('chat')
+        // Stay on current tab
         setMessages(prev => [...prev, {
           role: 'assistant',
           content: "You've been through all the matches! Want me to find more options? I can widen the search area, adjust the budget, or remove a requirement to show you more properties."
@@ -116,7 +116,8 @@ export default function SearchPage() {
         setProperties(prev => {
           const existingIds = prev.map(p => p.id)
           const newProps = data.properties.filter((p: Property) => !existingIds.includes(p.id))
-          return [...newProps, ...prev]
+          const updated = [...newProps, ...prev]
+          return updated
         })
         setMobileTab('results')
       }
@@ -138,6 +139,8 @@ export default function SearchPage() {
 
   const handleReject = async (propertyId: string) => {
     if (!user) { window.location.href = '/auth/login?next=/search'; return }
+    // Remove immediately from UI for instant feedback
+    setProperties(prev => prev.filter(p => p.id !== propertyId))
     await fetch('/api/reject-property', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -279,7 +282,11 @@ export default function SearchPage() {
                       <p className="text-xs text-stone-700">🤖 {property.match_reason}</p>
                     </div>
                     <div className="flex gap-2 mt-3">
-                      <button onClick={() => handleReject(property.id)}
+                      <button onClick={() => { 
+                const el = document.getElementById('prop-'+property.id)
+                if (el) { el.style.opacity='0.3'; el.style.transition='opacity 0.3s' }
+                setTimeout(() => handleReject(property.id), 300)
+              }}
                         className="flex-1 py-2 rounded-lg border border-stone-300 text-stone-500 hover:border-red-500 hover:text-red-400 text-sm transition">
                         ✕ Not for me
                       </button>
