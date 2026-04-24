@@ -1,15 +1,21 @@
 'use client'
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 
-interface Message { role: 'user' | 'assistant'; content: string }
+interface Message {
+  role: 'user' | 'assistant'
+  content: string
+  propertyCount?: number  // when set, renders the "I found X" action card
+}
 interface Property {
   id: string; title: string; address: string; suburb: string; city: string
   price: number; price_type: string; bedrooms: number; bathrooms: number
   photos: string[]; match_score: number; match_reason: string
   has_pool: boolean; has_solar: boolean; has_gated_community: boolean
 }
+
+const FIRST_CHIP = "Just show me what's available"
 
 export default function SearchPage() {
   const [mobileTab, setMobileTab] = useState<'chat'|'results'>('chat')
@@ -23,7 +29,7 @@ export default function SearchPage() {
   const [properties, setProperties] = useState<Property[]>([])
   const [rejectingIds, setRejectingIds] = useState<string[]>([])
   const [suggestedPrompts, setSuggestedPrompts] = useState<string[]>([
-    'Show me what is available', '3 bedrooms', 'I want to rent', 'I want to buy', 'Pool and garden', 'Under R15,000/mo'
+    FIRST_CHIP, '3 bedrooms', 'I want to rent', 'I want to buy', 'Pool and garden', 'Under R15,000/mo'
   ])
   const [savedIds, setSavedIds] = useState<string[]>([])
   const [rejectedIds, setRejectedIds] = useState<string[]>([])
@@ -31,7 +37,7 @@ export default function SearchPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const allActionedShown = useRef(false)
 
-  // Fix #4: read ?tab=results from URL on mount
+  // Read ?tab=results from URL on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     if (params.get('tab') === 'results') setMobileTab('results')
@@ -57,7 +63,7 @@ export default function SearchPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  // Fix #3: auto-switch to chat and show message when all properties actioned
+  // Auto-switch back to chat + ask AI for personalised relaxation suggestions when all actioned
   useEffect(() => {
     if (properties.length === 0) return
     const allActioned = properties.every(p => savedIds.includes(p.id) || rejectedIds.includes(p.id))
@@ -65,14 +71,57 @@ export default function SearchPage() {
       allActionedShown.current = true
       setTimeout(() => {
         setMobileTab('chat')
-        setMessages(prev => [...prev, {
-          role: 'assistant',
-          content: "You've been through all the matches! Want me to find more options? I can widen the search area, adjust the budget, or remove a requirement to show you more properties."
-        }])
-        setSuggestedPrompts(['Show me what is available', 'Widen the search area', 'Adjust my budget', 'Remove a requirement'])
+        // Trigger AI for personalised relaxation suggestions via a system-level message
+        triggerAllActionedResponse(properties.length, savedIds.length, rejectedIds.length)
       }, 800)
     }
   }, [savedIds, rejectedIds, properties])
+
+  const triggerAllActionedResponse = useCallback(async (total: number, saved: number, rejected: number) => {
+    const trigger = `I've reviewed all ${total} properties — saved ${saved} and passed on ${rejected}. What should I search for next?`
+    // Add as a visible user message so the conversation makes sense
+    const newMessages: Message[] = [...messages, { role: 'user', content: trigger }]
+    setMessages(newMessages)
+    setLoading(true)
+    try {
+      const response = await fetch('/api/ai-search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: newMessages, user_id: user?.id })
+      })
+      const data = await response.json()
+      const cleanMsg = stripTags(data.message || '')
+      setMessages(prev => [...prev, { role: 'assistant', content: cleanMsg }])
+      if (data.suggested_prompts?.length > 0) {
+        setSuggestedPrompts(ensureFirstChip(data.suggested_prompts))
+      } else {
+        setSuggestedPrompts([FIRST_CHIP, 'Widen the search area', 'Increase my budget', 'Remove a requirement'])
+      }
+    } catch {
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: "You've reviewed all your matches! Want me to find more options? I can widen the search area, adjust your budget, or drop a requirement."
+      }])
+      setSuggestedPrompts([FIRST_CHIP, 'Widen the search area', 'Increase my budget', 'Remove a requirement'])
+    }
+    setLoading(false)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])  // intentionally empty — captures snapshot values via params
+
+  const stripTags = (text: string) => text
+    .replace(/<lead>[\s\S]*?<\/lead>/g, '')
+    .replace(/<properties>[\s\S]*?<\/properties>/g, '')
+    .replace(/<profile>[\s\S]*?<\/profile>/g, '')
+    .replace(/<prompts>[\s\S]*?<\/prompts>/g, '')
+    .replace(/<feedback>[\s\S]*?<\/feedback>/g, '')
+    .replace(/<lead>/g, '').replace(/<\/lead>/g, '')
+    .replace(/<properties>/g, '').replace(/<\/properties>/g, '')
+    .trim()
+
+  const ensureFirstChip = (prompts: string[]) => {
+    const rest = prompts.filter((p: string) => p !== FIRST_CHIP && p !== 'Yes, show me!')
+    return [FIRST_CHIP, ...rest]
+  }
 
   const fetchUserPreferences = async (userId: string) => {
     const { data: saved } = await supabase.from('saved_properties').select('property_id').eq('user_id', userId)
@@ -105,35 +154,40 @@ export default function SearchPage() {
         body: JSON.stringify({ messages: newMessages, user_id: user?.id })
       })
       const data = await response.json()
-      const cleanMsg = (data.message || '')
-        .replace(/<lead>[\s\S]*?<\/lead>/g, '')
-        .replace(/<properties>[\s\S]*?<\/properties>/g, '')
-        .replace(/<profile>[\s\S]*?<\/profile>/g, '')
-        .replace(/<prompts>[\s\S]*?<\/prompts>/g, '')
-        .replace(/<feedback>[\s\S]*?<\/feedback>/g, '')
-        .replace(/<lead>/g, '').replace(/<\/lead>/g, '')
-        .replace(/<properties>/g, '').replace(/<\/properties>/g, '')
-        .trim()
+      const cleanMsg = stripTags(data.message || '')
       setMessages(prev => [...prev, { role: 'assistant', content: cleanMsg }])
-      // Fix #5: always keep "Show me what is available" first
+
       if (data.suggested_prompts?.length > 0) {
-        const rest = (data.suggested_prompts as string[]).filter((p: string) => p !== 'Show me what is available')
-        setSuggestedPrompts(['Show me what is available', ...rest])
+        setSuggestedPrompts(ensureFirstChip(data.suggested_prompts))
       }
+
       if (data.properties?.length > 0) {
         allActionedShown.current = false
-        // Fix #1: add new properties but never remove; rejectedIds filter handles hiding
-        setProperties(prev => {
-          const existingIds = prev.map(p => p.id)
-          const newProps = data.properties.filter((p: Property) => !existingIds.includes(p.id))
-          return [...newProps, ...prev]
-        })
-        setMobileTab('results')
+        const existingIds = new Set(properties.map(p => p.id))
+        const newProps: Property[] = data.properties.filter((p: Property) => !existingIds.has(p.id))
+
+        if (newProps.length > 0) {
+          setProperties(prev => [...newProps, ...prev])
+          // Inject "I found X" action card — user must tap "Yes" to switch tab
+          setMessages(prev => [...prev, {
+            role: 'assistant',
+            content: '',
+            propertyCount: newProps.length
+          }])
+          // Surface "Yes, show me!" as first chip for quick access
+          setSuggestedPrompts(prev => ['Yes, show me!', ...ensureFirstChip(prev).filter(p => p !== 'Yes, show me!')])
+        }
       }
-    } catch (e) {
+    } catch {
       setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, something went wrong. Please try again.' }])
     }
     setLoading(false)
+  }
+
+  // "Yes, show me!" switches tab directly; everything else sends to AI
+  const handleChipClick = (prompt: string) => {
+    if (prompt === 'Yes, show me!') { setMobileTab('results'); return }
+    sendMessage(prompt)
   }
 
   const handleSave = async (propertyId: string) => {
@@ -146,7 +200,6 @@ export default function SearchPage() {
     setSavedIds(prev => [...prev, propertyId])
   }
 
-  // Fix #1 + #2: keep properties in state, use rejectedIds to filter; animate out with rejectingIds
   const handleReject = (propertyId: string) => {
     if (!user) { window.location.href = '/auth/login?next=/search'; return }
     setRejectingIds(prev => [...prev, propertyId])
@@ -171,7 +224,7 @@ export default function SearchPage() {
   return (
     <main className="h-screen flex flex-col bg-[#f5f0eb] text-stone-900 overflow-hidden">
 
-      {/* Fix #7 + #8: taupe nav, hamburger on mobile */}
+      {/* Nav */}
       <nav className="bg-[#4a4238] px-4 py-3 flex justify-between items-center flex-shrink-0">
         <Link href="/" className="text-xl font-bold text-white">Property<span className="text-orange-400">AI</span>gency</Link>
         <div className="hidden md:flex gap-3 items-center">
@@ -212,16 +265,34 @@ export default function SearchPage() {
         <div className={`flex flex-col w-full md:w-96 md:max-w-sm border-r border-stone-200 bg-[#f5f0eb] ${mobileTab === 'chat' ? 'flex' : 'hidden md:flex'}`}>
           <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#f5f0eb]">
             {messages.map((message, i) => (
-              <div key={i} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                {message.role === 'assistant' && (
+              message.propertyCount !== undefined ? (
+                /* "I found X properties" action card */
+                <div key={i} className="flex justify-start">
                   <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm mr-2 flex-shrink-0 mt-1">AI</div>
-                )}
-                <div className={`max-w-xs rounded-2xl px-4 py-3 text-sm leading-relaxed ${message.role === 'user' ? 'bg-[#4a4238] text-white rounded-br-sm' : 'bg-white text-stone-900 rounded-bl-sm shadow-sm'}`}>
-                  {message.content.split('\n').map((line, j) => (
-                    <span key={j}>{line}{j < message.content.split('\n').length - 1 && <br/>}</span>
-                  ))}
+                  <div className="bg-orange-50 border border-orange-200 rounded-2xl rounded-bl-sm px-4 py-3 max-w-xs">
+                    <p className="text-sm font-medium text-stone-900 mb-2.5">
+                      🏠 I found <span className="font-bold text-orange-500">{message.propertyCount}</span> {message.propertyCount === 1 ? 'property' : 'properties'} matching your search — want to see {message.propertyCount === 1 ? 'it' : 'them'}?
+                    </p>
+                    <button
+                      onClick={() => setMobileTab('results')}
+                      className="w-full bg-orange-500 hover:bg-orange-400 text-white font-bold py-2 rounded-xl text-sm transition">
+                      Yes, show me! →
+                    </button>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                /* Regular chat bubble */
+                <div key={i} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  {message.role === 'assistant' && (
+                    <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm mr-2 flex-shrink-0 mt-1">AI</div>
+                  )}
+                  <div className={`max-w-xs rounded-2xl px-4 py-3 text-sm leading-relaxed ${message.role === 'user' ? 'bg-[#4a4238] text-white rounded-br-sm' : 'bg-white text-stone-900 rounded-bl-sm shadow-sm'}`}>
+                    {message.content.split('\n').map((line, j) => (
+                      <span key={j}>{line}{j < message.content.split('\n').length - 1 && <br/>}</span>
+                    ))}
+                  </div>
+                </div>
+              )
             ))}
             {loading && (
               <div className="flex justify-start">
@@ -240,8 +311,8 @@ export default function SearchPage() {
           <div className="flex-shrink-0 border-t border-stone-200 p-3 bg-white">
             <div className="flex gap-2 mb-2" style={{overflowX:'auto'}}>
               {suggestedPrompts.map((p, i) => (
-                <button key={i} onClick={() => sendMessage(p)}
-                  className="whitespace-nowrap text-xs bg-[#f5f0eb] hover:bg-[#ede7e0] text-stone-800 border border-stone-300 rounded-full px-3 py-1.5 transition flex-shrink-0">
+                <button key={i} onClick={() => handleChipClick(p)}
+                  className={`whitespace-nowrap text-xs border rounded-full px-3 py-1.5 transition flex-shrink-0 ${p === 'Yes, show me!' ? 'bg-orange-500 text-white border-orange-500 font-semibold hover:bg-orange-400' : 'bg-[#f5f0eb] hover:bg-[#ede7e0] text-stone-800 border-stone-300'}`}>
                   {p}
                 </button>
               ))}
@@ -273,7 +344,6 @@ export default function SearchPage() {
               <h3 className="text-lg font-bold text-stone-700 col-span-full">
                 🏡 Properties Found ({visibleCount})
               </h3>
-              {/* Fix #1: filter by rejectedIds only; rejectingIds drives animation */}
               {properties.filter(p => !rejectedIds.includes(p.id)).map(property => (
                 <div key={property.id}
                   className={`bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-sm transition-all duration-300 ${rejectingIds.includes(property.id) ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
@@ -305,7 +375,6 @@ export default function SearchPage() {
                       <p className="text-xs text-stone-700">🤖 {property.match_reason}</p>
                     </div>
                     <div className="flex gap-2 mt-3">
-                      {/* Fix #2: instant fade on tap via rejectingIds state */}
                       <button
                         onClick={() => handleReject(property.id)}
                         disabled={rejectingIds.includes(property.id)}
