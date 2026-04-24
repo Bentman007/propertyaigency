@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import VoiceInput from '@/components/VoiceInput'
+import CollapsibleSection from '@/components/CollapsibleSection'
 import AvailabilityManager from '@/components/AvailabilityManager'
 import PropertyAIsistant from '@/components/PropertyAIsistant'
 import PushNotifications from '@/components/PushNotifications'
@@ -359,36 +360,41 @@ export default function DashboardPage() {
 
         {/* Summary Stats */}
       {user && (
-        <div className="max-w-6xl mx-auto px-6 mt-6 space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <BookingsCalendar agentId={user.id} />
-            <PropertyAIsistant agentId={user.id} />
-          </div>
+        <div className="max-w-6xl mx-auto px-6 mt-6 space-y-4">
+          <CollapsibleSection title="Bookings & AIsistant" icon="📅" defaultOpen={true}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <BookingsCalendar agentId={user.id} />
+              <PropertyAIsistant agentId={user.id} />
+            </div>
+          </CollapsibleSection>
         </div>
       )}
 
         {properties.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
-            <div className="bg-white rounded-xl p-4 border border-stone-300">
-              <p className="text-stone-500 text-sm">Total Listings</p>
-              <p className="text-3xl font-bold text-stone-900 mt-1">{properties.length}</p>
+          <CollapsibleSection title="Performance Overview" icon="📊" defaultOpen={true} badge={`${properties.length} listings`}>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+              <div className="bg-stone-50 rounded-xl p-4 border border-stone-200">
+                <p className="text-stone-500 text-sm">Total Listings</p>
+                <p className="text-3xl font-bold text-stone-900 mt-1">{properties.length}</p>
+              </div>
+              <div className="bg-stone-50 rounded-xl p-4 border border-stone-200">
+                <p className="text-stone-500 text-sm">Total Views</p>
+                <p className="text-3xl font-bold text-orange-500 mt-1">{properties.reduce((a, p) => a + p.views, 0)}</p>
+              </div>
+              <div className="bg-stone-50 rounded-xl p-4 border border-stone-200">
+                <p className="text-stone-500 text-sm">Total Enquiries</p>
+                <p className="text-3xl font-bold text-green-500 mt-1">{properties.reduce((a, p) => a + p.enquiries, 0)}</p>
+              </div>
+              <div className="bg-stone-50 rounded-xl p-4 border border-stone-200">
+                <p className="text-stone-500 text-sm">Hot Listings</p>
+                <p className="text-3xl font-bold text-yellow-500 mt-1">{properties.filter(p => p.heat_score >= 70).length}</p>
+              </div>
             </div>
-            <div className="bg-white rounded-xl p-4 border border-stone-300">
-              <p className="text-stone-500 text-sm">Total Views</p>
-              <p className="text-3xl font-bold text-orange-500 mt-1">{properties.reduce((a, p) => a + p.views, 0)}</p>
-            </div>
-            <div className="bg-white rounded-xl p-4 border border-stone-300">
-              <p className="text-stone-500 text-sm">Total Enquiries</p>
-              <p className="text-3xl font-bold text-green-400 mt-1">{properties.reduce((a, p) => a + p.enquiries, 0)}</p>
-            </div>
-            <div className="bg-white rounded-xl p-4 border border-stone-300">
-              <p className="text-stone-500 text-sm">Hot Listings</p>
-              <p className="text-3xl font-bold text-yellow-400 mt-1">{properties.filter(p => p.heat_score >= 70).length}</p>
-            </div>
-          </div>
+          </CollapsibleSection>
         )}
 
         {/* Listings */}
+        <CollapsibleSection title="My Listings" icon="🏠" defaultOpen={true} badge={properties.length > 0 ? properties.length : undefined}>
         {properties.length === 0 ? (
           <div className="text-center py-24">
             <p className="text-6xl mb-4">🏠</p>
@@ -527,11 +533,14 @@ export default function DashboardPage() {
             ))}
           </div>
         )}
+        </CollapsibleSection>
       </div>
 
       {user && (
         <div className="max-w-6xl mx-auto px-6 pb-8 mt-6">
-          <AvailabilityManager agentId={user.id} />
+          <CollapsibleSection title="Viewing Availability" icon="🗓️" defaultOpen={false}>
+            <AvailabilityManager agentId={user.id} />
+          </CollapsibleSection>
         </div>
       )}
       {/* Delete confirmation modal */}
