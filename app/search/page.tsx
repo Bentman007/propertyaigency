@@ -101,7 +101,16 @@ export default function SearchPage() {
         body: JSON.stringify({ messages: newMessages, user_id: user?.id })
       })
       const data = await response.json()
-      setMessages(prev => [...prev, { role: 'assistant', content: data.message }])
+      const cleanMsg = (data.message || '')
+        .replace(/<lead>[\s\S]*?<\/lead>/g, '')
+        .replace(/<properties>[\s\S]*?<\/properties>/g, '')
+        .replace(/<profile>[\s\S]*?<\/profile>/g, '')
+        .replace(/<prompts>[\s\S]*?<\/prompts>/g, '')
+        .replace(/<feedback>[\s\S]*?<\/feedback>/g, '')
+        .replace(/<lead>/g, '').replace(/<\/lead>/g, '')
+        .replace(/<properties>/g, '').replace(/<\/properties>/g, '')
+        .trim()
+      setMessages(prev => [...prev, { role: 'assistant', content: cleanMsg }])
       if (data.suggested_prompts?.length > 0) setSuggestedPrompts(data.suggested_prompts)
       if (data.properties?.length > 0) {
         setProperties(prev => {
@@ -109,6 +118,7 @@ export default function SearchPage() {
           const newProps = data.properties.filter((p: Property) => !existingIds.includes(p.id))
           return [...newProps, ...prev]
         })
+        setMobileTab('results')
       }
     } catch (e) {
       setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, something went wrong. Please try again.' }])
