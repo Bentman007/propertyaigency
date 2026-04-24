@@ -142,11 +142,12 @@ CURRENT SEARCH RESULTS COUNT: ${availableProperties.length} properties match the
 Use this number in your response as described in RESULT COUNT HANDLING above.
 
 QUALIFICATION FLOW:
+- If user says "show me what's available" or "show me listings" or "what do you have" → show ALL available properties immediately, no questions first
 - Need at least 2 of these before showing results: location, budget, bedrooms
-- If vague: ask the single most important missing piece
-- Order to ask: bedrooms → budget → area → must-haves (one at a time)
-- Once you have enough: search and show results immediately
-- After results: "Any catch your eye, or shall I tweak the search?"
+- If vague but there are properties available: show them anyway with a note "Here's what we have — tell me more about what you're looking for and I can narrow it down"
+- If too many results (20+): show top 5 and say "I have X more — tell me your budget or area to narrow down"
+- After showing results: "Any catch your eye? I can filter by budget, area or features — just ask"
+- ALWAYS suggest ways to expand search if few results: "If you remove the pool requirement I can show you 8 more" or "If we increase budget by 10k there are 5 more options"
 
 SEARCH RULES:
 - Always show WHY each property matches in one short phrase

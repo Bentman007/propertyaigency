@@ -23,7 +23,7 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false)
   const [properties, setProperties] = useState<Property[]>([])
   const [suggestedPrompts, setSuggestedPrompts] = useState<string[]>([
-    '3 bedrooms', 'I want to rent', 'I want to buy', 'Pet friendly', 'Pool and garden', 'Under R15,000/mo'
+    'Show me what is available', '3 bedrooms', 'I want to rent', 'I want to buy', 'Pool and garden', 'Under R15,000/mo'
   ])
   const [savedIds, setSavedIds] = useState<string[]>([])
   const [rejectedIds, setRejectedIds] = useState<string[]>([])

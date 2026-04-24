@@ -52,6 +52,7 @@ function FeatureGroup({ group, form, update }: { group: any, form: any, update: 
 function ListPropertyInner() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
+  const [newPropertyId, setNewPropertyId] = useState<string | null>(null)
   const [photos, setPhotos] = useState<string[]>([])
   const [newSlotDate, setNewSlotDate] = useState('')
   const [newSlotTime, setNewSlotTime] = useState('morning')
@@ -529,7 +530,9 @@ function ListPropertyInner() {
 
           {message && (
             <div className={`p-4 rounded-lg text-center font-medium ${message.includes('success') ? 'bg-green-900 text-green-300' : 'bg-red-900 text-red-300'}`}>
-              {message}
+              {message.includes('success') && newPropertyId ? (
+                <a href={`/property/${newPropertyId}`} className="underline hover:no-underline">{message} — View your listing →</a>
+              ) : message}
             </div>
           )}
 
