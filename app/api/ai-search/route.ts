@@ -357,6 +357,22 @@ ${feedbackData.text}`,
     
     // Cache this result
     searchCache.set(cacheKey, { result, timestamp: Date.now() })
+
+    // If no matches found and user has enough criteria — search competitor sites
+    if (matchedProperties.length === 0 && user_id && existingProfile?.locations?.length > 0) {
+      fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/competitor-search`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id,
+          location: existingProfile.locations?.[0] || '',
+          bedrooms: existingProfile.bedrooms_min || existingProfile.bedrooms_max || '',
+          budget: existingProfile.budget_max || existingProfile.budget_min || '',
+          price_type: existingProfile.price_type || 'sale',
+          must_haves: existingProfile.must_haves || []
+        })
+      }).catch(() => {})
+    }
     
     return NextResponse.json(result)
 
