@@ -93,24 +93,24 @@ export default function MyPropertiesPage() {
   }
 
   if (loading) return (
-    <main className="min-h-screen bg-stone-50 flex items-center justify-center">
+    <main className="min-h-screen bg-[#f5f0eb] flex items-center justify-center">
       <p className="text-orange-500 animate-pulse text-xl">Loading your dashboard...</p>
     </main>
   )
 
   return (
-    <main className="min-h-screen bg-stone-50 text-stone-900">
-      <nav className="bg-white border-b border-stone-300 px-4 md:px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold">
-          Property<span className="text-orange-500">AI</span>gency
+    <main className="min-h-screen bg-[#f5f0eb] text-stone-900">
+      <nav className="bg-[#4a4238] px-4 md:px-6 py-4 flex justify-between items-center">
+        <Link href="/" className="text-2xl font-bold text-white">
+          Property<span className="text-orange-400">AI</span>gency
         </Link>
         <div className="flex gap-4 items-center">
           <Link href="/search" className="bg-orange-500 text-black px-4 py-2 rounded-lg font-semibold hover:bg-orange-400 text-sm">
             🔍 AI Property Search
           </Link>
-          <Link href="/profile" className="text-stone-500 hover:text-stone-900 text-sm">👤 Profile</Link>
+          <Link href="/profile" className="text-stone-300 hover:text-white text-sm">👤 Profile</Link>
           <button onClick={() => supabase.auth.signOut().then(() => window.location.href = '/')}
-            className="text-stone-500 hover:text-stone-900 text-sm">Sign Out</button>
+            className="text-stone-300 hover:text-white text-sm">Sign Out</button>
         </div>
       </nav>
 

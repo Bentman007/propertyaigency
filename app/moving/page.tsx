@@ -205,16 +205,16 @@ export default function MovingServicesPage() {
   }, [step])
 
   if (checkingAccess) return (
-    <main className="min-h-screen bg-stone-50 flex items-center justify-center">
+    <main className="min-h-screen bg-[#f5f0eb] flex items-center justify-center">
       <p className="text-orange-500 animate-pulse">Loading...</p>
     </main>
   )
 
   if (!user) return (
-    <main className="min-h-screen bg-stone-50 text-stone-900">
-      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
-        <Link href="/" className="text-stone-500 hover:text-stone-900 text-sm">← Back to Home</Link>
+    <main className="min-h-screen bg-[#f5f0eb] text-stone-900">
+      <nav className="bg-[#4a4238] px-6 py-4 flex justify-between items-center">
+        <Link href="/" className="text-2xl font-bold text-white">Property<span className="text-orange-400">AI</span>gency</Link>
+        <Link href="/" className="text-stone-300 hover:text-white text-sm">← Back to Home</Link>
       </nav>
       <div className="flex items-center justify-center min-h-[80vh] px-6">
         <div className="text-center">
@@ -231,10 +231,10 @@ export default function MovingServicesPage() {
   )
 
   if (!hasAccess) return (
-    <main className="min-h-screen bg-stone-50 text-stone-900">
-      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
-        <Link href="/my-properties" className="text-stone-500 hover:text-stone-900 text-sm">← My Dashboard</Link>
+    <main className="min-h-screen bg-[#f5f0eb] text-stone-900">
+      <nav className="bg-[#4a4238] px-6 py-4 flex justify-between items-center">
+        <Link href="/" className="text-2xl font-bold text-white">Property<span className="text-orange-400">AI</span>gency</Link>
+        <Link href="/my-properties" className="text-stone-300 hover:text-white text-sm">← My Dashboard</Link>
       </nav>
       <div className="max-w-xl mx-auto px-6 py-12">
         <div className="text-center mb-8">
@@ -271,7 +271,7 @@ export default function MovingServicesPage() {
   )
 
   if (submitted) return (
-    <main className="min-h-screen bg-stone-50 text-stone-900 flex items-center justify-center px-6">
+    <main className="min-h-screen bg-[#f5f0eb] text-stone-900 flex items-center justify-center px-6">
       <div className="text-center max-w-md">
         <p className="text-6xl mb-6">🎉</p>
         <h1 className="text-3xl font-bold mb-3">Requests Sent!</h1>
@@ -290,10 +290,10 @@ export default function MovingServicesPage() {
   )
 
   return (
-    <main className="min-h-screen bg-stone-50 text-stone-900">
-      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
-        <Link href="/my-properties" className="text-stone-500 hover:text-stone-900 text-sm">← My Dashboard</Link>
+    <main className="min-h-screen bg-[#f5f0eb] text-stone-900">
+      <nav className="bg-[#4a4238] px-6 py-4 flex justify-between items-center">
+        <Link href="/" className="text-2xl font-bold text-white">Property<span className="text-orange-400">AI</span>gency</Link>
+        <Link href="/my-properties" className="text-stone-300 hover:text-white text-sm">← My Dashboard</Link>
       </nav>
 
       <div className="max-w-3xl mx-auto px-6 py-12">

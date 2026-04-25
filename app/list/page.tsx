@@ -1,5 +1,6 @@
 'use client'
 import { useState, useCallback, useEffect, Suspense } from 'react'
+import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import PhotoUpload from '@/components/PhotoUpload'
 import AddressAutocomplete from '@/components/AddressAutocomplete'
@@ -50,6 +51,7 @@ function FeatureGroup({ group, form, update }: { group: any, form: any, update: 
 }
 
 function ListPropertyInner() {
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [newPropertyId, setNewPropertyId] = useState<string | null>(null)
@@ -240,8 +242,9 @@ function ListPropertyInner() {
 
 
     if (error) setMessage(error.message)
-    else { 
+    else {
       setMessage(isEditing ? 'Property updated successfully!' : 'Property listed successfully!')
+      if (!isEditing && data?.[0]?.id) setNewPropertyId(data[0].id)
       window.scrollTo(0,0)
       // Notify matching searchers about new listing
       if (!isEditing && data?.[0]?.id) {
@@ -265,10 +268,10 @@ function ListPropertyInner() {
   }
 
   return (
-    <main className="min-h-screen bg-stone-50 text-stone-900">
-      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
-        <a href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</a>
-        <a href="/dashboard" className="text-stone-500 hover:text-stone-900 text-sm">← Back to Dashboard</a>
+    <main className="min-h-screen bg-[#f5f0eb] text-stone-900">
+      <nav className="bg-[#4a4238] px-6 py-4 flex justify-between items-center">
+        <a href="/" className="text-2xl font-bold text-white">Property<span className="text-orange-400">AI</span>gency</a>
+        <button onClick={() => router.back()} className="text-stone-300 hover:text-white text-sm">← Back</button>
       </nav>
 
       <div className="max-w-3xl mx-auto px-6 py-12">
@@ -553,7 +556,7 @@ function ListPropertyInner() {
 
 export default function ListProperty() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-stone-50 flex items-center justify-center text-stone-900">Loading...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-[#f5f0eb] flex items-center justify-center text-stone-900">Loading...</div>}>
       <ListPropertyInner />
     </Suspense>
   )

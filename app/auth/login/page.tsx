@@ -38,7 +38,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-stone-50 flex items-center justify-center px-4 relative">
+    <main className="min-h-screen bg-[#f5f0eb] flex items-center justify-center px-4 relative">
       <Link href="/" className="absolute top-4 left-6 text-stone-500 hover:text-stone-900 text-sm">← Back to Home</Link>
       <div className="bg-white rounded-2xl p-8 w-full max-w-md border border-stone-300">
         <div className="text-center mb-8">

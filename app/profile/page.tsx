@@ -1,11 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import CollapsibleSection from '@/components/CollapsibleSection'
 import Link from 'next/link'
 
 export default function ProfilePage() {
+  const router = useRouter()
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [buyerProfile, setBuyerProfile] = useState<any>(null)
@@ -96,24 +98,24 @@ export default function ProfilePage() {
   const update = (field: string, value: string) => setForm(p => ({ ...p, [field]: value }))
 
   if (loading) return (
-    <main className="min-h-screen bg-stone-50 flex items-center justify-center">
+    <main className="min-h-screen bg-[#f5f0eb] flex items-center justify-center">
       <p className="text-orange-500 animate-pulse">Loading profile...</p>
     </main>
   )
 
   return (
-    <main className="min-h-screen bg-stone-50 text-stone-900">
-      <nav className="bg-white border-b border-stone-300 px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold">
-          Property<span className="text-orange-500">AI</span>gency
+    <main className="min-h-screen bg-[#f5f0eb] text-stone-900">
+      <nav className="bg-[#4a4238] px-6 py-4 flex justify-between items-center">
+        <Link href="/" className="text-2xl font-bold text-white">
+          Property<span className="text-orange-400">AI</span>gency
         </Link>
-        <Link href="/dashboard" className="text-stone-500 hover:text-stone-900 text-sm">← Back to Dashboard</Link>
+        <button onClick={() => router.back()} className="text-stone-300 hover:text-white text-sm">← Back</button>
       </nav>
 
       <div className="max-w-2xl mx-auto px-6 py-10 space-y-6">
         <h1 className="text-2xl font-bold">👤 My Profile</h1>
 
-        {buyerProfile !== undefined && (
+        {accountType === 'buyer' && buyerProfile !== undefined && (
             <CollapsibleSection title="My Search Profile" icon="🔍" defaultOpen={false}>
               <p className="text-stone-500 text-sm mb-4">Your search preferences — edit anytime.</p>
               {!buyerProfile || (!buyerProfile.locations?.length && !buyerProfile.budget_max) ? (

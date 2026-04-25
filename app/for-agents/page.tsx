@@ -2,13 +2,13 @@ import Link from 'next/link'
 
 export default function ForAgentsPage() {
   return (
-    <main className="min-h-screen bg-stone-50 text-stone-900">
-      <nav className="bg-stone-100 border-b border-stone-200 px-4 md:px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="text-xl md:text-2xl font-bold">
-          Property<span className="text-orange-500">AI</span>gency
+    <main className="min-h-screen bg-[#f5f0eb] text-stone-900">
+      <nav className="bg-[#4a4238] px-4 md:px-6 py-4 flex justify-between items-center">
+        <Link href="/" className="text-xl md:text-2xl font-bold text-white">
+          Property<span className="text-orange-400">AI</span>gency
         </Link>
         <div className="flex gap-3 items-center">
-          <Link href="/pricing" className="text-stone-500 hover:text-stone-900 text-sm hidden md:block">Pricing</Link>
+          <Link href="/pricing" className="text-stone-300 hover:text-white text-sm hidden md:block">Pricing</Link>
           <Link href="/auth/register" className="bg-orange-500 text-black px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-400">
             Start Free Trial
           </Link>

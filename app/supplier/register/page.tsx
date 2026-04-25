@@ -234,10 +234,10 @@ export default function SupplierRegister() {
   }
 
   return (
-    <main className="min-h-screen bg-stone-50 text-stone-900">
-      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
-        <Link href="/supplier/login" className="text-stone-500 hover:text-stone-900 text-sm">Already registered? Sign in</Link>
+    <main className="min-h-screen bg-[#f5f0eb] text-stone-900">
+      <nav className="bg-[#4a4238] px-6 py-4 flex justify-between items-center">
+        <Link href="/" className="text-2xl font-bold text-white">Property<span className="text-orange-400">AI</span>gency</Link>
+        <Link href="/supplier/login" className="text-stone-300 hover:text-white text-sm">Already registered? Sign in</Link>
       </nav>
 
       <div className="max-w-2xl mx-auto px-6 py-12">

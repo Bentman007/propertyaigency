@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 
@@ -11,6 +12,7 @@ const BUNDLES = [
 ]
 
 export default function UpgradePage() {
+  const router = useRouter()
   const [profile, setProfile] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [selected, setSelected] = useState<string>('pro')
@@ -25,7 +27,7 @@ export default function UpgradePage() {
   }, [])
 
   if (loading) return (
-    <main className="min-h-screen bg-stone-50 flex items-center justify-center">
+    <main className="min-h-screen bg-[#f5f0eb] flex items-center justify-center">
       <p className="text-orange-500 animate-pulse">Loading...</p>
     </main>
   )
@@ -33,10 +35,10 @@ export default function UpgradePage() {
   const selectedBundle = BUNDLES.find(b => b.key === selected)!
 
   return (
-    <main className="min-h-screen bg-stone-50 text-stone-900">
-      <nav className="bg-stone-100 border-b border-stone-200 px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
-        <Link href="/dashboard" className="text-stone-500 hover:text-stone-900 text-sm">← Back to Dashboard</Link>
+    <main className="min-h-screen bg-[#f5f0eb] text-stone-900">
+      <nav className="bg-[#4a4238] px-6 py-4 flex justify-between items-center">
+        <Link href="/" className="text-2xl font-bold text-white">Property<span className="text-orange-400">AI</span>gency</Link>
+        <button onClick={() => router.back()} className="text-stone-300 hover:text-white text-sm">← Back</button>
       </nav>
 
       <div className="max-w-4xl mx-auto px-6 py-12">

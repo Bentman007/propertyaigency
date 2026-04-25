@@ -151,7 +151,7 @@ export default function SupplierDashboard() {
   }
 
   if (loading) return (
-    <main className="min-h-screen bg-stone-50 flex items-center justify-center">
+    <main className="min-h-screen bg-[#f5f0eb] flex items-center justify-center">
       <p className="text-orange-500 animate-pulse">Loading your dashboard...</p>
     </main>
   )
@@ -163,16 +163,16 @@ export default function SupplierDashboard() {
   const onTrial = supplier?.subscription_status === 'trial' && trialDaysLeft !== null && trialDaysLeft > 0
 
   return (
-    <main className="min-h-screen bg-stone-50 text-stone-900">
-      <nav className="bg-white border-b border-stone-300 px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold">Property<span className="text-orange-500">AI</span>gency</Link>
+    <main className="min-h-screen bg-[#f5f0eb] text-stone-900">
+      <nav className="bg-[#4a4238] px-6 py-4 flex justify-between items-center">
+        <Link href="/" className="text-2xl font-bold text-white">Property<span className="text-orange-400">AI</span>gency</Link>
         <div className="flex items-center gap-4">
           {supplier?.logo_url && (
             <img src={supplier.logo_url} alt="logo" className="w-8 h-8 rounded-lg object-contain bg-stone-100"/>
           )}
-          <span className="text-stone-500 text-sm hidden sm:block">{supplier?.business_name}</span>
+          <span className="text-stone-300 text-sm hidden sm:block">{supplier?.business_name}</span>
           <button onClick={() => supabase.auth.signOut().then(() => window.location.href = '/')}
-            className="text-stone-500 hover:text-stone-900 text-sm">Sign Out</button>
+            className="text-stone-300 hover:text-white text-sm">Sign Out</button>
         </div>
       </nav>
 
